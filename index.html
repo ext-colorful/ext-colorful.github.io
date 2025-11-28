@@ -18,7 +18,8 @@
     </style>
 </head>
 
-<body><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 700" width="100%" height="100%" preserveAspectRatio="none" style="margin: 0; padding: 0; display: block;">
+<body>
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 700" width="100%" height="100%" preserveAspectRatio="none" style="margin: 0; padding: 0; display: block;">
     <defs>
       <!-- 背景渐变：柔和青绿色系 -->
       <linearGradient id="bg-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -97,20 +98,20 @@
       
       <!-- 动画路径定义 -->
       <!-- 水平左右移动（往返） -->
-      <path id="path-horizontal" d="M 100 350 L 1100 350 L 100 350" fill="none"/>
+      <path id="path-horizontal" d="M 50 350 L 1150 350 L 50 350" fill="none"/>
       
       <!-- 垂直上下移动（往返） -->
-      <path id="path-vertical" d="M 600 100 L 600 600 L 600 100" fill="none"/>
+      <path id="path-vertical" d="M 600 50 L 600 650 L 600 50" fill="none"/>
       
       <!-- 对角线：左上→右下→左上（往返） -->
-      <path id="path-diagonal-1" d="M 150 150 L 1050 550 L 150 150" fill="none"/>
+      <path id="path-diagonal-1" d="M 50 50 L 1150 650 L 50 50" fill="none"/>
       
       <!-- 对角线：右上→左下→右上（往返） -->
-      <path id="path-diagonal-2" d="M 1050 150 L 150 550 L 1050 150" fill="none"/>
+      <path id="path-diagonal-2" d="M 1150 50 L 50 650 L 1150 50" fill="none"/>
       
       <!-- 圆形轨迹（闭合） -->
-      <path id="path-circle" d="M 600 200 
-                                A 200 200 0 1 1 599 200" fill="none"/>
+      <path id="path-circle" d="M 600 50 
+                                A 300 300 0 1 1 599 50" fill="none"/>
     </defs>
     
     <!-- 背景层 -->
@@ -179,9 +180,9 @@
     
     <!-- 小球组 - 水平移动 -->
     <g id="ball-horizontal" class="ball-animation" filter="url(#ball-shadow)" opacity="0">
-      <circle r="20" fill="url(#ball-gradient)" stroke="#1B5E20" stroke-width="0.5" opacity="0.95">
-        <circle r="6" fill="url(#ball-highlight)" transform="translate(-6,-6)"/>
-        <animate attributeName="r" values="18;22;18" dur="3s" repeatCount="indefinite" calcMode="spline" keyTimes="0;0.5;1" keySplines="0.4 0 0.2 1;0.4 0 0.2 1"/>
+      <circle r="16" fill="url(#ball-gradient)" stroke="#1B5E20" stroke-width="0.5" opacity="0.95">
+        <circle r="5" fill="url(#ball-highlight)" transform="translate(-5,-5)"/>
+        <animate attributeName="r" values="14;18;14" dur="3s" repeatCount="indefinite" calcMode="spline" keyTimes="0;0.5;1" keySplines="0.4 0 0.2 1;0.4 0 0.2 1"/>
       </circle>
       <animateMotion dur="4s" begin="0s" repeatCount="indefinite" calcMode="spline" keyTimes="0;0.5;1" keySplines="0.4 0 0.2 1;0.4 0 0.2 1">
         <mpath href="#path-horizontal"/>
@@ -190,9 +191,9 @@
     
     <!-- 小球组 - 垂直移动 -->
     <g id="ball-vertical" class="ball-animation" filter="url(#ball-shadow)" opacity="0">
-      <circle r="20" fill="url(#ball-gradient)" stroke="#1B5E20" stroke-width="0.5" opacity="0.95">
-        <circle r="6" fill="url(#ball-highlight)" transform="translate(-6,-6)"/>
-        <animate attributeName="r" values="18;22;18" dur="3s" repeatCount="indefinite" calcMode="spline" keyTimes="0;0.5;1" keySplines="0.4 0 0.2 1;0.4 0 0.2 1"/>
+      <circle r="16" fill="url(#ball-gradient)" stroke="#1B5E20" stroke-width="0.5" opacity="0.95">
+        <circle r="5" fill="url(#ball-highlight)" transform="translate(-5,-5)"/>
+        <animate attributeName="r" values="14;18;14" dur="3s" repeatCount="indefinite" calcMode="spline" keyTimes="0;0.5;1" keySplines="0.4 0 0.2 1;0.4 0 0.2 1"/>
       </circle>
       <animateMotion dur="4s" begin="0s" repeatCount="indefinite" calcMode="spline" keyTimes="0;0.5;1" keySplines="0.4 0 0.2 1;0.4 0 0.2 1">
         <mpath href="#path-vertical"/>
@@ -201,9 +202,9 @@
     
     <!-- 小球组 - 对角线1 -->
     <g id="ball-diagonal-1" class="ball-animation" filter="url(#ball-shadow)" opacity="0">
-      <circle r="20" fill="url(#ball-gradient)" stroke="#1B5E20" stroke-width="0.5" opacity="0.95">
-        <circle r="6" fill="url(#ball-highlight)" transform="translate(-6,-6)"/>
-        <animate attributeName="r" values="18;22;18" dur="3s" repeatCount="indefinite" calcMode="spline" keyTimes="0;0.5;1" keySplines="0.4 0 0.2 1;0.4 0 0.2 1"/>
+      <circle r="16" fill="url(#ball-gradient)" stroke="#1B5E20" stroke-width="0.5" opacity="0.95">
+        <circle r="5" fill="url(#ball-highlight)" transform="translate(-5,-5)"/>
+        <animate attributeName="r" values="14;18;14" dur="3s" repeatCount="indefinite" calcMode="spline" keyTimes="0;0.5;1" keySplines="0.4 0 0.2 1;0.4 0 0.2 1"/>
       </circle>
       <animateMotion dur="4s" begin="0s" repeatCount="indefinite" calcMode="spline" keyTimes="0;0.5;1" keySplines="0.4 0 0.2 1;0.4 0 0.2 1">
         <mpath href="#path-diagonal-1"/>
@@ -212,9 +213,9 @@
     
     <!-- 小球组 - 对角线2 -->
     <g id="ball-diagonal-2" class="ball-animation" filter="url(#ball-shadow)" opacity="0">
-      <circle r="20" fill="url(#ball-gradient)" stroke="#1B5E20" stroke-width="0.5" opacity="0.95">
-        <circle r="6" fill="url(#ball-highlight)" transform="translate(-6,-6)"/>
-        <animate attributeName="r" values="18;22;18" dur="3s" repeatCount="indefinite" calcMode="spline" keyTimes="0;0.5;1" keySplines="0.4 0 0.2 1;0.4 0 0.2 1"/>
+      <circle r="16" fill="url(#ball-gradient)" stroke="#1B5E20" stroke-width="0.5" opacity="0.95">
+        <circle r="5" fill="url(#ball-highlight)" transform="translate(-5,-5)"/>
+        <animate attributeName="r" values="14;18;14" dur="3s" repeatCount="indefinite" calcMode="spline" keyTimes="0;0.5;1" keySplines="0.4 0 0.2 1;0.4 0 0.2 1"/>
       </circle>
       <animateMotion dur="4s" begin="0s" repeatCount="indefinite" calcMode="spline" keyTimes="0;0.5;1" keySplines="0.4 0 0.2 1;0.4 0 0.2 1">
         <mpath href="#path-diagonal-2"/>
@@ -223,9 +224,9 @@
     
     <!-- 小球组 - 圆形 -->
     <g id="ball-circle" class="ball-animation" filter="url(#ball-shadow)" opacity="0">
-      <circle r="20" fill="url(#ball-gradient)" stroke="#1B5E20" stroke-width="0.5" opacity="0.95">
-        <circle r="6" fill="url(#ball-highlight)" transform="translate(-6,-6)"/>
-        <animate attributeName="r" values="18;22;18" dur="3s" repeatCount="indefinite" calcMode="spline" keyTimes="0;0.5;1" keySplines="0.4 0 0.2 1;0.4 0 0.2 1"/>
+      <circle r="16" fill="url(#ball-gradient)" stroke="#1B5E20" stroke-width="0.5" opacity="0.95">
+        <circle r="5" fill="url(#ball-highlight)" transform="translate(-5,-5)"/>
+        <animate attributeName="r" values="14;18;14" dur="3s" repeatCount="indefinite" calcMode="spline" keyTimes="0;0.5;1" keySplines="0.4 0 0.2 1;0.4 0 0.2 1"/>
       </circle>
       <animateMotion dur="8s" begin="0s" repeatCount="indefinite" rotate="auto" calcMode="spline" keyTimes="0;0.25;0.5;0.75;1" keySplines="0.4 0 0.2 1;0.4 0 0.2 1;0.4 0 0.2 1;0.4 0 0.2 1">
         <mpath href="#path-circle"/>
@@ -234,12 +235,12 @@
     
     <!-- 小球组 - 多点跳跃（使用 animateTransform 实现瞬移） -->
     <g id="ball-jump" class="ball-animation" filter="url(#ball-shadow)" opacity="0">
-      <circle r="20" fill="url(#ball-gradient)" stroke="#1B5E20" stroke-width="0.5" opacity="0.95">
-        <circle r="6" fill="url(#ball-highlight)" transform="translate(-6,-6)"/>
-        <animate attributeName="r" values="18;22;18" dur="3s" repeatCount="indefinite" calcMode="spline" keyTimes="0;0.5;1" keySplines="0.4 0 0.2 1;0.4 0 0.2 1"/>
+      <circle r="16" fill="url(#ball-gradient)" stroke="#1B5E20" stroke-width="0.5" opacity="0.95">
+        <circle r="5" fill="url(#ball-highlight)" transform="translate(-5,-5)"/>
+        <animate attributeName="r" values="14;18;14" dur="3s" repeatCount="indefinite" calcMode="spline" keyTimes="0;0.5;1" keySplines="0.4 0 0.2 1;0.4 0 0.2 1"/>
       </circle>
       <!-- 使用 animateTransform 实现多点瞬移 -->
-      <animateTransform attributeName="transform" type="translate" values="600 350;300 200;900 200;900 500;300 500;600 350" dur="8s" begin="0s" repeatCount="indefinite" calcMode="discrete" keyTimes="0;0.2;0.4;0.6;0.8;1"/>
+      <animateTransform attributeName="transform" type="translate" values="600 350;100 100;1100 100;1100 600;100 600;600 350" dur="8s" begin="0s" repeatCount="indefinite" calcMode="discrete" keyTimes="0;0.2;0.4;0.6;0.8;1"/>
     </g>
     
     <!-- JavaScript 控制逻辑 -->
@@ -254,8 +255,8 @@
             title: '训练模式',
             horizontal: '水平移动',
             vertical: '垂直移动',
-            diagonal1: '对角线 ↗',
-            diagonal2: '对角线 ↖',
+            diagonal1: '对角线 ↖',
+            diagonal2: '对角线 ↗',
             circle: '圆形轨迹',
             jump: '多点跳跃'
           },
@@ -263,8 +264,8 @@
             title: 'Training Mode',
             horizontal: 'Horizontal',
             vertical: 'Vertical',
-            diagonal1: 'Diagonal ↗',
-            diagonal2: 'Diagonal ↖',
+            diagonal1: 'Diagonal ↖',
+            diagonal2: 'Diagonal ↗',
             circle: 'Circle',
             jump: 'Jump Points'
           }
@@ -359,6 +360,7 @@
         switchMode('horizontal');
       })();
     ]]></script>
-  </svg>  
+  </svg>
+  
 </body>
 </html>
