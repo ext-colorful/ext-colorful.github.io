@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>钢铁电化学腐蚀模拟(原电池版)</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            /* font-family: "Microsoft YaHei", "SimHei", "SimSun", "Segoe UI", sans-serif; */
+            background: linear-gradient(135deg, #e8f4f8 0%, #d4e5ed 50%, #c9dde8 100%);
+            min-height: 100vh;
+            color: #2c3e50;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0;
+            /* padding: 25px 20px; */
+            font-size: 18px;
+        }
+
+        h1 { 
+            color: #1a365d; 
+            margin-bottom: 8px; 
+            font-weight: 500;
+            font-size: 2em;
+            letter-spacing: 3px;
+            text-shadow: 0 2px 10px rgba(26, 54, 93, 0.15);
+        }
+        
+        .subtitle { 
+            color: #5a7a94; 
+            margin-bottom: 25px; 
+            font-size: 1.1em;
+            letter-spacing: 2px;
+        }
+
+        /* 布局容器 */
+        .lab-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 50px;
+            max-width: 1600px;
+            width: 100%;
+        }
+
+        /* ----- 左侧：宏观烧杯 ----- */
+        .beaker-wrapper {
+            position: relative;
+            width: 320px;
+            height: 460px;
+        }
+
+        .beaker {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            border: 3px solid rgba(100, 140, 170, 0.4);
+            border-top: none;
+            border-radius: 0 0 25px 25px;
+            background: linear-gradient(180deg, 
+                rgba(255,255,255,0.7) 0%, 
+                rgba(255,255,255,0.5) 100%);
+            backdrop-filter: blur(10px);
+            box-shadow: 
+                0 20px 40px rgba(0,0,0,0.1),
+                inset 0 0 30px rgba(255,255,255,0.3);
+            overflow: hidden;
+        }
+
+        .solution {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 88%;
+            transition: background 0.8s ease;
+            background: linear-gradient(180deg, 
+                rgba(231, 76, 60, 0.35) 0%,
+                rgba(231, 76, 60, 0.55) 100%);
+        }
+
+        .iron-nail {
+            position: absolute;
+            left: 50%;
+            bottom: 18px;
+            transform: translateX(-50%);
+            width: 55px;
+            height: 300px;
+            background: linear-gradient(90deg, #4a4a4a, #8a8a8a 30%, #b0b0b0 50%, #8a8a8a 70%, #4a4a4a);
+            border-radius: 4px;
+            box-shadow: 
+                4px 4px 15px rgba(0,0,0,0.4),
+                inset 0 0 10px rgba(255,255,255,0.1);
+            z-index: 5;
+        }
+
+        .carbon-spot {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: radial-gradient(circle, #1a1a1a 0%, #000 100%);
+            border-radius: 50%;
+            z-index: 6;
+            box-shadow: 0 0 3px rgba(0,0,0,0.5);
+        }
+
+        /* 动画元素 */
+        .bubble {
+            position: absolute;
+            background: radial-gradient(circle at 30% 30%, 
+                rgba(255,255,255,0.9), 
+                rgba(255,255,255,0.3) 50%, 
+                transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 10;
+            animation: bubbleRise 2s ease-out forwards;
+        }
+
+        @keyframes bubbleRise {
+            0% { 
+                transform: translateY(0) scale(1); 
+                opacity: 0.8; 
+            }
+            50% { 
+                transform: translateY(-100px) scale(1.2); 
+                opacity: 0.6; 
+            }
+            100% { 
+                transform: translateY(-200px) scale(0.8); 
+                opacity: 0; 
+            }
+        }
+
+        .rust-spot {
+            position: absolute;
+            background: radial-gradient(circle, 
+                rgba(139, 69, 19, 0.9) 0%, 
+                rgba(165, 42, 42, 0.7) 50%, 
+                transparent 100%);
+            border-radius: 50%;
+            z-index: 7;
+            animation: rustGrow 3s ease-out forwards;
+        }
+
+        @keyframes rustGrow { 
+            0% { transform: scale(0); opacity: 0; }
+            30% { transform: scale(1.2); opacity: 1; }
+            100% { transform: scale(1); opacity: 0.85; }
+        }
+
+        /* ----- 中间：微观原电池原理 ----- */
+        .microscope-container {
+            width: 500px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .micro-title {
+            font-size: 1.3em;
+            font-weight: 500;
+            margin-bottom: 18px;
+            color: #2c4a63;
+            letter-spacing: 2px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .micro-title::before,
+        .micro-title::after {
+            content: '';
+            width: 40px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(44, 74, 99, 0.4));
+        }
+
+        .micro-title::after {
+            background: linear-gradient(90deg, rgba(44, 74, 99, 0.4), transparent);
+        }
+
+        .cell-container {
+            position: relative;
+            width: 480px;
+            height: 360px;
+            background: linear-gradient(180deg, 
+                rgba(255, 255, 255, 0.95) 0%,
+                rgba(245, 248, 250, 0.98) 100%);
+            border-radius: 24px;
+            border: 3px solid rgba(100, 140, 170, 0.3);
+            box-shadow: 
+                0 20px 60px rgba(0,0,0,0.1),
+                inset 0 1px 0 rgba(255,255,255,0.8);
+            overflow: hidden;
+        }
+
+        /* 溶液层 */
+        .solution-layer {
+            position: absolute;
+            top: 0;
+            width: 100%;
+            height: 45%;
+            background: linear-gradient(180deg, 
+                rgba(100, 150, 200, 0.15) 0%,
+                rgba(100, 150, 200, 0.3) 100%);
+            border-bottom: 2px dashed rgba(100, 140, 170, 0.4);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .solution-label {
+            font-size: 1.4em;
+            color: rgba(50, 80, 110, 0.7);
+            font-weight: 500;
+            letter-spacing: 4px;
+            z-index: 5;
+        }
+
+        /* 电极区域 */
+        .electrodes {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 55%;
+            display: flex;
+        }
+
+        .electrode {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .electrode-fe {
+            background: linear-gradient(135deg, 
+                rgba(160, 170, 185, 0.9) 0%,
+                rgba(130, 140, 155, 0.95) 100%);
+            border-right: 1px solid rgba(100, 140, 170, 0.3);
+        }
+
+        .electrode-c {
+            background: linear-gradient(135deg, 
+                rgba(60, 65, 75, 0.95) 0%,
+                rgba(40, 45, 55, 0.98) 100%);
+        }
+
+        .electrode-symbol {
+            font-size: 3.2em;
+            font-weight: 700;
+            color: #fff;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            margin-bottom: 12px;
+        }
+
+        .electrode-fe .electrode-symbol {
+            color: #6a7585;
+            text-shadow: 0 2px 10px rgba(106, 117, 133, 0.3);
+        }
+
+        .electrode-c .electrode-symbol {
+            color: #d0d4dc;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+
+        .electrode-label {
+            font-size: 0.9em;
+            color: rgba(255,255,255,0.95);
+            padding: 6px 16px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 20px;
+            letter-spacing: 2px;
+        }
+
+        .electrode-fe .electrode-label {
+            background: rgba(220, 80, 60, 0.75);
+            color: #fff;
+        }
+
+        .electrode-c .electrode-label {
+            background: rgba(46, 180, 100, 0.85);
+            color: #fff;
+        }
+
+        /* 电子流路径 */
+        .electron-flow-container {
+            position: absolute;
+            bottom: 55%;
+            left: 10%;
+            width: 80%;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            z-index: 10;
+        }
+
+        .electron-path-line {
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, 
+                rgba(255, 180, 0, 0.3),
+                rgba(255, 180, 0, 0.7) 50%,
+                rgba(255, 180, 0, 0.3));
+            border-radius: 2px;
+            position: relative;
+        }
+
+        .electron {
+            position: absolute;
+            width: 18px;
+            height: 18px;
+            background: radial-gradient(circle, #ffd700 0%, #ff9500 60%, transparent 80%);
+            border-radius: 50%;
+            top: 50%;
+            transform: translateY(-50%);
+            box-shadow: 
+                0 0 10px #ffc107,
+                0 0 20px rgba(255, 193, 7, 0.6);
+            animation: electronMove 2s infinite ease-in-out;
+        }
+
+        .electron::after {
+            content: 'e⁻';
+            position: absolute;
+            font-size: 10px;
+            font-weight: bold;
+            color: #5a3d00;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .electron:nth-child(2) { animation-delay: 0.4s; }
+        .electron:nth-child(3) { animation-delay: 0.8s; }
+        .electron:nth-child(4) { animation-delay: 1.2s; }
+        .electron:nth-child(5) { animation-delay: 1.6s; }
+
+        @keyframes electronMove {
+            0% { left: 0%; opacity: 0; transform: translateY(-50%) scale(0.5); }
+            10% { opacity: 1; transform: translateY(-50%) scale(1); }
+            90% { opacity: 1; transform: translateY(-50%) scale(1); }
+            100% { left: 100%; opacity: 0; transform: translateY(-50%) scale(0.5); }
+        }
+
+        .flow-label {
+            position: absolute;
+            bottom: -22px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.9em;
+            color: #d48800;
+            white-space: nowrap;
+            letter-spacing: 2px;
+            font-weight: 600;
+        }
+
+        /* 离子动画 */
+        .ion {
+            position: absolute;
+            font-weight: bold;
+            font-size: 1.1em;
+            pointer-events: none;
+            z-index: 15;
+            text-shadow: 0 1px 5px currentColor;
+        }
+
+        .fe-ion {
+            color: #e67300;
+            animation: feIonMove 3s infinite ease-out;
+        }
+
+        @keyframes feIonMove {
+            0% { 
+                transform: translate(0, 0) scale(1); 
+                opacity: 0;
+            }
+            20% { 
+                opacity: 1;
+            }
+            100% { 
+                transform: translate(var(--tx, 30px), var(--ty, -60px)) scale(0.7); 
+                opacity: 0;
+            }
+        }
+
+        .h-ion {
+            color: #e53935;
+            animation: hIonMove 2s infinite ease-in;
+        }
+
+        @keyframes hIonMove {
+            0% { 
+                transform: translate(0, -40px) scale(0.8); 
+                opacity: 0;
+            }
+            30% { opacity: 1; }
+            100% { 
+                transform: translate(0, 30px) scale(1); 
+                opacity: 0;
+            }
+        }
+
+        .o2-particle {
+            color: #2e9e4f;
+            animation: o2Move 2.5s infinite ease-in;
+        }
+
+        @keyframes o2Move {
+            0% { 
+                transform: translate(0, -50px) rotate(0deg); 
+                opacity: 0;
+            }
+            30% { opacity: 1; }
+            100% { 
+                transform: translate(0, 40px) rotate(180deg); 
+                opacity: 0;
+            }
+        }
+
+        /* H₂ 气泡从正极产生 */
+        .h2-bubble {
+            position: absolute;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            background: radial-gradient(circle at 30% 30%, 
+                rgba(255,255,255,0.95), 
+                rgba(200,220,255,0.6) 60%,
+                rgba(150,180,220,0.3));
+            border-radius: 50%;
+            font-size: 13px;
+            font-weight: bold;
+            color: #2980b9;
+            text-shadow: 0 0 3px rgba(255,255,255,0.8);
+            box-shadow: 0 0 10px rgba(100,150,200,0.5);
+            animation: h2BubbleRise 2s ease-out forwards;
+        }
+
+        @keyframes h2BubbleRise {
+            0% { transform: translateY(0) scale(0.3); opacity: 0; }
+            15% { opacity: 1; transform: scale(1); }
+            85% { opacity: 0.8; }
+            100% { transform: translateY(-110px) scale(1.1); opacity: 0; }
+        }
+
+        /* OH- 生成动画 */
+        .oh-ion {
+            color: #1e88e5;
+            animation: ohGenerate 2s infinite ease-out;
+        }
+
+        @keyframes ohGenerate {
+            0% { transform: scale(0); opacity: 0; }
+            30% { transform: scale(1.2); opacity: 1; }
+            100% { transform: scale(1) translateY(30px); opacity: 0; }
+        }
+
+        /* ----- 右侧：控制与数据 ----- */
+        .controls {
+            flex: 1;
+            min-width: 340px;
+            max-width: 420px;
+            background: rgba(255,255,255,0.92);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            border-radius: 24px;
+            border: 1px solid rgba(100, 140, 170, 0.2);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+            align-self: flex-start;
+        }
+
+        /* pH 控制区域 */
+        .ph-control {
+            background: linear-gradient(135deg, rgba(255,255,255,0.6) 0%, rgba(240,245,250,0.8) 100%);
+            border-radius: 16px;
+            padding: 5px 24px 2px 24px;
+            border: 1px solid rgba(100, 140, 170, 0.15);
+            margin-top: 50px;
+            width: 100%;
+        }
+
+        .ph-header {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .ph-value-box {
+            display: flex;
+            align-items: baseline;
+            gap: 4px;
+            background: linear-gradient(135deg, #2c4a63 0%, #1a365d 100%);
+            padding: 6px 14px;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(26, 54, 93, 0.2);
+        }
+
+        .ph-prefix {
+            font-size: 0.8em;
+            color: rgba(255,255,255,0.7);
+            font-weight: 500;
+        }
+
+        .ph-number {
+            font-size: 1.4em;
+            /* font-family: "Consolas", "Courier New", monospace; */
+            font-weight: 600;
+            color: #fff;
+            min-width: 45px;
+            text-align: center;
+        }
+
+        .ph-slider-container {
+            position: relative;
+            padding: 8px 0;
+        }
+
+        .ph-slider {
+            width: 100%;
+            height: 10px;
+            border-radius: 5px;
+            background: linear-gradient(90deg, 
+                #e74c3c 0%, 
+                #e67e22 15%,
+                #f1c40f 30%,
+                #2ecc71 50%, 
+                #3498db 70%, 
+                #9b59b6 100%);
+            outline: none;
+            -webkit-appearance: none;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .ph-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, rgb(247, 191, 244) 0%, rgb(247, 197, 244) 12.5%, rgb(248, 185, 198) 12.5%, rgb(247, 151, 170) 25%, rgb(247, 204, 151) 25%, rgb(247, 204, 151) 37.5%, rgb(218, 247, 151) 37.5%, rgb(218, 247, 151) 50%, rgb(151, 247, 156) 50%, rgb(151, 247, 156) 62.5%, rgb(151, 247, 228) 62.5%, rgb(151, 247, 228) 75%, rgb(151, 194, 247) 75%, rgb(185, 214, 249) 87.5%, rgb(215, 200, 249) 87.5%, rgb(217, 201, 253) 100%) fixed;            box-shadow: 
+                0 2px 8px rgba(0,0,0,0.2),
+                0 0 0 3px rgba(255,255,255,0.8);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .ph-slider::-webkit-slider-thumb:hover {
+            transform: scale(1.15);
+            box-shadow: 
+                0 4px 12px rgba(0,0,0,0.25),
+                0 0 0 4px rgba(255,255,255,0.9);
+        }
+
+        .ph-scale {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 8px;
+            padding: 0 2px;
+        }
+
+        .ph-scale span {
+            font-size: 0.75em;
+            color: #6a8599;
+            font-weight: 500;
+        }
+
+        .ph-scale .acidic { color: #e74c3c; }
+        .ph-scale .neutral { color: #2ecc71; }
+        .ph-scale .alkaline { color: #9b59b6; }
+
+        /* 反应式卡片 */
+        .reaction-box {
+            background: rgba(245, 248, 250, 0.85);
+            border-radius: 18px;
+            padding: 25px;
+            margin-top: 0;
+            border-left: 5px solid #e74c3c;
+            transition: all 0.5s ease;
+        }
+
+        .corrosion-title {
+            margin: 0 0 18px 0;
+            font-size: 1.5em;
+            font-weight: 600;
+            letter-spacing: 2px;
+            transition: color 0.3s;
+        }
+
+        .mixed-warning {
+            color: #8e44ad;
+            font-weight: 500;
+            font-size: 1em;
+            margin-bottom: 18px;
+            padding: 10px 15px;
+            background: rgba(155, 89, 182, 0.15);
+            border-radius: 10px;
+            display: none;
+        }
+
+        .eq-section {
+            margin: 15px 0;
+        }
+
+        .eq-label {
+            font-size: 0.95em;
+            color: #6a8599;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .eq {
+            /* font-family: "Microsoft YaHei", "SimHei", "SimSun", "Times New Roman", serif; */
+            background: rgba(255,255,255,0.92);
+            padding: 6px 9px;
+            border-radius: 10px;
+            color: #2c3e50;
+            border: 1px solid rgba(100, 140, 170, 0.2);
+            font-size: 1.3em;
+            letter-spacing: -0.02em;
+            opacity: 0;
+            transform: translateY(15px) scale(0.9);
+            transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), 
+                        transform 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+                        box-shadow 0.6s ease,
+                        background 0.6s ease;
+            cursor: pointer;
+            box-shadow: 0 0 0 rgba(0,0,0,0);
+        }
+        
+        .eq-section:hover .eq:not(.revealed) {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15), 0 0 0 2px rgba(52, 152, 219, 0.3);
+            background: rgba(255,255,255,1);
+        }
+        
+        .eq.revealed {
+            opacity: 1 !important;
+            transform: translateY(0) scale(1) !important;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            background: rgba(255,255,255,1);
+        }
+        
+        .eq sup,
+        .eq sub {
+            letter-spacing: 0;
+        }
+        
+        /* 增强上标减号符号的显示，让它更长 */
+        .eq {
+            position: relative;
+        }
+        
+        /* 使用 CSS 来让上标符号更明显 */
+        .eq {
+            text-rendering: optimizeLegibility;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .eq-total {
+            background: linear-gradient(135deg, rgba(46, 204, 113, 0.15) 0%, rgba(39, 174, 96, 0.1) 100%);
+            border: 1px solid rgba(46, 204, 113, 0.3);
+            font-weight: 500;
+        }
+
+        .eq-secondary {
+            background: linear-gradient(135deg, rgba(230, 126, 34, 0.12) 0%, rgba(211, 84, 0, 0.08) 100%);
+            border: 1px solid rgba(230, 126, 34, 0.25);
+            font-size: 0.96em;
+            line-height: 1.8;
+        }
+
+        .secondary-reactions .eq-label {
+            color: #d35400;
+        }
+
+        .explanation {
+            font-size: 1em;
+            line-height: 1.7;
+            color: #4a6580;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid rgba(100, 140, 170, 0.2);
+        }
+
+        /* 标签引线样式 */
+        .label-tag {
+            position: absolute;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(100, 140, 170, 0.3);
+            padding: 6px 14px;
+            font-size: 14px;
+            z-index: 20;
+            border-radius: 6px;
+            color: #3d5a73;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            font-weight: 500;
+        }
+
+        .line {
+            position: absolute;
+            background: rgba(100, 140, 170, 0.5);
+            height: 2px;
+            z-index: 19;
+        }
+
+        /* 动态离子容器 */
+        #ionContainer {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>钢铁电化学腐蚀模拟</h1>
+    <div class="subtitle">析氢腐蚀 · 吸氧腐蚀 | 原电池微观原理可视化</div>
+
+    <div class="lab-container">
+        
+        <!-- 1. 宏观现象 -->
+        <div class="beaker-wrapper">
+            <div class="line" style="top: 260px; left: 25px; width: 90px;"></div>
+            <div class="label-tag" style="top: 248px; left: -80px;">钢铁 (Fe-C)</div>
+
+            <div class="beaker">
+                <div class="solution" id="solution">
+                    <div class="iron-nail" id="nail">
+                        <div class="carbon-spot" style="top:18%; left:25%"></div>
+                        <div class="carbon-spot" style="top:38%; left:65%"></div>
+                        <div class="carbon-spot" style="top:58%; left:20%"></div>
+                        <div class="carbon-spot" style="top:78%; left:55%"></div>
+                    </div>
+                    <div id="effects-layer"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. 微观原电池原理 -->
+        <div class="microscope-container">
+            <div class="micro-title">微观原电池原理</div>
+            
+            <div class="cell-container">
+                <!-- 溶液层 -->
+                <div class="solution-layer" id="solutionLayer">
+                    <span class="solution-label" id="solutionLabel">电解质溶液</span>
+                    <div id="ionContainer"></div>
+                </div>
+
+                <!-- 电极 -->
+                <div class="electrodes">
+                    <div class="electrode electrode-fe">
+                        <div class="electrode-symbol">Fe</div>
+                        <div class="electrode-label">负极 · 阳极</div>
+                    </div>
+                    <div class="electrode electrode-c">
+                        <div class="electrode-symbol">C</div>
+                        <div class="electrode-label">正极 · 阴极</div>
+                    </div>
+                </div>
+
+                <!-- 电子流 -->
+                <div class="electron-flow-container">
+                    <div class="electron-path-line">
+                        <div class="electron"></div>
+                        <div class="electron"></div>
+                        <div class="electron"></div>
+                        <div class="electron"></div>
+                        <div class="electron"></div>
+                    </div>
+                    <div class="flow-label">电子流 e⁻ →</div>
+                </div>
+            </div>
+
+            <!-- pH 控制移到这里 -->
+            <div class="ph-control">
+                <div class="ph-header">
+                    <div class="ph-value-box">
+                        <span class="ph-prefix">pH</span>
+                        <span class="ph-number" id="phDisplay">2.0</span>
+                    </div>
+                </div>
+                <div class="ph-slider-container">
+                    <input type="range" id="phSlider" class="ph-slider" min="1" max="14" value="2" step="0.1">
+                    <div class="ph-scale">
+                        <span class="acidic">酸性</span>
+                        <span class="neutral">中性</span>
+                        <span class="alkaline">碱性</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. 控制面板 -->
+        <div class="controls">
+            <div class="reaction-box" id="reactionBox">
+                <h3 class="corrosion-title" id="corrosionTitle" style="color:#e74c3c;">析氢腐蚀</h3>
+                <div class="mixed-warning" id="mixedWarning">⚠ 过渡区间：混合腐蚀进行中</div>
+
+                <div class="eq-section">
+                    <div class="eq-label">负极反应（氧化）</div>
+                    <div class="eq" id="anodeEq"></div>
+                </div>
+                
+                <div class="eq-section">
+                    <div class="eq-label">正极反应（还原）</div>
+                    <div class="eq" id="cathodeEq"></div>
+                </div>
+
+                <div class="eq-section" id="totalEqSection">
+                    <div class="eq-label">总反应</div>
+                    <div class="eq eq-total" id="totalEq"></div>
+                </div>
+
+                <div class="eq-section secondary-reactions" id="secondaryReactions" style="display:none;">
+                    <div class="eq-label">后续反应（生锈）</div>
+                    <div class="eq eq-secondary" id="secondaryEq"></div>
+                </div>
+
+                <div class="explanation" id="explanation">
+                    酸性较强，H⁺ 浓度高，在正极（碳）表面得到电子，产生氢气。
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const slider = document.getElementById('phSlider');
+        const phDisplay = document.getElementById('phDisplay');
+        const solution = document.getElementById('solution');
+        const solutionLayer = document.getElementById('solutionLayer');
+        const solutionLabel = document.getElementById('solutionLabel');
+        const ionContainer = document.getElementById('ionContainer');
+        const effectsLayer = document.getElementById('effects-layer');
+        const reactionBox = document.getElementById('reactionBox');
+        const corrosionTitle = document.getElementById('corrosionTitle');
+        const anodeEq = document.getElementById('anodeEq');
+        const cathodeEq = document.getElementById('cathodeEq');
+        const totalEq = document.getElementById('totalEq');
+        const secondaryReactions = document.getElementById('secondaryReactions');
+        const secondaryEq = document.getElementById('secondaryEq');
+        const explanation = document.getElementById('explanation');
+        const mixedWarning = document.getElementById('mixedWarning');
+
+        let bubbleInterval = null;
+        let rustInterval = null;
+        let microAnimInterval = null;
+
+        // 颜色映射
+        function getPhColor(ph) {
+            if(ph < 4.3) return { 
+                macro: 'linear-gradient(180deg, rgba(231, 76, 60, 0.4) 0%, rgba(231, 76, 60, 0.6) 100%)',
+                micro: 'rgba(231, 76, 60, 0.2)'
+            };
+            if(ph < 7.5) return { 
+                macro: 'linear-gradient(180deg, rgba(46, 204, 113, 0.4) 0%, rgba(46, 204, 113, 0.6) 100%)',
+                micro: 'rgba(46, 204, 113, 0.2)'
+            };
+            if(ph < 10) return { 
+                macro: 'linear-gradient(180deg, rgba(52, 152, 219, 0.4) 0%, rgba(52, 152, 219, 0.6) 100%)',
+                micro: 'rgba(52, 152, 219, 0.2)'
+            };
+            return { 
+                macro: 'linear-gradient(180deg, rgba(155, 89, 182, 0.4) 0%, rgba(155, 89, 182, 0.6) 100%)',
+                micro: 'rgba(155, 89, 182, 0.2)'
+            };
+        }
+
+        // --- 宏观动画 ---
+
+        function createBubble() {
+            const b = document.createElement('div');
+            b.className = 'bubble';
+            const offset = (Math.random() * 45) - 22; 
+            b.style.left = `calc(50% + ${offset}px)`;
+            b.style.bottom = (Math.random() * 220 + 35) + 'px';
+            const size = Math.random() * 8 + 5;
+            b.style.width = size + 'px';
+            b.style.height = size + 'px';
+            b.style.animationDuration = (1.5 + Math.random()) + 's';
+            effectsLayer.appendChild(b);
+            setTimeout(() => b.remove(), 2500);
+        }
+
+        function createRust() {
+            if(document.querySelectorAll('.rust-spot').length > 18) return;
+            const r = document.createElement('div');
+            r.className = 'rust-spot';
+            const offset = (Math.random() * 48) - 24;
+            r.style.left = `calc(50% + ${offset}px)`;
+            r.style.bottom = (Math.random() * 260 + 30) + 'px';
+            const size = Math.random() * 12 + 6;
+            r.style.width = size + 'px';
+            r.style.height = size + 'px';
+            effectsLayer.appendChild(r);
+            setTimeout(() => {
+                r.style.transition = 'opacity 2s';
+                r.style.opacity = 0;
+                setTimeout(() => r.remove(), 2000);
+            }, 4000);
+        }
+
+        // --- 微观动画 ---
+
+        function createFeIon() {
+            const ion = document.createElement('div');
+            ion.className = 'ion fe-ion';
+            ion.textContent = 'Fe²⁺';
+            ion.style.left = '15%';
+            ion.style.top = '60%';
+            ion.style.setProperty('--tx', (Math.random() * 40 - 20) + 'px');
+            ion.style.setProperty('--ty', (-50 - Math.random() * 30) + 'px');
+            ion.style.animationDuration = (2.5 + Math.random()) + 's';
+            ionContainer.appendChild(ion);
+            setTimeout(() => ion.remove(), 3500);
+        }
+
+        function createHIon() {
+            const ion = document.createElement('div');
+            ion.className = 'ion h-ion';
+            ion.textContent = 'H⁺';
+            ion.style.left = (60 + Math.random() * 30) + '%';
+            ion.style.top = '10%';
+            ion.style.animationDuration = (1.5 + Math.random() * 0.5) + 's';
+            ionContainer.appendChild(ion);
+            setTimeout(() => ion.remove(), 2500);
+        }
+
+        function createH2Bubble() {
+            const bubble = document.createElement('div');
+            bubble.className = 'h2-bubble';
+            bubble.textContent = 'H₂';
+            bubble.style.left = (62 + Math.random() * 28) + '%';
+            bubble.style.top = '38%';
+            bubble.style.animationDuration = (1.8 + Math.random() * 0.4) + 's';
+            ionContainer.appendChild(bubble);
+            setTimeout(() => bubble.remove(), 2500);
+        }
+
+        function createO2Particle() {
+            const particle = document.createElement('div');
+            particle.className = 'ion o2-particle';
+            particle.textContent = 'O₂';
+            particle.style.left = (60 + Math.random() * 30) + '%';
+            particle.style.top = '5%';
+            particle.style.animationDuration = (2 + Math.random() * 0.5) + 's';
+            ionContainer.appendChild(particle);
+            setTimeout(() => particle.remove(), 3000);
+        }
+
+        function createOHIon() {
+            const ion = document.createElement('div');
+            ion.className = 'ion oh-ion';
+            ion.textContent = 'OH⁻';
+            ion.style.left = (65 + Math.random() * 25) + '%';
+            ion.style.top = '30%';
+            ion.style.animationDuration = (1.8 + Math.random() * 0.4) + 's';
+            ionContainer.appendChild(ion);
+            setTimeout(() => ion.remove(), 2500);
+        }
+
+        // --- 主逻辑 ---
+        
+        // 增强上标减号符号的显示
+        function enhanceSuperscript(text) {
+            // 将 ⁻ 替换为带样式的版本，使其更长更明显，并加粗
+            return text.replace(/⁻/g, '<span style="display:inline-block; transform:scaleX(1.5); margin-left:0.05em; margin-right:0.05em; font-weight:bold;">⁻</span>');
+        }
+
+        function updateSimulation() {
+            const ph = parseFloat(slider.value);
+            phDisplay.textContent = ph.toFixed(1);
+            
+            // 更新颜色
+            const colors = getPhColor(ph);
+            solution.style.background = colors.macro;
+            solutionLayer.style.background = `linear-gradient(180deg, ${colors.micro} 0%, ${colors.micro.replace('0.25', '0.4')} 100%)`;
+
+            // 清除旧的定时器
+            clearInterval(bubbleInterval);
+            clearInterval(rustInterval);
+            clearInterval(microAnimInterval);
+            ionContainer.innerHTML = '';
+            // 清除宏观动画元素
+            effectsLayer.innerHTML = '';
+            
+            // 清除所有方程式的revealed类，重置显示状态
+            document.querySelectorAll('.eq').forEach(eq => {
+                eq.classList.remove('revealed');
+            });
+
+            // 根据 pH 判断腐蚀类型
+            
+            // A. 析氢腐蚀 (pH < 4.3)
+            if (ph < 4.3) {
+                corrosionTitle.textContent = "析氢腐蚀";
+                corrosionTitle.style.color = "#e74c3c";
+                reactionBox.style.borderLeftColor = "#e74c3c";
+                mixedWarning.style.display = "none";
+                
+                anodeEq.innerHTML = enhanceSuperscript("Fe − 2e⁻ = Fe²⁺");
+                cathodeEq.innerHTML = enhanceSuperscript("2H⁺ + 2e⁻ = H₂↑");
+                totalEq.innerHTML = enhanceSuperscript("Fe + 2H⁺ = Fe²⁺ + H₂↑");
+                secondaryReactions.style.display = "none";
+                explanation.innerHTML = "强酸性环境下，溶液中大量的 <b style='color:#c0392b'>H⁺</b> 在正极（碳）表面得到电子，产生氢气气泡上升。";
+                
+                solutionLabel.textContent = "酸性溶液";
+
+                // 动画
+                bubbleInterval = setInterval(createBubble, 100);
+                microAnimInterval = setInterval(() => {
+                    createFeIon();
+                    createH2Bubble();
+                }, 350);
+            } 
+            
+            // B. 吸氧腐蚀 (pH >= 4.3)
+            else {
+                corrosionTitle.textContent = "吸氧腐蚀";
+                corrosionTitle.style.color = "#3498db";
+                reactionBox.style.borderLeftColor = "#3498db";
+                mixedWarning.style.display = "none";
+
+                anodeEq.innerHTML = enhanceSuperscript("Fe − 2e⁻ = Fe²⁺");
+                cathodeEq.innerHTML = enhanceSuperscript("O₂ + 2H₂O + 4e⁻ = 4OH⁻");
+                totalEq.innerHTML = enhanceSuperscript("2Fe + O₂ + 2H₂O = 2Fe(OH)₂");
+                secondaryReactions.style.display = "block";
+                secondaryEq.innerHTML = enhanceSuperscript("4Fe(OH)₂ + O₂ + 2H₂O = 4Fe(OH)₃<br>2Fe(OH)₃ = Fe₂O₃·3H₂O (铁锈)<br><span style='color:#8B4513'>或写作：Fe₂O₃·xH₂O</span>");
+                explanation.innerHTML = "中性或碱性环境下，<b style='color:#27ae60'>O₂</b> 在正极得电子生成 OH⁻，Fe²⁺ 与 OH⁻ 结合后进一步氧化生锈。";
+                
+                // 吸氧腐蚀的方程式默认隐藏，不添加revealed类
+
+                solutionLabel.textContent = "中性/碱性溶液";
+
+                // 动画
+                rustInterval = setInterval(createRust, 350);
+                microAnimInterval = setInterval(() => {
+                    createFeIon();
+                    createO2Particle();
+                    createOHIon();
+                }, 400);
+            }
+        }
+
+        // 为方程式添加悬停显示效果，显示后保持显示
+        // 使用事件委托，避免重复绑定和联动问题
+        const reactionBoxContainer = document.getElementById('reactionBox');
+        if (reactionBoxContainer) {
+            reactionBoxContainer.addEventListener('mouseenter', (e) => {
+                const section = e.target.closest('.eq-section');
+                if (section) {
+                    const eq = section.querySelector('.eq');
+                    if (eq && !eq.classList.contains('revealed')) {
+                        eq.classList.add('revealed');
+                    }
+                }
+            }, true);
+        }
+
+        slider.addEventListener('input', updateSimulation);
+        updateSimulation();
+    </script>
+</body>
+</html>

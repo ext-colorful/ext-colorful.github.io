@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>金属阴极保护技术演示系统</title>
+    <style>
+        :root {
+            --bg-color: #f5f7fa;
+            --panel-bg: #ffffff;
+            --primary: #1890ff;
+            --danger: #ff4d4f;
+            --success: #52c41a;
+            --text-dark: #2c3e50;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: "Segoe UI", "Microsoft YaHei", sans-serif;
+            background: var(--bg-color);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* --- 顶部导航 --- */
+        header {
+            background: #263238;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            z-index: 10;
+        }
+
+        h1 { color: #fff; font-size: 18px; margin: 0; letter-spacing: 1px; }
+
+        .nav-tabs {
+            display: flex;
+            background: rgba(0,0,0,0.2);
+            border-radius: 6px;
+            padding: 4px;
+            gap: 4px;
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: none;
+            color: #b0bec5;
+            padding: 8px 20px;
+            cursor: pointer;
+            border-radius: 4px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        .tab-btn:hover { color: #fff; background: rgba(255,255,255,0.05); }
+        .tab-btn.active { background: var(--primary); color: #fff; font-weight: bold; }
+
+        .btn-reset {
+            background: #ffc107;
+            color: #333;
+            border: none;
+            padding: 6px 16px;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* --- 主内容 --- */
+        main {
+            flex: 1;
+            padding: 20px;
+            display: flex;
+            gap: 20px;
+            position: relative;
+        }
+
+        .view-panel {
+            flex: 1;
+            background: var(--panel-bg);
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            border: 1px solid #e1e4e8;
+        }
+
+        .panel-head {
+            padding: 12px 20px;
+            border-bottom: 1px solid #eee;
+            background: #fafbfc;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .panel-title { font-weight: bold; color: var(--text-dark); margin: 0; }
+        
+        .status-tag {
+            font-size: 13px;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        .tag-green { background: #f6ffed; color: #52c41a; border: 1px solid #b7eb8f; }
+        .tag-red { background: #fff1f0; color: #f5222d; border: 1px solid #ffa39e; }
+
+        .canvas-container {
+            flex: 1;
+            position: relative;
+            background: linear-gradient(180deg, #e3f2fd 0%, #bbdefb 100%);
+        }
+
+        canvas { width: 100%; height: 100%; display: block; }
+
+        /* --- 底部控制栏 --- */
+        .controls {
+            height: 70px;
+            background: #fff;
+            border-top: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        /* 新版开关样式 (分离式) */
+        .switch-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 20px;
+            background: #f8f9fa;
+            border-radius: 30px;
+            border: 1px solid #eee;
+        }
+
+        /* 纯净的滑块 */
+        .toggle-btn {
+            width: 50px;
+            height: 28px;
+            background: #bdc3c7;
+            border-radius: 14px;
+            position: relative;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .toggle-btn::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 24px;
+            height: 24px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        /* 激活状态 */
+        .toggle-btn.active { background: var(--success); }
+        .toggle-btn.active::after { transform: translateX(22px); }
+
+        .switch-label { font-weight: bold; color: #555; font-size: 14px; }
+        .status-text { font-family: monospace; font-weight: bold; font-size: 16px; min-width: 40px; }
+
+        .hidden { display: none !important; }
+
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>⚡ 金属阴极保护技术演示系统</h1>
+    <div class="nav-tabs">
+        <button class="tab-btn active" onclick="setMode(1)">1. 牺牲阳极法</button>
+        <button class="tab-btn" onclick="setMode(2)">2. 外加电源法 (ICCP)</button>
+        <button class="tab-btn" onclick="setMode(3)">3. 对比总结</button>
+    </div>
+    <button class="btn-reset" onclick="resetAll()">重置演示</button>
+</header>
+
+<main>
+    <!-- 模块 A: 牺牲阳极 -->
+    <div id="panel-sa" class="view-panel">
+        <div class="panel-head">
+            <h3 class="panel-title">牺牲阳极保护法</h3>
+            <span id="tag-sa" class="status-tag tag-green">● 保护中</span>
+        </div>
+        <div class="canvas-container">
+            <canvas id="cvs-sa"></canvas>
+        </div>
+        <div class="controls">
+            <span style="color:#666;font-size:14px;">💡 提示：观察左侧锌阳极的逐渐消耗过程，右侧铁结构受到保护不会生锈</span>
+        </div>
+    </div>
+
+    <!-- 模块 B: ICCP -->
+    <div id="panel-iccp" class="view-panel hidden">
+        <div class="panel-head">
+            <h3 class="panel-title">外加电源法 (ICCP)</h3>
+            <span id="tag-iccp" class="status-tag tag-green">● 电源开启</span>
+        </div>
+        <div class="canvas-container">
+            <canvas id="cvs-iccp"></canvas>
+        </div>
+        <div class="controls">
+            <!-- 你的需求：开关把内容也展示到按钮里了不好看 -->
+            <!-- 解决方案：分开写，左边是开关，右边是文字 -->
+            <div class="switch-wrapper">
+                <span class="switch-label">直流电源:</span>
+                <div id="iccp-toggle" class="toggle-btn active" onclick="togglePower()"></div>
+                <span id="iccp-state-text" class="status-text" style="color:var(--success)">ON</span>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script>
+    /** 配置 */
+    const CFG = {
+        electronSpeed: 0.5, // 电子更慢，便于观察
+        zincMaxLife: 3000,
+        zincDecayRate: 0.05, // 阳极消耗速度（加快）
+        colors: {
+            wire: '#2c3e50',
+            water: 'rgba(33, 150, 243, 0.3)',
+            sky: '#e3f2fd',
+            zinc: '#b0bec5',
+            iron: '#5c6bc0',
+            inert: '#455a64'
+        }
+    };
+
+    /** 状态 */
+    const state = {
+        mode: 1,
+        sa: { life: 100, electrons: [], rust: 0, wave: 0 },
+        iccp: { on: true, electrons: [], bubbles: [], rust: 0, wave: 0 }
+    };
+
+    const cvsSA = document.getElementById('cvs-sa');
+    const ctxSA = cvsSA.getContext('2d');
+    const cvsICCP = document.getElementById('cvs-iccp');
+    const ctxICCP = cvsICCP.getContext('2d');
+    // 标记当前绘制场景（sa / iccp），用于符号显示判断
+    let CURRENT_SCENE = 'sa';
+
+    // --- 核心逻辑 ---
+
+    function init() {
+        resize();
+        window.addEventListener('resize', resize);
+        loop();
+    }
+
+    function resize() {
+        [cvsSA, cvsICCP].forEach(cvs => {
+            if(cvs.parentElement) {
+                cvs.width = cvs.parentElement.clientWidth;
+                cvs.height = cvs.parentElement.clientHeight;
+            }
+        });
+    }
+
+    window.setMode = function(m) {
+        state.mode = m;
+        document.querySelectorAll('.tab-btn').forEach((b,i)=> b.classList.toggle('active', i+1===m));
+        
+        const p1 = document.getElementById('panel-sa');
+        const p2 = document.getElementById('panel-iccp');
+        
+        if(m===1) { p1.classList.remove('hidden'); p2.classList.add('hidden'); }
+        else if(m===2) { p1.classList.add('hidden'); p2.classList.remove('hidden'); }
+        else { p1.classList.remove('hidden'); p2.classList.remove('hidden'); }
+        
+        setTimeout(resize, 10);
+    };
+
+    window.togglePower = function() {
+        state.iccp.on = !state.iccp.on;
+        if(!state.iccp.on) state.iccp.electrons = [];
+        updateUI();
+    };
+
+    window.resetAll = function() {
+        state.sa.life = 100; state.sa.rust = 0; state.sa.electrons = [];
+        state.iccp.on = true; state.iccp.rust = 0; state.iccp.electrons = [];
+        updateUI();
+    };
+
+    function updateUI() {
+        const t = document.getElementById('iccp-toggle');
+        const txt = document.getElementById('iccp-state-text');
+        const tag = document.getElementById('tag-iccp');
+        
+        if(state.iccp.on) {
+            t.classList.add('active');
+            txt.innerText = "ON"; txt.style.color = "var(--success)";
+            tag.className = "status-tag tag-green"; tag.innerText = "● 电源开启";
+        } else {
+            t.classList.remove('active');
+            txt.innerText = "OFF"; txt.style.color = "#999";
+            tag.className = "status-tag tag-red"; tag.innerText = "● 失去保护";
+        }
+    }
+
+    function loop() {
+        // SA Logic
+        if(state.mode !== 2) {
+            const s = state.sa;
+            if(s.life > 0) {
+                s.life -= CFG.zincDecayRate; // 使用配置的消耗速度
+                if(Math.random()<0.03) s.electrons.push({t:0});
+                if(s.rust > 0) s.rust -= 0.5;
+            } else {
+                s.life = 0;
+                s.electrons = []; // 耗尽后停止电子流动
+                if(s.rust < 100) s.rust += 0.8; // 加快生锈速度
+            }
+            // UI Tag Update
+            const tag = document.getElementById('tag-sa');
+            if(s.life <= 0) {
+                tag.className = "status-tag tag-red"; tag.innerText = "⚠️ 阳极已耗尽";
+            } else if(s.life <= 15) {
+                tag.className = "status-tag"; tag.innerText = "⚡ 阳极即将耗尽";
+                tag.style.background = "#fff1f0"; tag.style.color = "#ff4d4f"; tag.style.border = "1px solid #ffa39e";
+            } else if(s.life <= 40) {
+                tag.className = "status-tag"; tag.innerText = "🔋 阳极消耗中";
+                tag.style.background = "#fff7e6"; tag.style.color = "#fa8c16"; tag.style.border = "1px solid #ffd591";
+            } else {
+                tag.className = "status-tag tag-green"; tag.innerText = "✓ 保护正常";
+            }
+            updateElectrons(s.electrons);
+            s.wave += 0.02;
+            drawScene(ctxSA, 'sa');
+        }
+
+        // ICCP Logic
+        if(state.mode !== 1) {
+            const s = state.iccp;
+            if(s.on) {
+                if(Math.random()<0.03) s.electrons.push({t:0});
+                if(Math.random()<0.05) s.bubbles.push({x:(Math.random()-0.5)*20, y:0});
+                if(s.rust > 0) s.rust -= 0.5;
+            } else {
+                if(s.rust < 100) s.rust += 0.2;
+            }
+            updateElectrons(s.electrons);
+            updateBubbles(s.bubbles);
+            s.wave += 0.02;
+            drawScene(ctxICCP, 'iccp');
+        }
+
+        requestAnimationFrame(loop);
+    }
+
+    function updateElectrons(arr) {
+        for(let i=arr.length-1; i>=0; i--) {
+            arr[i].t += 0.005 * CFG.electronSpeed;
+            if(arr[i].t >= 1) arr.splice(i,1);
+        }
+    }
+    function updateBubbles(arr) {
+        for(let i=arr.length-1; i>=0; i--) {
+            arr[i].y += 1.5; if(arr[i].y > 150) arr.splice(i,1);
+        }
+    }
+
+    // --- 绘图 (修复：对称性、遮挡问题、电池外观) ---
+
+    function drawScene(ctx, type) {
+        CURRENT_SCENE = type;
+        const w = ctx.canvas.width;
+        const h = ctx.canvas.height;
+        if(w===0) return;
+        
+        ctx.clearRect(0,0,w,h);
+        const data = (type==='sa') ? state.sa : state.iccp;
+
+        // 1. 水面
+        const waterLevel = h * 0.45;
+        ctx.fillStyle = CFG.colors.water;
+        ctx.beginPath();
+        ctx.moveTo(0, h); ctx.lineTo(0, waterLevel);
+        for(let x=0; x<=w; x+=20) ctx.lineTo(x, waterLevel + Math.sin(x*0.01 + data.wave)*8);
+        ctx.lineTo(w, h); ctx.fill();
+
+        // 布局坐标
+        const floorY = h * 0.8;
+        const centerX = w * 0.5;
+        // 左右完全对称
+        const offset = Math.min(w * 0.25, 200); 
+        const anodeX = centerX - offset;
+        const cathodeX = centerX + offset;
+        const wireH = h * 0.25; // 导线高度
+
+        // 2. 先计算金属块位置（为了导线连接）
+        let anodeTop = {x: anodeX, y: floorY-120};
+        let cathodeTop = {x: cathodeX, y: floorY-120};
+
+        // 计算实际高度
+        if(type==='sa') {
+            const lifePct = data.life/100;
+            // 让阳极完全消失的效果更明显
+            const hNow = lifePct <= 0 ? 5 : 120 * (0.05 + 0.95 * lifePct);
+            anodeTop = {x: anodeX, y: floorY - hNow};
+        }
+
+        // 3. 先绘制电源与导线（在金属块之前，这样符号就不会被遮挡）
+        ctx.lineWidth = 4;
+        ctx.lineJoin = 'round';
+        ctx.strokeStyle = CFG.colors.wire;
+        ctx.beginPath();
+
+        let path = []; // 电子路径
+
+        if(type==='sa') {
+            // 简单回路：左 -> 上 -> 右 -> 下
+            ctx.moveTo(anodeTop.x, anodeTop.y);
+            ctx.lineTo(anodeTop.x, wireH);
+            ctx.lineTo(cathodeTop.x, wireH);
+            ctx.lineTo(cathodeTop.x, cathodeTop.y);
+            ctx.stroke();
+
+            // 路径
+            path = [
+                anodeTop, 
+                {x:anodeTop.x, y:wireH}, 
+                {x:cathodeTop.x, y:wireH}, 
+                cathodeTop
+            ];
+        } else {
+            // ICCP 回路：连接电源
+            // 你的需求：电池画得好一点，线对称
+            const boxY = h * 0.12; 
+            const boxW = 140;
+            const boxH = 70;
+            const termL = centerX - 40;
+            const termR = centerX + 40;
+            const termY = boxY + boxH; // 接线柱Y
+
+            // 左路导线: 阳极 -> 上 -> 右 -> 接线柱左
+            ctx.moveTo(anodeTop.x, anodeTop.y);
+            ctx.lineTo(anodeTop.x, wireH + 20); // 稍微拐一下
+            ctx.lineTo(termL, wireH + 20);
+            ctx.lineTo(termL, termY);
+            
+            // 右路导线: 阴极 -> 上 -> 左 -> 接线柱右
+            ctx.moveTo(cathodeTop.x, cathodeTop.y);
+            ctx.lineTo(cathodeTop.x, wireH + 20);
+            ctx.lineTo(termR, wireH + 20);
+            ctx.lineTo(termR, termY);
+            
+            ctx.stroke();
+
+            // 绘制高级电源
+            drawPowerDevice(ctx, centerX, boxY, boxW, boxH, data.on);
+
+            // 路径: 电源右(-) -> 阴极
+            path = [
+                {x:termR, y:termY},
+                {x:termR, y:wireH + 20},
+                {x:cathodeTop.x, y:wireH + 20},
+                cathodeTop
+            ];
+        }
+
+        // 4. 再绘制金属块（在导线之后，符号就不会被遮挡）
+        // A. 阳极
+        if(type==='sa') {
+            const lifePct = data.life/100;
+            // 阳极消耗效果：高度和宽度都变化，完全耗尽时几乎消失
+            const hNow = lifePct <= 0 ? 5 : 120 * (0.05 + 0.95 * lifePct);
+            const wNow = lifePct <= 0 ? 20 : 80 * (0.25 + 0.75 * lifePct);
+            drawBlock(ctx, anodeX, floorY, wNow, hNow, 'zinc', 0, lifePct);
+        } else {
+            drawBlock(ctx, anodeX, floorY, 60, 120, 'inert', 0, 1);
+            drawBubbles(ctx, anodeX, floorY-120, data.bubbles);
+        }
+
+        // B. 阴极
+        drawBlock(ctx, cathodeX, floorY, 80, 120, 'iron', data.rust, 1);
+
+        // 5. 绘制电子（最后绘制，确保可见）
+        if( (type==='sa' && data.life>0) || (type==='iccp' && data.on) ) {
+            drawElectrons(ctx, data.electrons, path);
+        }
+    }
+
+    // --- 绘制组件细节 ---
+
+    function drawBlock(ctx, cx, by, w, h, type, rust, lifePct = 1) {
+        const x = cx - w/2;
+        const y = by - h;
+        const depth = 15;
+        
+        // 调色板（带渐变，金属感更强）
+        const fade = Math.max(lifePct, 0); // 阳极消耗时整体淡化
+        const palette = {
+            zinc: {
+                face: [`rgba(222,230,236,${fade})`, `rgba(194,205,214,${fade})`],
+                top:  [`rgba(244,247,249,${fade})`, `rgba(220,230,236,${fade})`],
+                side: [`rgba(176,190,197,${fade})`, `rgba(146,158,166,${fade})`],
+                stroke: `rgba(146,158,166,${fade})`,
+                highlight: `rgba(255,255,255,${0.18*fade})`
+            },
+            iron: {
+                face: ['#7f8ac9', '#5f6bb8'],
+                top:  ['#aab4f0', '#7f8ac9'],
+                side: ['#5460a6', '#454e8d'],
+                stroke: '#3d447a',
+                highlight: 'rgba(255,255,255,0.12)'
+            },
+            inert: {
+                face: ['#4a5964', '#39444c'],
+                top:  ['#62727e', '#4a5964'],
+                side: ['#2b3339', '#22292e'],
+                stroke: '#1d252a',
+                highlight: 'rgba(255,255,255,0.08)'
+            }
+        }[type];
+
+        // 侧面
+        const sideGrad = ctx.createLinearGradient(x+w, y-depth, x+w, y+h);
+        sideGrad.addColorStop(0, palette.side[0]);
+        sideGrad.addColorStop(1, palette.side[1]);
+        ctx.fillStyle = sideGrad;
+        ctx.beginPath(); ctx.moveTo(x+w,y); ctx.lineTo(x+w+depth,y-depth); 
+        ctx.lineTo(x+w+depth,y+h-depth); ctx.lineTo(x+w,y+h); ctx.fill();
+
+        // 顶面
+        const topGrad = ctx.createLinearGradient(x, y-depth, x+w+depth, y-depth);
+        topGrad.addColorStop(0, palette.top[0]);
+        topGrad.addColorStop(1, palette.top[1]);
+        ctx.fillStyle = topGrad;
+        ctx.beginPath(); ctx.moveTo(x,y); ctx.lineTo(x+depth,y-depth);
+        ctx.lineTo(x+w+depth,y-depth); ctx.lineTo(x+w,y); ctx.fill();
+
+        // 正面
+        const faceGrad = ctx.createLinearGradient(x, y, x, y+h);
+        faceGrad.addColorStop(0, palette.face[0]);
+        faceGrad.addColorStop(1, palette.face[1]);
+        ctx.fillStyle = faceGrad;
+        ctx.fillRect(x,y,w,h);
+
+        // 高光遮罩
+        ctx.fillStyle = palette.highlight;
+        ctx.fillRect(x, y, w, h*0.25);
+
+        // 边框线条
+        ctx.strokeStyle = palette.stroke;
+        ctx.lineWidth = 1.2;
+        ctx.strokeRect(x, y, w, h);
+
+        // 铁锈
+        if(type==='iron' && rust>0) {
+            ctx.save(); ctx.beginPath(); ctx.rect(x,y,w,h); ctx.clip();
+            ctx.fillStyle = `rgba(140,50,30,${rust/100 * 0.9})`;
+            ctx.fillRect(x,y,w,h);
+            // 锈斑
+            if(rust>20) {
+                ctx.fillStyle='rgba(60,20,10,0.5)';
+                for(let i=0; i<8; i++) {
+                    ctx.beginPath(); 
+                    ctx.arc(x+w*0.2+(i*23)%w, y+h*0.2+(i*17)%h, 4+i, 0, 6.28); 
+                    ctx.fill();
+                }
+            }
+            ctx.restore();
+        }
+
+        // 文字标签
+        ctx.fillStyle = '#333';
+        ctx.font = 'bold 12px Arial';
+        ctx.textAlign = 'center';
+        let lbl = type==='zinc'?'Zn (阳极)':(type==='iron'?'Fe（被保护 / 阴极）':'辅助阳极');
+        ctx.fillText(lbl, cx, by+20);
+
+        // 极性符号 - 精美且区分正负
+        // 规则：
+        // - SA 模式：锌为负(-)，铁为正(+)
+        // - ICCP 模式：辅助阳极(inert)为正(+)，被保护铁为负(-)
+        // 电极本身不再标注 + / −（Zn、Fe、辅助阳极都不显示）
+        const polarity = null;
+
+        if(polarity && lifePct > 0.02) {
+            const symbolY = y - depth - 25;
+            
+            // 绘制精美的标签背景
+            ctx.save();
+            
+            // 阴影效果
+            ctx.shadowColor = 'rgba(0,0,0,0.15)';
+            ctx.shadowBlur = 8;
+            ctx.shadowOffsetX = 0;
+            ctx.shadowOffsetY = 2;
+            
+            // 背景圆形
+            const bgGradient = ctx.createRadialGradient(cx, symbolY, 0, cx, symbolY, 22);
+            const isNegative = polarity === '−';
+            if(isNegative) {
+                bgGradient.addColorStop(0, '#fff9e6'); // 温暖黄
+                bgGradient.addColorStop(1, '#ffeaa7');
+            } else {
+                bgGradient.addColorStop(0, '#ffe6e6'); // 柔和红
+                bgGradient.addColorStop(1, '#ffb3b3');
+            }
+            ctx.fillStyle = bgGradient;
+            ctx.beginPath();
+            ctx.arc(cx, symbolY, 20, 0, 6.28);
+            ctx.fill();
+            
+            ctx.shadowColor = 'transparent';
+            
+            // 边框
+            ctx.strokeStyle = isNegative ? '#ff9f43' : '#ff6b6b';
+            ctx.lineWidth = 2.5;
+            ctx.stroke();
+            
+            ctx.restore();
+            
+            // 绘制符号
+            ctx.font = 'bold 20px Arial';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillStyle = isNegative ? '#ff9f43' : '#ff6b6b';
+            ctx.fillText(polarity, cx, symbolY);
+        }
+    }
+
+    // 绘制高级电源 (你的需求：画好一点，线位置对称)
+    function drawPowerDevice(ctx, cx, y, w, h, isOn) {
+        const x = cx - w/2;
+        
+        // 1. 机箱阴影
+        ctx.shadowColor = 'rgba(0,0,0,0.2)'; ctx.shadowBlur = 10;
+        
+        // 2. 机箱主体 (渐变灰)
+        const grd = ctx.createLinearGradient(x,y,x,y+h);
+        grd.addColorStop(0, '#f5f5f5'); grd.addColorStop(1, '#e0e0e0');
+        ctx.fillStyle = grd;
+        ctx.beginPath(); ctx.roundRect(x, y, w, h, 6); ctx.fill();
+        ctx.shadowBlur = 0; // reset
+        
+        // 边框
+        ctx.strokeStyle = '#bdbdbd'; ctx.lineWidth = 1; ctx.stroke();
+
+        // 3. 液晶屏 (黑色背景，绿色字)
+        ctx.fillStyle = '#222';
+        ctx.fillRect(x + 15, y + 10, w - 30, 25);
+        if(isOn) {
+            ctx.fillStyle = '#00ff00';
+            ctx.font = 'bold 16px "Courier New", monospace';
+            ctx.textAlign = 'center';
+            ctx.fillText("12.0 V", cx, y + 28);
+        } else {
+            ctx.fillStyle = '#444';
+            ctx.font = 'bold 16px monospace';
+            ctx.textAlign = 'center';
+            ctx.fillText("---", cx, y + 28);
+        }
+
+        // 4. 接线柱 (红/黑)
+        const termY = y + h - 12;
+        const termL = cx - 40;
+        const termR = cx + 40;
+        
+        // 左接线柱 (红 +)
+        ctx.beginPath(); ctx.arc(termL, termY, 8, 0, 6.28);
+        ctx.fillStyle = '#d32f2f'; ctx.fill();
+        ctx.strokeStyle = '#b71c1c'; ctx.lineWidth=2; ctx.stroke();
+
+        // 右接线柱 (黑 -)
+        ctx.beginPath(); ctx.arc(termR, termY, 8, 0, 6.28);
+        ctx.fillStyle = '#212121'; ctx.fill();
+        ctx.strokeStyle = '#000'; ctx.stroke();
+
+        // 5. 符号 (画在面板上，永久可见)
+        ctx.font = 'bold 16px Arial';
+        ctx.fillStyle = '#d32f2f'; 
+        ctx.fillText("+", termL, termY - 12); // + 号在红色柱上方
+        
+        ctx.fillStyle = '#000'; 
+        ctx.fillText("-", termR, termY - 12); // - 号在黑色柱上方
+    }
+
+    function drawElectrons(ctx, list, path) {
+        // 电子：更大、更亮、标记清晰
+        list.forEach(e => {
+            // 路径计算
+            const segs = path.length - 1;
+            const step = 1/segs;
+            const idx = Math.floor(e.t / step);
+            const sub = (e.t % step) / step;
+            if(idx >= segs) return;
+            
+            const p1 = path[idx]; const p2 = path[idx+1];
+            const x = p1.x + (p2.x - p1.x)*sub;
+            const y = p1.y + (p2.y - p1.y)*sub;
+
+            // 外层光晕 - 更大半径
+            const outerGlow = ctx.createRadialGradient(x,y,0,x,y,18);
+            outerGlow.addColorStop(0, 'rgba(255,235,59,0.8)');
+            outerGlow.addColorStop(0.5, 'rgba(255,235,59,0.4)');
+            outerGlow.addColorStop(1, 'rgba(255,235,59,0)');
+            ctx.fillStyle = outerGlow;
+            ctx.beginPath(); ctx.arc(x,y,18,0,6.28); ctx.fill();
+
+            // 内层光晕
+            const innerGlow = ctx.createRadialGradient(x,y,0,x,y,10);
+            innerGlow.addColorStop(0, 'rgba(255,245,157,1)');
+            innerGlow.addColorStop(1, 'rgba(255,235,59,0.6)');
+            ctx.fillStyle = innerGlow;
+            ctx.beginPath(); ctx.arc(x,y,10,0,6.28); ctx.fill();
+
+            // 核心圆球 - 更大
+            ctx.fillStyle = '#fff176';
+            ctx.beginPath(); ctx.arc(x,y,8,0,6.28); ctx.fill();
+            ctx.strokeStyle='#fbc02d'; ctx.lineWidth=1.5; ctx.stroke();
+            
+            // e- 标记
+            ctx.font = 'bold 12px Arial';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillStyle = '#000';
+            ctx.fillText("e−", x, y);
+        });
+    }
+
+    function drawBubbles(ctx, x, y, list) {
+        ctx.fillStyle = 'rgba(255,255,255,0.6)';
+        list.forEach(b => {
+            ctx.beginPath(); ctx.arc(x+b.x, y-b.y, 3, 0, 6.28); ctx.fill();
+        });
+    }
+
+    window.onload = init;
+
+</script>
+</body>
+</html>
