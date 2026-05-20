@@ -429,22 +429,23 @@ function setLang(lang) {
     render(lang);
 }
 
-// 核心逻辑修改：获取默认语言
-function getDefaultLang() {
-    // 1. 尝试从 URL 后面拼接的参数获取（例如：?lang=zh 或 ?lang=en）
-    const urlParams = new URLSearchParams(window.location.search);
-    const langParam = urlParams.get('lang');
-    
-    if (langParam) {
-        const lowerLang = langParam.toLowerCase();
-        if (dict[lowerLang]) {
-            return lowerLang;
-        }
-    }
+/** 将扩展 locale（如 zh_CN、en_US）映射为页面语言 zh | en */
+function toPageLang(locale) {
+    if (!locale || locale === "default") return null;
+    const base = locale.toLowerCase().replace(/_/g, "-").split("-")[0];
+    if (base === "zh") return "zh";
+    if (base === "en") return "en";
+    return null;
+}
 
-    // 2. 如果 URL 没有参数或参数不合法，则降级使用系统/浏览器语言
-    const browserLang = navigator.language || navigator.userLanguage;
-    return browserLang.startsWith("zh") ? "zh" : "en";
+function getDefaultLang() {
+    const fromExtension = toPageLang(new URLSearchParams(location.search).get("lang"));
+    if (fromExtension) return fromExtension;
+
+    const locales = navigator.languages?.length
+        ? navigator.languages
+        : [navigator.language || navigator.userLanguage];
+    return locales.some((l) => l.toLowerCase().startsWith("zh")) ? "zh" : "en";
 }
 
 // 执行初始化与首次渲染
