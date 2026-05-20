@@ -4,109 +4,196 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
-<title>Support</title>
-<link rel="icon" type="image/svg+xml" href="umbrella.svg" />
+<title>Support Colorful Background</title>
+<link rel="icon" type="image/svg+xml" href="https://ext-colorful.github.io/umbrella.svg" />
 
 <style>
-body{
-    margin:0;
-    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
-    background:#f6f7f9;
-    color:#111;
+:root {
+    --bg-color: #f8fafc;
+    --text-color: #0f172a;
+    --text-muted: #64748b;
+    --card-bg: #ffffff;
+    --card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+    --card-shadow-hover: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -6px rgba(0, 0, 0, 0.1);
+    --border-color: #e2e8f0;
+    --btn-hover: #f1f5f9;
 }
 
-.wrap{
-    max-width:900px;
-    margin:auto;
-    padding:60px 20px;
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg-color: #0b0f17;
+        --text-color: #f8fafc;
+        --text-muted: #94a3b8;
+        --card-bg: #151b26;
+        --card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+        --card-shadow-hover: 0 20px 25px -5px rgba(0, 0, 0, 0.4);
+        --border-color: #222f43;
+        --btn-hover: #1e293b;
+    }
 }
 
-/* top */
-.topbar{
-    display:flex;
-    justify-content:flex-end;
-    margin-bottom:20px;
+body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg-color);
+    color: var(--text-color);
+    transition: background 0.3s, color 0.3s;
+    -webkit-font-smoothing: antialiased;
 }
 
-button.lang{
-    border:1px solid #ddd;
-    background:#fff;
-    padding:6px 12px;
-    border-radius:10px;
-    cursor:pointer;
-    margin-left:8px;
+.wrap {
+    max-width: 960px;
+    margin: auto;
+    padding: 40px 20px 60px 20px;
+}
+
+/* topbar */
+.topbar {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 40px;
+}
+
+button.lang {
+    border: 1px solid var(--border-color);
+    background: var(--card-bg);
+    color: var(--text-color);
+    padding: 8px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    margin-left: 8px;
+    font-weight: 500;
+    font-size: 14px;
+    transition: all 0.2s;
+}
+
+button.lang:hover {
+    background: var(--btn-hover);
+    transform: translateY(-1px);
+}
+
+button.lang.active {
+    background: var(--text-color);
+    color: var(--bg-color);
+    border-color: var(--text-color);
 }
 
 /* hero */
-.hero{
-    text-align:center;
-    margin-bottom:50px;
+.hero {
+    text-align: center;
+    margin-bottom: 50px;
 }
 
-.hero h1{
-    font-size:32px;
-    margin-bottom:12px;
+/* 融入 Colorful 概念的渐变文字 */
+.hero h1 {
+    font-size: 36px;
+    font-weight: 800;
+    margin-bottom: 16px;
+    letter-spacing: -0.5px;
+    background: linear-gradient(45deg, #ff6b6b, #4dadf7, #339af0, #cc5de8);
+    background-size: 300% 300%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: gradientFlow 8s ease infinite;
 }
 
-.desc{
-    color:#666;
-    line-height:1.8;
-    max-width:720px;
-    margin:auto;
+@keyframes gradientFlow {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
 }
 
-/* grid */
-.grid{
-    display:flex;
-    gap:30px;
-    justify-content:center;
-    flex-wrap:wrap;
+.desc {
+    color: var(--text-muted);
+    line-height: 1.8;
+    max-width: 600px;
+    margin: auto;
+    font-size: 16px;
+    white-space: pre-line; /* 保持换行格式 */
 }
 
-.card{
-    width:300px;
-    background:#fff;
-    border-radius:20px;
-    padding:26px;
-    text-align:center;
-    box-shadow:0 10px 30px rgba(0,0,0,.08);
-    transition:.25s;
+/* 1. 优化 grid 容器，在大屏幕下禁止换行 */
+.grid {
+    display: flex;
+    gap: 24px;
+    justify-content: center;
+    /* 如果你希望大屏幕绝对不换行，可以改为 nowrap。
+       这里推荐用 wrap，但通过缩小卡片来阻止大屏换行，这样手机端依然能自适应 */
+    flex-wrap: wrap; 
+    margin-top: 20px;
 }
 
-.card:hover{
-    transform:translateY(-6px);
-    box-shadow:0 18px 50px rgba(0,0,0,.12);
+/* 2. 适当缩减卡片宽度，从 300px 降到 240px~260px 左右 */
+.card {
+    width: 250px; /* 缩减宽度，给一排排下三个留出更多空间 */
+    background: #fff;
+    border-radius: 20px;
+    padding: 24px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,.08);
+    transition: .25s;
+    
+    /* 让卡片内部垂直居中，标准高度一致 */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between; 
+    text-decoration: none;
 }
 
-.card img{
-    width:220px;
-    border-radius:12px;
-    margin-top:14px;
+/* 只有 PayPal 卡片作为链接时有点击手势 */
+a.card {
+    cursor: pointer;
 }
 
-.tip{
-    margin-top:12px;
-    color:#777;
-    font-size:14px;
+.card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--card-shadow-hover);
+    border-color: #4dadf7;
+}
+
+.card h2 {
+    font-size: 20px;
+    margin: 0 0 20px 0;
+    font-weight: 600;
+}
+
+.img-wrapper {
+    width: 200px;
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #ffffff; /* 确保二维码白底在暗黑模式下也可读 */
+    padding: 10px;
+    border-radius: 16px;
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,0.05);
+}
+
+/* 3. 核心：限制图片包裹层或图片本身的高度 */
+.card img {
+    width: 100%;
+    max-width: 160px;  /* 限制最大宽度 */
+    max-height: 160px; /* 限制最大高度，防止把卡片撑得太长 */
+    object-fit: contain;
+    border-radius: 12px;
+}
+
+.tip {
+    margin-top: 18px;
+    color: var(--text-muted);
+    font-size: 14px;
+    line-height: 1.4;
 }
 
 /* footer */
-.footer{
-    text-align:center;
-    margin-top:50px;
-    color:#888;
-    font-size:14px;
-}
-
-@media (prefers-color-scheme:dark){
-    body{ background:#0f1115; color:#eee; }
-    .card{ background:#1b1d22; }
-    .desc{ color:#aaa; }
-    button.lang{
-        background:#1b1d22;
-        border-color:#333;
-        color:#eee;
-    }
+.footer {
+    text-align: center;
+    margin-top: 60px;
+    color: var(--text-muted);
+    font-size: 14px;
+    border-top: 1px solid var(--border-color);
+    padding-top: 24px;
 }
 </style>
 </head>
@@ -116,8 +203,8 @@ button.lang{
 <div class="wrap">
 
     <div class="topbar">
-        <button class="lang" onclick="setLang('en')">EN</button>
-        <button class="lang" onclick="setLang('zh')">中文</button>
+        <button class="lang" id="btn-en" onclick="setLang('en')">EN</button>
+        <button class="lang" id="btn-zh" onclick="setLang('zh')">中文</button>
     </div>
 
     <div class="hero">
@@ -125,7 +212,7 @@ button.lang{
         <div class="desc" data-i18n="desc"></div>
     </div>
 
-    <!-- payment -->
+    <!-- 支付网格 -->
     <div class="grid" id="grid"></div>
 
     <div class="footer" data-i18n="footer"></div>
@@ -133,80 +220,104 @@ button.lang{
 </div>
 
 <script>
-
 const dict = {
-    en:{
-        title:"❤️ Support Colorful Background",
-        desc:`If Colorful Background makes your browsing experience more enjoyable,
-your support helps keep the project growing.
+    en: {
+        title: "❤️ Support Colorful Background",
+        desc: `If Colorful Background makes your browsing experience more enjoyable, your support helps keep the project growing.
 
 Every contribution helps with:
 ✨ New themes and visual improvements
 🚀 New features and updates
 🛠 Bug fixes and maintenance
 👁 Eye comfort improvements`,
-        footer:"Thank you for supporting independent development ☕"
+        footer: "Thank you for supporting independent development ☕",
+        wechatTitle: "💚 WeChat Pay",
+        wechatTip: "Scan or Long-press via WeChat",
+        alipayTitle: "💙 Alipay",
+        alipayTip: "Scan or Long-press via Alipay",
+        paypalTitle: "💛 PayPal",
+        paypalTip: "Click to donate via PayPal"
     },
-
-    zh:{
-        title:"❤️ 支持 Colorful Background",
-        desc:`如果 Colorful Background 让你的浏览体验更愉快，
-你的支持将帮助项目持续成长。
+    zh: {
+        title: "❤️ 支持 Colorful Background",
+        desc: `如果 Colorful Background 让你的浏览体验更愉快，你的支持将帮助项目持续成长。
 
 每一份支持都会帮助：
 ✨ 新主题与视觉优化
 🚀 新功能与持续更新
 🛠 Bug 修复与维护
 👁 护眼体验优化`,
-        footer:"感谢支持独立开发 ☕"
+        footer: "感谢支持独立开发 ☕",
+        wechatTitle: "💚 微信支付",
+        wechatTip: "微信扫码或长按识别",
+        alipayTitle: "💙 支付宝",
+        alipayTip: "支付宝扫码或长按识别",
+        paypalTitle: "💛 PayPal",
+        paypalTip: "点击跳转至 PayPal 页面"
     }
 };
 
 /**
- * 支付方式配置（核心逻辑）
+ * 核心修改：支付卡片配置（包含国内和国外，通过动态文本键值渲染）
  */
-const payments = {
-    en: [
-        {
-            title:"💛 PayPal",
-            tip:"Donate with PayPal",
-            img:"https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg"
-        }
-    ],
-    zh: [
-        {
-            title:"💚 微信",
-            tip:"使用微信扫码",
-            img:"https://ext-colorful.github.io/images/wechat.jpg"
-        },
-        {
-            title:"💙 支付宝",
-            tip:"使用支付宝扫码",
-            img:"https://ext-colorful.github.io/images/alipay.jpg"
-        }
-    ]
-};
+const paymentsConfig = [
+    {
+        id: "wechat",
+        titleKey: "wechatTitle",
+        tipKey: "wechatTip",
+        img: "https://ext-colorful.github.io/images/wechat.svg",
+        isLink: false
+    },
+    {
+        id: "alipay",
+        titleKey: "alipayTitle",
+        tipKey: "alipayTip",
+        img: "https://ext-colorful.github.io/images/alipay.svg",
+        isLink: false
+    },
+    {
+        id: "paypal",
+        titleKey: "paypalTitle",
+        tipKey: "paypalTip",
+        img: "https://ext-colorful.github.io/images/PayPal.svg",
+        isLink: true,
+        // ⚠️ 请在此处替换为你真实的 PayPal.me 链接或捐赠按钮链接
+        url: "https://www.paypal.me/yxuiang" 
+    }
+];
 
-function render(lang){
-
-    // 文案
-    document.querySelectorAll("[data-i18n]").forEach(el=>{
+function render(lang) {
+    // 1. 渲染基础多语言文案
+    document.querySelectorAll("[data-i18n]").forEach(el => {
         const key = el.getAttribute("data-i18n");
         el.innerText = dict[lang][key];
     });
 
-    // 支付方式
+    // 2. 切换高亮按钮状态
+    document.querySelectorAll("button.lang").forEach(btn => btn.classList.remove("active"));
+    document.getElementById(`btn-${lang}`).classList.add("active");
+
+    // 3. 动态生成支付卡片（国内国外支付方式同时保留，但文案随语言动态切换）
     const grid = document.getElementById("grid");
     grid.innerHTML = "";
 
-    payments[lang].forEach(p=>{
-        const card = document.createElement("div");
+    paymentsConfig.forEach(p => {
+        // 如果是 PayPal，使用 <a> 标签以支持直接点击跳转；二维码使用 <div>
+        const card = document.createElement(p.isLink ? "a" : "div");
         card.className = "card";
+        
+        if (p.isLink) {
+            card.href = p.url;
+            card.target = "_blank";
+            card.rel = "noopener noreferrer";
+        }
 
         card.innerHTML = `
-            <h2>${p.title}</h2>
-            <img src="${p.img}" />
-            <div class="tip">${p.tip}</div>
+            <h2>${dict[lang][p.titleKey]}</h2>
+            <div class="img-wrapper">
+                <img src="${p.img}" alt="${dict[lang][p.titleKey]}" />
+            </div>
+            <div class="tip">${dict[lang][p.tipKey]}</div>
         `;
 
         grid.appendChild(card);
@@ -215,13 +326,13 @@ function render(lang){
     localStorage.setItem("lang", lang);
 }
 
-function setLang(lang){
+function setLang(lang) {
     render(lang);
 }
 
-// init
-render(localStorage.getItem("lang") || "en");
-
+// 初始化时自动获取浏览器首选语言，若无则使用本地缓存，默认英文
+const defaultLang = (navigator.language || navigator.userLanguage).startsWith("zh") ? "zh" : "en";
+render(localStorage.getItem("lang") || defaultLang);
 </script>
 
 </body>
