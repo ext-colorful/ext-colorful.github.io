@@ -9,32 +9,36 @@
 
 <style>
 :root {
-    --bg-color: #f8fafc;
+    --bg-color: #f6f8fa;
     --text-color: #0f172a;
-    --text-muted: #64748b;
-    --card-bg: #ffffff;
-    --card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
-    --card-shadow-hover: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -6px rgba(0, 0, 0, 0.1);
-    --border-color: #e2e8f0;
+    --text-muted: #475569;
+    --text-light: #94a3b8;
+    --card-bg: rgba(255, 255, 255, 0.85);
+    --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 10px 30px -10px rgba(15, 23, 42, 0.06);
+    --card-shadow-hover: 0 20px 40px -1px rgba(15, 23, 42, 0.12);
+    --border-color: rgba(226, 232, 240, 0.8);
     --btn-hover: #f1f5f9;
+    --desc-bg: #ffffff;
 }
 
 @media (prefers-color-scheme: dark) {
     :root {
-        --bg-color: #0b0f17;
-        --text-color: #f8fafc;
+        --bg-color: #090d16;
+        --text-color: #f1f5f9;
         --text-muted: #94a3b8;
-        --card-bg: #151b26;
-        --card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
-        --card-shadow-hover: 0 20px 25px -5px rgba(0, 0, 0, 0.4);
-        --border-color: #222f43;
+        --text-light: #64748b;
+        --card-bg: rgba(21, 28, 44, 0.7);
+        --border-color: rgba(34, 49, 77, 0.6);
+        --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 10px 30px -10px rgba(0, 0, 0, 0.4);
+        --card-shadow-hover: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
         --btn-hover: #1e293b;
+        --desc-bg: #111827;
     }
 }
 
 body {
     margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', Roboto, sans-serif;
     background: var(--bg-color);
     color: var(--text-color);
     transition: background 0.3s, color 0.3s;
@@ -42,29 +46,29 @@ body {
 }
 
 .wrap {
-    max-width: 960px;
+    max-width: 900px;
     margin: auto;
-    padding: 40px 20px 60px 20px;
+    padding: 40px 24px 80px 24px;
 }
 
 /* topbar */
 .topbar {
     display: flex;
     justify-content: flex-end;
-    margin-bottom: 40px;
+    margin-bottom: 50px;
 }
 
 button.lang {
     border: 1px solid var(--border-color);
     background: var(--card-bg);
     color: var(--text-color);
-    padding: 8px 16px;
-    border-radius: 20px;
+    padding: 7px 16px;
+    border-radius: 100px;
     cursor: pointer;
     margin-left: 8px;
     font-weight: 500;
-    font-size: 14px;
-    transition: all 0.2s;
+    font-size: 13px;
+    transition: all 0.25s ease;
 }
 
 button.lang:hover {
@@ -78,73 +82,126 @@ button.lang.active {
     border-color: var(--text-color);
 }
 
-/* hero */
+/* hero header */
 .hero {
     text-align: center;
-    margin-bottom: 50px;
+    margin-bottom: 40px;
 }
 
-/* 融入 Colorful 概念的渐变文字 */
 .hero h1 {
-    font-size: 36px;
+    font-size: 40px;
     font-weight: 800;
-    margin-bottom: 16px;
+    margin: 0 0 16px 0;
     letter-spacing: -0.5px;
-    background: linear-gradient(45deg, #ff6b6b, #4dadf7, #339af0, #cc5de8);
-    background-size: 300% 300%;
+    background: linear-gradient(135deg, #ff6b6b 10%, #4dadf7 50%, #cc5de8 90%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    animation: gradientFlow 8s ease infinite;
+    background-size: 200% auto;
+    animation: shine 6s linear infinite;
 }
 
-@keyframes gradientFlow {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
+@keyframes shine {
+    to { background-position: 200% center; }
 }
 
-.desc {
-    color: var(--text-muted);
-    line-height: 1.8;
-    max-width: 600px;
-    margin: auto;
+/* 优雅的内容故事板结构 */
+.story-container {
+    background: var(--desc-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 24px;
+    padding: 36px;
+    box-shadow: var(--card-shadow);
+    margin-bottom: 60px;
+}
+
+.story-lead {
     font-size: 16px;
-    white-space: pre-line; /* 保持换行格式 */
+    line-height: 1.7;
+    color: var(--text-color);
+    margin-bottom: 24px;
+    font-weight: 500;
 }
 
-/* 1. 优化 grid 容器，在大屏幕下禁止换行 */
+.story-sub {
+    font-size: 14px;
+    color: var(--text-muted);
+    margin-bottom: 20px;
+}
+
+/* 列表化结构组件 */
+.feature-list {
+    display: grid;
+    grid-template-columns: repeat(2, 11fr);
+    gap: 16px;
+}
+
+@media (max-width: 640px) {
+    .feature-list { grid-template-columns: 1fr; }
+}
+
+.feature-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 16px;
+    background: var(--bg-color);
+    border-radius: 14px;
+    border: 1px solid transparent;
+    transition: border 0.3s;
+}
+
+.feature-item:hover {
+    border-color: rgba(77, 173, 247, 0.3);
+}
+
+.feature-icon {
+    font-size: 18px;
+    line-height: 1.4;
+}
+
+.feature-text {
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--text-muted);
+}
+
+/* grid */
 .grid {
     display: flex;
     gap: 24px;
     justify-content: center;
-    /* 如果你希望大屏幕绝对不换行，可以改为 nowrap。
-       这里推荐用 wrap，但通过缩小卡片来阻止大屏换行，这样手机端依然能自适应 */
-    flex-wrap: wrap; 
+    flex-wrap: nowrap; /* 锁定大屏绝对不换行 */
     margin-top: 20px;
 }
 
-/* 2. 适当缩减卡片宽度，从 300px 降到 240px~260px 左右 */
+@media (max-width: 768px) {
+    .grid { flex-wrap: wrap; }
+}
+
+/* 更加细腻、带空气感的卡片 */
 .card {
-    width: 250px; /* 缩减宽度，给一排排下三个留出更多空间 */
-    background: #fff;
-    border-radius: 20px;
-    padding: 24px;
+    flex: 1;
+    min-width: 220px;
+    max-width: 260px;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 28px;
+    padding: 32px 20px;
     text-align: center;
-    box-shadow: 0 10px 30px rgba(0,0,0,.08);
-    transition: .25s;
+    box-shadow: var(--card-shadow);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     
-    /* 让卡片内部垂直居中，标准高度一致 */
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: space-between; 
     text-decoration: none;
+    color: inherit;
 }
 
-/* 只有 PayPal 卡片作为链接时有点击手势 */
-a.card {
-    cursor: pointer;
-}
+a.card { cursor: pointer; }
 
 .card:hover {
     transform: translateY(-8px);
@@ -153,47 +210,45 @@ a.card {
 }
 
 .card h2 {
-    font-size: 20px;
+    font-size: 18px;
     margin: 0 0 20px 0;
     font-weight: 600;
 }
 
+/* 二维码安全白底包裹层优化 */
 .img-wrapper {
-    width: 200px;
-    height: 200px;
+    width: 170px;
+    height: 170px;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #ffffff; /* 确保二维码白底在暗黑模式下也可读 */
+    background: #ffffff; 
     padding: 10px;
-    border-radius: 16px;
-    box-shadow: inset 0 0 0 1px rgba(0,0,0,0.05);
+    border-radius: 20px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.03), inset 0 0 0 1px rgba(0,0,0,0.04);
 }
 
-/* 3. 核心：限制图片包裹层或图片本身的高度 */
 .card img {
     width: 100%;
-    max-width: 160px;  /* 限制最大宽度 */
-    max-height: 160px; /* 限制最大高度，防止把卡片撑得太长 */
+    height: 100%;
     object-fit: contain;
-    border-radius: 12px;
 }
 
 .tip {
-    margin-top: 18px;
-    color: var(--text-muted);
-    font-size: 14px;
-    line-height: 1.4;
+    margin-top: 20px;
+    color: var(--text-light);
+    font-size: 13px;
+    font-weight: 500;
 }
 
 /* footer */
 .footer {
     text-align: center;
-    margin-top: 60px;
-    color: var(--text-muted);
-    font-size: 14px;
+    margin-top: 80px;
+    color: var(--text-light);
+    font-size: 13px;
     border-top: 1px solid var(--border-color);
-    padding-top: 24px;
+    padding-top: 30px;
 }
 </style>
 </head>
@@ -208,11 +263,15 @@ a.card {
     </div>
 
     <div class="hero">
-        <h1 data-i18n="title"></h1>
-        <div class="desc" data-i18n="desc"></div>
+        <h1 id="page-main-title"></h1>
     </div>
 
-    <!-- 支付网格 -->
+    <div class="story-container">
+        <div class="story-lead" id="story-lead"></div>
+        <div class="story-sub" id="story-sub"></div>
+        <div class="feature-list" id="feature-list"></div>
+    </div>
+
     <div class="grid" id="grid"></div>
 
     <div class="footer" data-i18n="footer"></div>
@@ -222,15 +281,17 @@ a.card {
 <script>
 const dict = {
     en: {
-        title: "❤️ Support Colorful Background",
-        desc: `If Colorful Background makes your browsing experience more enjoyable, your support helps keep the project growing.
-
-Every contribution helps with:
-✨ New themes and visual improvements
-🚀 New features and updates
-🛠 Bug fixes and maintenance
-👁 Eye comfort improvements`,
-        footer: "Thank you for supporting independent development ☕",
+        pageTitle: "Support Colorful Background ❤️",
+        title: "Keep the Colors Growing",
+        lead: "Every day, Colorful Background accompanies thousands of users to create a more comfortable and personalized digital aesthetic space.",
+        sub: "As an independent project, your support is the sole engine that keeps it alive. Every coffee you buy me directly fuels:",
+        features: [
+            { icon: "🎨", text: "Crafting new elegant themes & seamless visual designs" },
+            { icon: "🚀", text: "Delivering next-gen features & regular performance tuning" },
+            { icon: "🛠", text: "Resolving edge-case bugs & maintaining reliable updates" },
+            { icon: "👁", text: "Researching deeper eye-comfort & dynamic dimming logic" }
+        ],
+        footer: "Crafted with care. Thank you for empowering independent development ☕",
         wechatTitle: "💚 WeChat Pay",
         wechatTip: "Scan or Long-press via WeChat",
         alipayTitle: "💙 Alipay",
@@ -239,15 +300,17 @@ Every contribution helps with:
         paypalTip: "Click to donate via PayPal"
     },
     zh: {
-        title: "❤️ 支持 Colorful Background",
-        desc: `如果 Colorful Background 让你的浏览体验更愉快，你的支持将帮助项目持续成长。
-
-每一份支持都会帮助：
-✨ 新主题与视觉优化
-🚀 新功能与持续更新
-🛠 Bug 修复与维护
-👁 护眼体验优化`,
-        footer: "感谢支持独立开发 ☕",
+        pageTitle: "支持 Colorful Background ❤️",
+        title: "让色彩持续绽放",
+        lead: "每天，Colorful Background 都在陪伴成百上千的用户，打造更舒适、更具个性的数字美学空间。",
+        sub: "作为一个完全由兴趣驱动的独立开发项目，你的每一份支持，都是它走向完美的唯一动力。每一杯咖啡的赞助，都将直达这些改变：",
+        features: [
+            { icon: "🎨", text: "雕琢更优雅的专属主题与视觉动效" },
+            { icon: "🚀", text: "探索下一代新功能与极致的性能调优" },
+            { icon: "🛠", text: "跨平台 Bug 追击与长期的稳定维护" },
+            { icon: "👁", text: "持续深耕护眼技术与更细腻的色调算法" }
+        ],
+        footer: "心存感激。谢谢你愿意为独立开发者的夜晚点亮一盏灯 ☕",
         wechatTitle: "💚 微信支付",
         wechatTip: "微信扫码或长按识别",
         alipayTitle: "💙 支付宝",
@@ -257,9 +320,6 @@ Every contribution helps with:
     }
 };
 
-/**
- * 核心修改：支付卡片配置（包含国内和国外，通过动态文本键值渲染）
- */
 const paymentsConfig = [
     {
         id: "wechat",
@@ -281,28 +341,49 @@ const paymentsConfig = [
         tipKey: "paypalTip",
         img: "https://ext-colorful.github.io/images/PayPal.svg",
         isLink: true,
-        // ⚠️ 请在此处替换为你真实的 PayPal.me 链接或捐赠按钮链接
         url: "https://www.paypal.me/yxuiang" 
     }
 ];
 
 function render(lang) {
-    // 1. 渲染基础多语言文案
-    document.querySelectorAll("[data-i18n]").forEach(el => {
-        const key = el.getAttribute("data-i18n");
-        el.innerText = dict[lang][key];
+    const data = dict[lang];
+    
+    // 1. 动态更新网页标题
+    document.title = data.pageTitle;
+
+    // 2. 渲染头部与故事板
+    document.getElementById("page-main-title").innerText = data.title;
+    document.getElementById("story-lead").innerText = data.lead;
+    document.getElementById("story-sub").innerText = data.sub;
+
+    // 3. 动态渲染 2x2 网格列表，彻底告别简陋的文本换行
+    const featureListContainer = document.getElementById("feature-list");
+    featureListContainer.innerHTML = "";
+    data.features.forEach(f => {
+        const item = document.createElement("div");
+        item.className = "feature-item";
+        item.innerHTML = `
+            <span class="feature-icon">${f.icon}</span>
+            <span class="feature-text">${f.text}</span>
+        `;
+        featureListContainer.appendChild(item);
     });
 
-    // 2. 切换高亮按钮状态
+    // 4. 页脚通用渲染
+    document.querySelectorAll("[data-i18n]").forEach(el => {
+        const key = el.getAttribute("data-i18n");
+        el.innerText = data[key];
+    });
+
+    // 5. 语言切换按钮状态
     document.querySelectorAll("button.lang").forEach(btn => btn.classList.remove("active"));
     document.getElementById(`btn-${lang}`).classList.add("active");
 
-    // 3. 动态生成支付卡片（国内国外支付方式同时保留，但文案随语言动态切换）
+    // 6. 动态生成赞助卡片
     const grid = document.getElementById("grid");
     grid.innerHTML = "";
 
     paymentsConfig.forEach(p => {
-        // 如果是 PayPal，使用 <a> 标签以支持直接点击跳转；二维码使用 <div>
         const card = document.createElement(p.isLink ? "a" : "div");
         card.className = "card";
         
@@ -313,11 +394,11 @@ function render(lang) {
         }
 
         card.innerHTML = `
-            <h2>${dict[lang][p.titleKey]}</h2>
+            <h2>${data[p.titleKey]}</h2>
             <div class="img-wrapper">
-                <img src="${p.img}" alt="${dict[lang][p.titleKey]}" />
+                <img src="${p.img}" alt="${data[p.titleKey]}" />
             </div>
-            <div class="tip">${dict[lang][p.tipKey]}</div>
+            <div class="tip">${data[p.tipKey]}</div>
         `;
 
         grid.appendChild(card);
@@ -330,7 +411,7 @@ function setLang(lang) {
     render(lang);
 }
 
-// 初始化时自动获取浏览器首选语言，若无则使用本地缓存，默认英文
+// 初始化语言选择
 const defaultLang = (navigator.language || navigator.userLanguage).startsWith("zh") ? "zh" : "en";
 render(localStorage.getItem("lang") || defaultLang);
 </script>
