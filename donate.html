@@ -1,458 +1,466 @@
 <!doctype html>
 <html lang="zh">
+
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Support Colorful Background ❤️</title>
+    <link rel="icon" type="image/svg+xml" href="https://ext-colorful.github.io/umbrella.svg" />
+    <style>
+        :root {
+            --bg-color: #f8fafc;
+            --text-color: #0f172a;
+            --text-muted: #475569;
+            --text-light: #94a3b8;
+            --card-bg: rgba(255, 255, 255, 0.85);
+            --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 10px 30px -10px rgba(15, 23, 42, 0.06);
+            --card-shadow-hover: 0 20px 40px -1px rgba(15, 23, 42, 0.12);
+            --border-color: rgba(226, 232, 240, 0.8);
+            --btn-hover: #f1f5f9;
+            --desc-bg: #ffffff;
+            --primary-color: #4dadf7;
+        }
 
-<title>Support Colorful Background ❤️</title>
-<link rel="icon" type="image/svg+xml" href="https://ext-colorful.github.io/umbrella.svg" />
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-color: #090d16;
+                --text-color: #f1f5f9;
+                --text-muted: #94a3b8;
+                --text-light: #64748b;
+                --card-bg: rgba(21, 28, 44, 0.7);
+                --border-color: rgba(34, 49, 77, 0.6);
+                --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 10px 30px -10px rgba(0, 0, 0, 0.4);
+                --card-shadow-hover: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+                --btn-hover: #1e293b;
+                --desc-bg: #111827;
+            }
+        }
 
-<style>
-:root {
-    --bg-color: #f8fafc;
-    --text-color: #0f172a;
-    --text-muted: #475569;
-    --text-light: #94a3b8;
-    --card-bg: rgba(255, 255, 255, 0.85);
-    --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 10px 30px -10px rgba(15, 23, 42, 0.06);
-    --card-shadow-hover: 0 20px 40px -1px rgba(15, 23, 42, 0.12);
-    --border-color: rgba(226, 232, 240, 0.8);
-    --btn-hover: #f1f5f9;
-    --desc-bg: #ffffff;
-    --primary-color: #4dadf7;
-}
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-color);
+            color: var(--text-color);
+            transition: background 0.3s, color 0.3s;
+            -webkit-font-smoothing: antialiased;
+        }
 
-@media (prefers-color-scheme: dark) {
-    :root {
-        --bg-color: #090d16;
-        --text-color: #f1f5f9;
-        --text-muted: #94a3b8;
-        --text-light: #64748b;
-        --card-bg: rgba(21, 28, 44, 0.7);
-        --border-color: rgba(34, 49, 77, 0.6);
-        --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 10px 30px -10px rgba(0, 0, 0, 0.4);
-        --card-shadow-hover: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
-        --btn-hover: #1e293b;
-        --desc-bg: #111827;
-    }
-}
+        .wrap {
+            max-width: 900px;
+            margin: auto;
+            padding: 30px 24px 30px 24px;
+            box-sizing: border-box;
+        }
 
-body {
-    margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', Roboto, sans-serif;
-    background: var(--bg-color);
-    color: var(--text-color);
-    transition: background 0.3s, color 0.3s;
-    -webkit-font-smoothing: antialiased;
-}
+        /* 优化后的语言切换器：采用悬浮胶囊设计，不占用文档流空间 */
+        .lang-toggle-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 100;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            padding: 3px;
+            border-radius: 100px;
+            display: flex;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
 
-.wrap {
-    max-width: 900px;
-    margin: auto;
-    padding: 30px 24px 30px 24px;
-    box-sizing: border-box;
-}
+        button.lang {
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+            padding: 6px 14px;
+            border-radius: 100px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 12px;
+            transition: all 0.2s ease;
+        }
 
-/* 优化后的语言切换器：采用悬浮胶囊设计，不占用文档流空间 */
-.lang-toggle-container {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    z-index: 100;
-    background: var(--card-bg);
-    border: 1px solid var(--border-color);
-    padding: 3px;
-    border-radius: 100px;
-    display: flex;
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-}
+        button.lang:hover {
+            color: var(--text-color);
+        }
 
-button.lang {
-    border: none;
-    background: transparent;
-    color: var(--text-muted);
-    padding: 6px 14px;
-    border-radius: 100px;
-    cursor: pointer;
-    font-weight: 600;
-    font-size: 12px;
-    transition: all 0.2s ease;
-}
+        button.lang.active {
+            background: var(--text-color);
+            color: var(--bg-color);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
 
-button.lang:hover {
-    color: var(--text-color);
-}
+        /* 移动端视窗较小时，让悬浮按钮贴紧边缘或微调位置避免挡住主要内容 */
+        @media (max-width: 640px) {
+            .lang-toggle-container {
+                top: 12px;
+                right: 12px;
+            }
+        }
 
-button.lang.active {
-    background: var(--text-color);
-    color: var(--bg-color);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
+        /* hero header */
+        .hero {
+            text-align: center;
+            /* margin-bottom: 40px; */
+        }
 
-/* 移动端视窗较小时，让悬浮按钮贴紧边缘或微调位置避免挡住主要内容 */
-@media (max-width: 640px) {
-    .lang-toggle-container {
-        top: 12px;
-        right: 12px;
-    }
-}
+        .hero h1 {
+            font-size: 40px;
+            font-weight: 800;
+            margin: 0 0 16px 0;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, #ff6b6b 10%, #4dadf7 50%, #cc5de8 90%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-size: 200% auto;
+            animation: shine 6s linear infinite;
+        }
 
-/* hero header */
-.hero {
-    text-align: center;
-    /* margin-bottom: 40px; */
-}
+        @keyframes shine {
+            to {
+                background-position: 200% center;
+            }
+        }
 
-.hero h1 {
-    font-size: 40px;
-    font-weight: 800;
-    margin: 0 0 16px 0;
-    letter-spacing: -0.5px;
-    background: linear-gradient(135deg, #ff6b6b 10%, #4dadf7 50%, #cc5de8 90%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-size: 200% auto;
-    animation: shine 6s linear infinite;
-}
+        /* 故事板结构优化 */
+        .story-container {
+            background: var(--desc-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 36px;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 40px;
+        }
 
-@keyframes shine {
-    to { background-position: 200% center; }
-}
+        .story-lead {
+            font-size: 16px;
+            line-height: 1.8;
+            color: var(--text-color);
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
 
-/* 故事板结构优化 */
-.story-container {
-    background: var(--desc-bg);
-    border: 1px solid var(--border-color);
-    border-radius: 24px;
-    padding: 36px;
-    box-shadow: var(--card-shadow);
-    margin-bottom: 40px;
-}
+        .story-sub {
+            font-size: 14px;
+            line-height: 1.6;
+            color: var(--text-muted);
+            margin-bottom: 24px;
+        }
 
-.story-lead {
-    font-size: 16px;
-    line-height: 1.8;
-    color: var(--text-color);
-    margin-bottom: 20px;
-    font-weight: 500;
-}
+        /* 列表组件自适应优化 */
+        .feature-list {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
 
-.story-sub {
-    font-size: 14px;
-    line-height: 1.6;
-    color: var(--text-muted);
-    margin-bottom: 24px;
-}
+        @media (max-width: 640px) {
+            .feature-list {
+                grid-template-columns: 1fr;
+            }
+        }
 
-/* 列表组件自适应优化 */
-.feature-list {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 16px;
-}
+        .feature-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 16px;
+            background: var(--bg-color);
+            border-radius: 16px;
+            border: 1px solid transparent;
+            transition: all 0.3s ease;
+        }
 
-@media (max-width: 640px) {
-    .feature-list { grid-template-columns: 1fr; }
-}
+        body:not(.dark) .feature-item:hover {
+            border-color: rgba(77, 173, 247, 0.2);
+            background: var(--desc-bg);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+        }
 
-.feature-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
-    padding: 16px;
-    background: var(--bg-color);
-    border-radius: 16px;
-    border: 1px solid transparent;
-    transition: all 0.3s ease;
-}
+        .feature-icon {
+            font-size: 18px;
+            line-height: 1.4;
+        }
 
-body:not(.dark) .feature-item:hover {
-    border-color: rgba(77, 173, 247, 0.2);
-    background: var(--desc-bg);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.02);
-}
+        .feature-text {
+            font-size: 14px;
+            line-height: 1.5;
+            color: var(--text-muted);
+        }
 
-.feature-icon {
-    font-size: 18px;
-    line-height: 1.4;
-}
+        /* grid 布局优化 */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin-top: 20px;
+        }
 
-.feature-text {
-    font-size: 14px;
-    line-height: 1.5;
-    color: var(--text-muted);
-}
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            }
+        }
 
-/* grid 布局优化 */
-.grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 24px;
-    margin-top: 20px;
-}
+        /* 卡片细节打磨 */
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 28px;
+            padding: 32px 24px;
+            text-align: center;
+            box-shadow: var(--card-shadow);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            box-sizing: border-box;
+            position: relative;
 
-@media (max-width: 768px) {
-    .grid { 
-        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); 
-    }
-}
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            text-decoration: none;
+            color: inherit;
+        }
 
-/* 卡片细节打磨 */
-.card {
-    background: var(--card-bg);
-    border: 1px solid var(--border-color);
-    border-radius: 28px;
-    padding: 32px 24px;
-    text-align: center;
-    box-shadow: var(--card-shadow);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-    box-sizing: border-box;
-    position: relative;
-    
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-between; 
-    text-decoration: none;
-    color: inherit;
-}
+        a.card {
+            cursor: pointer;
+        }
 
-a.card { cursor: pointer; }
+        .card:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--card-shadow-hover);
+            border-color: var(--primary-color);
+        }
 
-.card:hover {
-    transform: translateY(-6px);
-    box-shadow: var(--card-shadow-hover);
-    border-color: var(--primary-color);
-}
+        .card h2 {
+            font-size: 18px;
+            margin: 0 0 20px 0;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
 
-.card h2 {
-    font-size: 18px;
-    margin: 0 0 20px 0;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
+        /* 外链图标提示 */
+        .card .link-icon {
+            font-size: 14px;
+            opacity: 0.5;
+            transition: opacity 0.3s;
+        }
 
-/* 外链图标提示 */
-.card .link-icon {
-    font-size: 14px;
-    opacity: 0.5;
-    transition: opacity 0.3s;
-}
-.card:hover .link-icon {
-    opacity: 1;
-}
+        .card:hover .link-icon {
+            opacity: 1;
+        }
 
-/* 二维码容器等比缩放 */
-.img-wrapper {
-    width: 100%;
-    max-width: 170px;
-    aspect-ratio: 1 / 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #ffffff; 
-    padding: 12px;
-    border-radius: 20px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.02), inset 0 0 0 1px rgba(0,0,0,0.04);
-    box-sizing: border-box;
-}
+        /* 二维码容器等比缩放 */
+        .img-wrapper {
+            width: 100%;
+            max-width: 170px;
+            aspect-ratio: 1 / 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02), inset 0 0 0 1px rgba(0, 0, 0, 0.04);
+            box-sizing: border-box;
+        }
 
-.card img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-}
+        #card-paypal>.img-wrapper {
+            padding: 12px;
+        }
 
-.tip {
-    margin-top: 20px;
-    color: var(--text-light);
-    font-size: 13px;
-    font-weight: 500;
-    line-height: 1.4;
-}
+        .card img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
 
-/* footer */
-.footer {
-    text-align: center;
-    color: var(--text-light);
-    font-size: 13px;
-    border-top: 1px solid var(--border-color);
-    padding-top: 30px;
-    line-height: 1.5;
-}
-</style>
+        .tip {
+            margin-top: 20px;
+            color: var(--text-light);
+            font-size: 13px;
+            font-weight: 500;
+            line-height: 1.4;
+        }
+
+        .footer {
+            text-align: center;
+            color: var(--text-light);
+            font-size: 13px;
+            border-top: 1px solid var(--border-color);
+            padding-top: 30px;
+            line-height: 1.5;
+        }
+    </style>
 </head>
 
 <body>
+    <!-- 修改后的悬浮切换栏 -->
+    <div class="lang-toggle-container">
+        <button class="lang" id="btn-en" onclick="setLang('en')">EN</button>
+        <button class="lang" id="btn-zh" onclick="setLang('zh')">中文</button>
+    </div>
 
-<!-- 修改后的悬浮切换栏 -->
-<div class="lang-toggle-container">
-    <button class="lang" id="btn-en" onclick="setLang('en')">EN</button>
-    <button class="lang" id="btn-zh" onclick="setLang('zh')">中文</button>
-</div>
-
-<div class="wrap">
-    <div class="hero">
-        <div class="hero-logo">
-            <img src="https://ext-colorful.github.io/umbrella.svg">
+    <div class="wrap">
+        <div class="hero">
+            <div class="hero-logo">
+                <img src="https://ext-colorful.github.io/umbrella.svg">
+            </div>
+            <h1 id="page-main-title">让色彩持续绽放</h1>
         </div>
-        <h1 id="page-main-title">让色彩持续绽放</h1>
+
+        <div class="story-container">
+            <div class="story-lead" id="story-lead"></div>
+            <div class="story-sub" id="story-sub"></div>
+            <div class="feature-list" id="feature-list"></div>
+        </div>
+
+        <div class="grid" id="grid"></div>
+
+        <div class="footer" id="page-footer" data-i18n="footer">心存感激。谢谢你愿意为独立开发者的夜晚点亮一盏灯 ☕</div>
     </div>
 
-    <div class="story-container">
-        <div class="story-lead" id="story-lead"></div>
-        <div class="story-sub" id="story-sub"></div>
-        <div class="feature-list" id="feature-list"></div>
-    </div>
+    <script>
+        const dict = {
+            en: {
+                pageTitle: "Support Colorful Background ❤️",
+                title: "Keep the Colors Growing",
+                lead: "Every day, Colorful Background accompanies hundreds of users to create a more comfortable and personalized digital aesthetic space.",
+                sub: "As an independent project, your support is the sole engine that keeps it alive. Every coffee you buy me directly fuels:",
+                features: [
+                    { icon: "🎨", text: "Crafting new elegant themes & seamless visual designs" },
+                    { icon: "🚀", text: "Delivering next-gen features & regular performance tuning" },
+                    { icon: "🛠", text: "Resolving edge-case bugs & maintaining reliable updates" },
+                    { icon: "👁", text: "Researching deeper eye-comfort & dynamic dimming logic" }
+                ],
+                footer: "Crafted with care. Thank you for empowering independent development ☕",
+                wechatTitle: "💚 WeChat Pay",
+                wechatTip: "Scan or Long-press via WeChat",
+                alipayTitle: "💙 Alipay",
+                alipayTip: "Scan or Long-press via Alipay",
+                paypalTitle: "💛 PayPal",
+                paypalTip: "Click to donate via PayPal"
+            },
+            zh: {
+                pageTitle: "支持 Colorful Background ❤️",
+                title: "让色彩持续绽放",
+                lead: "每天，Colorful Background 都在陪伴成百上千的用户，打造更舒适、更具个性的数字美学空间。",
+                sub: "作为一个完全由兴趣驱动的独立开发项目，你的每一份支持，都是它走向完美的唯一动力。每一杯咖啡的赞助，都将直达这些改变：",
+                features: [
+                    { icon: "🎨", text: "雕琢更优雅的专属主题与视觉动效" },
+                    { icon: "🚀", text: "探索下一代新功能与极致的性能调优" },
+                    { icon: "🛠", text: "跨平台 Bug 追击与长期的稳定维护" },
+                    { icon: "👁", text: "持续深耕护眼技术与更细腻的色调算法" }
+                ],
+                footer: "心存感激。谢谢你愿意为独立开发者的夜晚点亮一盏灯 ☕",
+                wechatTitle: "💚 微信支付",
+                wechatTip: "微信扫码或长按识别",
+                alipayTitle: "💙 支付宝",
+                alipayTip: "支付宝扫码或长按识别",
+                paypalTitle: "💛 PayPal",
+                paypalTip: "点击跳转至 PayPal 页面"
+            }
+        };
 
-    <div class="grid" id="grid"></div>
+        const paymentsConfig = [
+            { id: "wechat", titleKey: "wechatTitle", tipKey: "wechatTip", img: "https://ext-colorful.github.io/images/wechat.svg", isLink: false },
+            { id: "alipay", titleKey: "alipayTitle", tipKey: "alipayTip", img: "https://ext-colorful.github.io/images/alipay.svg", isLink: false },
+            { id: "paypal", titleKey: "paypalTitle", tipKey: "paypalTip", img: "https://ext-colorful.github.io/images/PayPal.svg", isLink: true, url: "https://www.paypal.me/yxuiang" }
+        ];
 
-    <div class="footer" id="page-footer" data-i18n="footer">心存感激。谢谢你愿意为独立开发者的夜晚点亮一盏灯 ☕</div>
-</div>
+        function initDOM() {
+            const grid = document.getElementById("grid");
+            grid.innerHTML = "";
 
-<script>
-const dict = {
-    en: {
-        pageTitle: "Support Colorful Background ❤️",
-        title: "Keep the Colors Growing",
-        lead: "Every day, Colorful Background accompanies hundreds of users to create a more comfortable and personalized digital aesthetic space.",
-        sub: "As an independent project, your support is the sole engine that keeps it alive. Every coffee you buy me directly fuels:",
-        features: [
-            { icon: "🎨", text: "Crafting new elegant themes & seamless visual designs" },
-            { icon: "🚀", text: "Delivering next-gen features & regular performance tuning" },
-            { icon: "🛠", text: "Resolving edge-case bugs & maintaining reliable updates" },
-            { icon: "👁", text: "Researching deeper eye-comfort & dynamic dimming logic" }
-        ],
-        footer: "Crafted with care. Thank you for empowering independent development ☕",
-        wechatTitle: "💚 WeChat Pay",
-        wechatTip: "Scan or Long-press via WeChat",
-        alipayTitle: "💙 Alipay",
-        alipayTip: "Scan or Long-press via Alipay",
-        paypalTitle: "💛 PayPal",
-        paypalTip: "Click to donate via PayPal"
-    },
-    zh: {
-        pageTitle: "支持 Colorful Background ❤️",
-        title: "让色彩持续绽放",
-        lead: "每天，Colorful Background 都在陪伴成百上千的用户，打造更舒适、更具个性的数字美学空间。",
-        sub: "作为一个完全由兴趣驱动的独立开发项目，你的每一份支持，都是它走向完美的唯一动力。每一杯咖啡的赞助，都将直达这些改变：",
-        features: [
-            { icon: "🎨", text: "雕琢更优雅的专属主题与视觉动效" },
-            { icon: "🚀", text: "探索下一代新功能与极致的性能调优" },
-            { icon: "🛠", text: "跨平台 Bug 追击与长期的稳定维护" },
-            { icon: "👁", text: "持续深耕护眼技术与更细腻的色调算法" }
-        ],
-        footer: "心存感激。谢谢你愿意为独立开发者的夜晚点亮一盏灯 ☕",
-        wechatTitle: "💚 微信支付",
-        wechatTip: "微信扫码或长按识别",
-        alipayTitle: "💙 支付宝",
-        alipayTip: "支付宝扫码或长按识别",
-        paypalTitle: "💛 PayPal",
-        paypalTip: "点击跳转至 PayPal 页面"
-    }
-};
+            paymentsConfig.forEach(p => {
+                const card = document.createElement(p.isLink ? "a" : "div");
+                card.className = "card";
+                card.id = `card-${p.id}`;
 
-const paymentsConfig = [
-    { id: "wechat", titleKey: "wechatTitle", tipKey: "wechatTip", img: "https://ext-colorful.github.io/images/wechat.svg", isLink: false },
-    { id: "alipay", titleKey: "alipayTitle", tipKey: "alipayTip", img: "https://ext-colorful.github.io/images/alipay.svg", isLink: false },
-    { id: "paypal", titleKey: "paypalTitle", tipKey: "paypalTip", img: "https://ext-colorful.github.io/images/PayPal.svg", isLink: true, url: "https://www.paypal.me/yxuiang" }
-];
+                if (p.isLink) {
+                    card.href = p.url;
+                    card.target = "_blank";
+                    card.rel = "noopener noreferrer";
+                }
 
-function initDOM() {
-    const grid = document.getElementById("grid");
-    grid.innerHTML = "";
-
-    paymentsConfig.forEach(p => {
-        const card = document.createElement(p.isLink ? "a" : "div");
-        card.className = "card";
-        card.id = `card-${p.id}`;
-        
-        if (p.isLink) {
-            card.href = p.url;
-            card.target = "_blank";
-            card.rel = "noopener noreferrer";
-        }
-
-        card.innerHTML = `
+                card.innerHTML = `
             <h2 id="title-${p.id}"></h2>
             <div class="img-wrapper">
                 <img src="${p.img}" alt="${p.id}" loading="lazy" />
             </div>
             <div class="tip" id="tip-${p.id}"></div>
         `;
-        grid.appendChild(card);
-    });
-}
+                grid.appendChild(card);
+            });
+        }
 
-function render(lang) {
-    const data = dict[lang];
-    
-    document.title = data.pageTitle;
-    document.getElementById("page-main-title").innerText = data.title;
-    document.getElementById("story-lead").innerText = data.lead;
-    document.getElementById("story-sub").innerText = data.sub;
-    document.getElementById("page-footer").innerText = data.footer;
+        function render(lang) {
+            const data = dict[lang];
 
-    const featureListContainer = document.getElementById("feature-list");
-    featureListContainer.innerHTML = "";
-    data.features.forEach(f => {
-        const item = document.createElement("div");
-        item.className = "feature-item";
-        item.innerHTML = `
+            document.title = data.pageTitle;
+            document.getElementById("page-main-title").innerText = data.title;
+            document.getElementById("story-lead").innerText = data.lead;
+            document.getElementById("story-sub").innerText = data.sub;
+            document.getElementById("page-footer").innerText = data.footer;
+
+            const featureListContainer = document.getElementById("feature-list");
+            featureListContainer.innerHTML = "";
+            data.features.forEach(f => {
+                const item = document.createElement("div");
+                item.className = "feature-item";
+                item.innerHTML = `
             <span class="feature-icon">${f.icon}</span>
             <span class="feature-text">${f.text}</span>
         `;
-        featureListContainer.appendChild(item);
-    });
+                featureListContainer.appendChild(item);
+            });
 
-    paymentsConfig.forEach(p => {
-        const titleEl = document.getElementById(`title-${p.id}`);
-        const tipEl = document.getElementById(`tip-${p.id}`);
-        
-        if(titleEl && tipEl) {
-            titleEl.innerHTML = data[p.titleKey] + (p.isLink ? ' <span class="link-icon">↗</span>' : '');
-            tipEl.innerText = data[p.tipKey];
+            paymentsConfig.forEach(p => {
+                const titleEl = document.getElementById(`title-${p.id}`);
+                const tipEl = document.getElementById(`tip-${p.id}`);
+
+                if (titleEl && tipEl) {
+                    titleEl.innerHTML = `${data[p.titleKey]}${p.isLink ? '<span class="link-icon">↗</span>' : ''}`;
+                    tipEl.innerText = data[p.tipKey];
+                }
+            });
+
+            document.querySelectorAll("button.lang").forEach(btn => btn.classList.remove("active"));
+            document.getElementById(`btn-${lang}`).classList.add("active");
         }
-    });
 
-    document.querySelectorAll("button.lang").forEach(btn => btn.classList.remove("active"));
-    document.getElementById(`btn-${lang}`).classList.add("active");
-}
+        function setLang(lang) {
+            render(lang);
+        }
 
-function setLang(lang) {
-    render(lang);
-}
+        /** 将扩展 locale（如 zh_CN、en_US）映射为页面语言 zh | en */
+        function toPageLang(locale) {
+            if (!locale || locale === "default") return null;
+            const base = locale.toLowerCase().replace(/_/g, "-").split("-")[0];
+            if (base === "zh") return "zh";
+            if (base === "en") return "en";
+            return null;
+        }
 
-/** 将扩展 locale（如 zh_CN、en_US）映射为页面语言 zh | en */
-function toPageLang(locale) {
-    if (!locale || locale === "default") return null;
-    const base = locale.toLowerCase().replace(/_/g, "-").split("-")[0];
-    if (base === "zh") return "zh";
-    if (base === "en") return "en";
-    return null;
-}
+        function getDefaultLang() {
+            const fromExtension = toPageLang(new URLSearchParams(location.search).get("lang"));
+            if (fromExtension) return fromExtension;
 
-function getDefaultLang() {
-    const fromExtension = toPageLang(new URLSearchParams(location.search).get("lang"));
-    if (fromExtension) return fromExtension;
+            const locales = navigator.languages?.length
+                ? navigator.languages
+                : [navigator.language || navigator.userLanguage];
+            return locales.some((l) => l.toLowerCase().startsWith("zh")) ? "zh" : "en";
+        }
 
-    const locales = navigator.languages?.length
-        ? navigator.languages
-        : [navigator.language || navigator.userLanguage];
-    return locales.some((l) => l.toLowerCase().startsWith("zh")) ? "zh" : "en";
-}
-
-// 执行初始化与首次渲染
-initDOM();
-const defaultLang = getDefaultLang();
-render(defaultLang);
-</script>
+        // 执行初始化与首次渲染
+        initDOM();
+        const defaultLang = getDefaultLang();
+        render(defaultLang);
+    </script>
 
 </body>
+
 </html>
