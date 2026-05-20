@@ -1,0 +1,66 @@
+<svg width="112.5" height="32" viewBox="0 0 112.5 32" xmlns="http://www.w3.org/2000/svg" fill="none">
+  <defs>
+    <!-- 背景：细腻冷白微渐变 -->
+    <linearGradient id="luxuryBg" x1="0" y1="0" x2="0" y2="32" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#FBFDFE"/>
+      <stop offset="100%" stop-color="#F3F6FA"/>
+    </linearGradient>
+
+    <!-- 外边框：精细多层次渐变 -->
+    <linearGradient id="luxuryBorder" x1="0" y1="0" x2="0" y2="32" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#E2E7F3"/>
+      <stop offset="100%" stop-color="#CBD2E3"/>
+    </linearGradient>
+
+    <!-- 3D 折纸爱心：左侧高光 -->
+    <linearGradient id="foldHeartLeft" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#FF7FA0"/>
+      <stop offset="100%" stop-color="#F43F68"/>
+    </linearGradient>
+
+    <!-- 3D 折纸爱心：右侧暗面 -->
+    <linearGradient id="foldHeartRight" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#E12D55"/>
+      <stop offset="100%" stop-color="#B81438"/>
+    </linearGradient>
+    
+    <!-- 爱心中心折痕处的微阴影 -->
+    <linearGradient id="foldShadow" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#000000" stop-opacity="0.18"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+
+  <!-- 外层精细边框 -->
+  <rect x="0.6" y="0.6" width="111.3" height="30.8" rx="15.4" fill="url(#luxuryBg)" stroke="url(#luxuryBorder)" stroke-width="0.8"/>
+  <!-- 内衬高光边缘 -->
+  <rect x="1.2" y="1.2" width="110.1" height="29.6" rx="14.8" stroke="#FFFFFF" stroke-opacity="0.9" stroke-width="0.6"/>
+
+  <!-- 左侧立体折纸爱心组合 -->
+  <g transform="translate(13, 10.5)">
+    <!-- 左半边爱心 -->
+    <path d="M 6 1.3 C 4.5 -0.3, 2.0 -0.3, 0.5 1.2 C -0.7 2.4, -0.7 4.5, 0.8 6.1 L 6 10.7 Z" fill="url(#foldHeartLeft)"/>
+    
+    <!-- 折纸交界处的立体阴影 -->
+    <path d="M 6 1.3 L 6 10.7 C 6 10.7, 6.8 9.5, 7.2 6.1 C 7.5 4.5, 7.0 2.4, 6 1.3 Z" fill="url(#foldShadow)"/>
+    
+    <!-- 右半边爱心 -->
+    <path d="M 6 1.3 C 7.5 -0.3, 10.0 -0.3, 11.5 1.2 C 12.7 2.4, 12.7 4.5, 11.2 6.1 L 6 10.7 Z" fill="url(#foldHeartRight)"/>
+  </g>
+
+  <!-- 极细分割线 -->
+  <line x1="35" y1="8" x2="35" y2="24" stroke="#E2E7F3" stroke-width="0.8" stroke-linecap="round"/>
+
+  <!-- 
+    核心优化：整个文本块由唯一一个 text 节点承载，y 严格居中锁定在 16px。
+    主、副文本通过 tspan 进行内部相对位移，消除由于不同字体和环境带来的行高对齐偏差。
+  -->
+  <text x="43" y="16" 
+        font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" 
+        dominant-baseline="central">
+    <!-- 主标题：先相对整体中轴线向上提 5.2px -->
+    <tspan dy="-5.2" font-size="10.5" font-weight="700" letter-spacing="0.2px" fill="#1A1E2E">Donate 🚀</tspan>
+    <!-- 副标题：通过 x="43" 强制另起一行左对齐，并相对主标题行向下移动 10.2px -->
+    <tspan x="43" dy="10.2" font-size="7.2" font-weight="500" letter-spacing="0.1px" fill="#8A93A6">Fuel creativity...</tspan>
+  </text>
+</svg>
