@@ -101,7 +101,24 @@
         /* hero header */
         .hero {
             text-align: center;
-            /* margin-bottom: 40px; */
+            margin-bottom: 28px;
+        }
+
+        .stats {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 24px;
+        }
+
+        .stats div {
+            padding: 8px 14px;
+            border-radius: 999px;
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            font-size: 13px;
+            color: var(--text-muted);
         }
 
         .hero h1 {
@@ -267,8 +284,28 @@
             box-sizing: border-box;
         }
 
-        #card-paypal>.img-wrapper {
-            padding: 12px;
+        .paypal-body {
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            width: 100%;
+            max-width: 170px;
+            aspect-ratio: 1 / 1;
+            border-radius: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02), inset 0 0 0 1px rgba(0, 0, 0, 0.04);
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+
+        #card-paypal .img-wrapper {
+            flex: 1 1 auto;
+            min-height: 0;
+            width: 100%;
+            max-width: none;
+            aspect-ratio: unset;
+            box-shadow: none;
+            border-radius: 0;
+            padding: 14px 14px 0;
         }
 
         .card img {
@@ -283,6 +320,48 @@
             font-size: 13px;
             font-weight: 500;
             line-height: 1.4;
+        }
+
+        a.img-wrapper {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .paypal-actions {
+            display: flex;
+            flex-direction: row;
+            flex-shrink: 0;
+            gap: 6px;
+            padding: 8px 10px 10px;
+        }
+
+        .paypal-actions a {
+            flex: 1;
+            text-decoration: none;
+            padding: 5px 0;
+            border-radius: 999px;
+            background: var(--btn-hover);
+            color: var(--text-color);
+            font-size: 12px;
+            font-weight: 600;
+            text-align: center;
+            transition: 0.2s;
+        }
+
+        .paypal-actions a:hover {
+            transform: translateY(-1px);
+        }
+
+        .paypal-actions a.featured {
+            background: var(--primary-color);
+            color: #fff;
+            font-size: 13px;
+            padding: 6px 0;
+            box-shadow: 0 2px 10px rgba(77, 173, 247, 0.4);
+        }
+
+        .paypal-actions a.featured:hover {
+            filter: brightness(1.08);
         }
 
         .footer {
@@ -312,6 +391,7 @@
         </div>
 
         <div class="story-container">
+            <div class="stats" id="stats"></div>
             <div class="story-lead" id="story-lead"></div>
             <div class="story-sub" id="story-sub"></div>
             <div class="feature-list" id="feature-list"></div>
@@ -327,39 +407,41 @@
             en: {
                 pageTitle: "Support Colorful Background ❤️",
                 title: "Keep the Colors Growing",
-                lead: "Every day, Colorful Background accompanies hundreds of users to create a more comfortable and personalized digital aesthetic space.",
-                sub: "As an independent project, your support is the sole engine that keeps it alive. Every coffee you buy me directly fuels:",
+                lead: "Colorful Background will always be free.",
+                sub: "If it makes your browsing experience a little better, consider buying me a coffee.",
+                stats: ["⭐ 1,000+ users", "🛠 Independently Built", "🚀 Actively Maintained"],
                 features: [
                     { icon: "🎨", text: "Crafting new elegant themes & seamless visual designs" },
                     { icon: "🚀", text: "Delivering next-gen features & regular performance tuning" },
                     { icon: "🛠", text: "Resolving edge-case bugs & maintaining reliable updates" },
                     { icon: "👁", text: "Researching deeper eye-comfort & dynamic dimming logic" }
                 ],
-                footer: "Crafted with care. Thank you for empowering independent development ☕",
-                wechatTitle: "💚 WeChat Pay",
+                footer: "Built with passion by an independent developer · Thank you for your support ❤️",
+                wechatTitle: "WeChat Pay",
                 wechatTip: "Scan or Long-press via WeChat",
-                alipayTitle: "💙 Alipay",
+                alipayTitle: "Alipay",
                 alipayTip: "Scan or Long-press via Alipay",
-                paypalTitle: "💛 PayPal",
+                paypalTitle: "PayPal",
                 paypalTip: "Click to donate via PayPal"
             },
             zh: {
                 pageTitle: "支持 Colorful Background ❤️",
                 title: "让色彩持续绽放",
-                lead: "每天，Colorful Background 都在陪伴成百上千的用户，打造更舒适、更具个性的数字美学空间。",
-                sub: "作为一个完全由兴趣驱动的独立开发项目，你的每一份支持，都是它走向完美的唯一动力。每一杯咖啡的赞助，都将直达这些改变：",
+                lead: "Colorful Background 将始终免费。",
+                sub: "如果它让你的浏览体验变得更舒适一点，欢迎请开发者喝杯咖啡。",
+                stats: ["⭐ 1,000+ 用户", "🛠 独立开发", "🚀 持续维护"],
                 features: [
                     { icon: "🎨", text: "雕琢更优雅的专属主题与视觉动效" },
                     { icon: "🚀", text: "探索下一代新功能与极致的性能调优" },
                     { icon: "🛠", text: "跨平台 Bug 追击与长期的稳定维护" },
                     { icon: "👁", text: "持续深耕护眼技术与更细腻的色调算法" }
                 ],
-                footer: "心存感激。谢谢你愿意为独立开发者的夜晚点亮一盏灯 ☕",
-                wechatTitle: "💚 微信支付",
+                footer: "由独立开发者用热爱打造 · 感谢你的支持 ❤️",
+                wechatTitle: "微信支付",
                 wechatTip: "微信扫码或长按识别",
-                alipayTitle: "💙 支付宝",
+                alipayTitle: "支付宝",
                 alipayTip: "支付宝扫码或长按识别",
-                paypalTitle: "💛 PayPal",
+                paypalTitle: "PayPal",
                 paypalTip: "点击跳转至 PayPal 页面"
             }
         };
@@ -367,7 +449,7 @@
         const paymentsConfig = [
             { id: "wechat", titleKey: "wechatTitle", tipKey: "wechatTip", img: "https://ext-colorful.github.io/images/wechat_a2.png", isLink: false },
             { id: "alipay", titleKey: "alipayTitle", tipKey: "alipayTip", img: "https://ext-colorful.github.io/images/alipay_a2.png", isLink: false },
-            { id: "paypal", titleKey: "paypalTitle", tipKey: "paypalTip", img: "https://ext-colorful.github.io/images/PayPal.svg", isLink: true, url: "https://www.paypal.me/yxuiang" }
+            { id: "paypal", titleKey: "paypalTitle", tipKey: "paypalTip", img: "https://ext-colorful.github.io/images/PayPal.svg", isLink: true, url: "https://paypal.me/yxuiang/5" }
         ];
 
         function initDOM() {
@@ -375,23 +457,35 @@
             grid.innerHTML = "";
 
             paymentsConfig.forEach(p => {
-                const card = document.createElement(p.isLink ? "a" : "div");
+                const card = document.createElement("div");
                 card.className = "card";
                 card.id = `card-${p.id}`;
 
-                if (p.isLink) {
-                    card.href = p.url;
-                    card.target = "_blank";
-                    card.rel = "noopener noreferrer";
-                }
-
-                card.innerHTML = `
+                if (p.id === "paypal") {
+                    card.innerHTML = `
+            <h2 id="title-${p.id}"></h2>
+            <div class="paypal-body">
+                <a href="${p.url}" class="img-wrapper" target="_blank" rel="noopener noreferrer">
+                    <img src="${p.img}" alt="${p.id}" loading="lazy" />
+                </a>
+                <div class="paypal-actions">
+                    <a href="https://paypal.me/yxuiang/3" target="_blank" rel="noopener noreferrer">$3</a>
+                    <a href="https://paypal.me/yxuiang/5" class="featured" target="_blank" rel="noopener noreferrer">$5</a>
+                    <a href="https://paypal.me/yxuiang/10" target="_blank" rel="noopener noreferrer">$10</a>
+                </div>
+            </div>
+            <div class="tip" id="tip-${p.id}"></div>
+        `;
+                } else {
+                    card.innerHTML = `
             <h2 id="title-${p.id}"></h2>
             <div class="img-wrapper">
                 <img src="${p.img}" alt="${p.id}" loading="lazy" />
             </div>
             <div class="tip" id="tip-${p.id}"></div>
         `;
+                }
+
                 grid.appendChild(card);
             });
         }
@@ -404,6 +498,9 @@
             document.getElementById("story-lead").innerText = data.lead;
             document.getElementById("story-sub").innerText = data.sub;
             document.getElementById("page-footer").innerText = data.footer;
+
+            const statsEl = document.getElementById("stats");
+            statsEl.innerHTML = data.stats.map((s) => `<div>${s}</div>`).join("");
 
             const featureListContainer = document.getElementById("feature-list");
             featureListContainer.innerHTML = "";
@@ -422,7 +519,7 @@
                 const tipEl = document.getElementById(`tip-${p.id}`);
 
                 if (titleEl && tipEl) {
-                    titleEl.innerHTML = `${data[p.titleKey]}${p.isLink ? '<span class="link-icon">↗</span>' : ''}`;
+                    titleEl.innerHTML = `${data[p.titleKey]}${p.id === "paypal" ? '<span class="link-icon">↗</span>' : ''}`;
                     tipEl.innerText = data[p.tipKey];
                 }
             });
