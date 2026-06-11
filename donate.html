@@ -79,7 +79,9 @@
             cursor: pointer;
             font-weight: 600;
             font-size: 12px;
-            transition: all 0.2s ease;
+            transition: color 0.3s ease, background 0.35s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.35s ease, transform 0.2s ease;
+            position: relative;
+            z-index: 1;
         }
 
         button.lang:hover {
@@ -89,7 +91,12 @@
         button.lang.active {
             background: var(--text-color);
             color: var(--bg-color);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.12);
+            transform: scale(1.02);
+        }
+
+        button.lang:active {
+            transform: scale(0.96);
         }
 
         /* 移动端视窗较小时，让悬浮按钮贴紧边缘或微调位置避免挡住主要内容 */
@@ -103,7 +110,7 @@
         /* hero header */
         .hero {
             text-align: center;
-            margin-bottom: 28px;
+            margin-bottom: 44px;
         }
 
         .hero-logo img {
@@ -165,6 +172,13 @@
             font-size: 13px;
             color: var(--text-muted);
             font-weight: 600;
+            transition: border-color 0.3s ease, color 0.3s ease;
+        }
+
+        .stats div.stat-highlight {
+            background: linear-gradient(160deg, rgba(77, 173, 247, 0.1) 0%, rgba(156, 107, 255, 0.08) 65%, rgba(255, 107, 107, 0.06) 100%);
+            border-color: rgba(77, 173, 247, 0.25);
+            color: var(--text-color);
         }
 
         .hero h1 {
@@ -203,6 +217,11 @@
             .hero h1,
             .brand-name .brand-char {
                 animation: none;
+            }
+
+            .anim-enter {
+                animation: none;
+                opacity: 1;
             }
 
             .card,
@@ -418,11 +437,16 @@
             font-size: 12px;
             font-weight: 600;
             text-align: center;
-            transition: 0.2s;
+            transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), background 0.2s ease, filter 0.2s ease;
+            cursor: pointer;
         }
 
         .paypal-actions a:hover {
-            transform: translateY(-1px);
+            transform: translateY(-2px);
+        }
+
+        .paypal-actions a:active {
+            transform: scale(0.95);
         }
 
         .paypal-actions a.featured {
@@ -446,6 +470,29 @@
             padding-top: 30px;
             line-height: 1.5;
         }
+
+        /* #9 入场动画 */
+        @keyframes fade-up {
+            from {
+                opacity: 0;
+                transform: translateY(24px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .anim-enter {
+            opacity: 0;
+            animation: fade-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .anim-delay-1 { animation-delay: 0.08s; }
+        .anim-delay-2 { animation-delay: 0.2s; }
+        .anim-delay-3 { animation-delay: 0.36s; }
+        .anim-delay-4 { animation-delay: 0.48s; }
+
     </style>
 </head>
 
@@ -457,7 +504,7 @@
     </div>
 
     <div class="wrap">
-        <div class="hero">
+        <div class="hero anim-enter anim-delay-1">
             <div class="hero-logo">
                 <img src="https://ext-colorful.github.io/umbrella.svg">
             </div>
@@ -472,29 +519,29 @@
                 <span class="brand-char" style="--i:6" aria-hidden="true">U</span>
                 <span class="brand-char" style="--i:7" aria-hidden="true">L</span>
                 <span class="brand-space" aria-hidden="true"></span>
-                <span class="brand-char" style="--i:9" aria-hidden="true">B</span>
-                <span class="brand-char" style="--i:10" aria-hidden="true">A</span>
-                <span class="brand-char" style="--i:11" aria-hidden="true">C</span>
-                <span class="brand-char" style="--i:12" aria-hidden="true">K</span>
-                <span class="brand-char" style="--i:13" aria-hidden="true">G</span>
-                <span class="brand-char" style="--i:14" aria-hidden="true">R</span>
-                <span class="brand-char" style="--i:15" aria-hidden="true">O</span>
-                <span class="brand-char" style="--i:16" aria-hidden="true">U</span>
-                <span class="brand-char" style="--i:17" aria-hidden="true">N</span>
-                <span class="brand-char" style="--i:18" aria-hidden="true">D</span>
+                <span class="brand-char" style="--i:8" aria-hidden="true">B</span>
+                <span class="brand-char" style="--i:9" aria-hidden="true">A</span>
+                <span class="brand-char" style="--i:10" aria-hidden="true">C</span>
+                <span class="brand-char" style="--i:11" aria-hidden="true">K</span>
+                <span class="brand-char" style="--i:12" aria-hidden="true">G</span>
+                <span class="brand-char" style="--i:13" aria-hidden="true">R</span>
+                <span class="brand-char" style="--i:14" aria-hidden="true">O</span>
+                <span class="brand-char" style="--i:15" aria-hidden="true">U</span>
+                <span class="brand-char" style="--i:16" aria-hidden="true">N</span>
+                <span class="brand-char" style="--i:17" aria-hidden="true">D</span>
             </div>
             <h1 id="page-main-title">让色彩持续绽放</h1>
         </div>
 
-        <div class="story-container">
+        <div class="story-container anim-enter anim-delay-2">
             <div class="stats" id="stats"></div>
             <div class="feature-list" id="feature-list"></div>
             <div class="support-note" id="support-note"></div>
         </div>
 
-        <div class="grid" id="grid"></div>
+        <div class="grid anim-enter anim-delay-3" id="grid"></div>
 
-        <div class="footer" id="page-footer" data-i18n="footer">心存感激。谢谢你愿意为独立开发者的夜晚点亮一盏灯 ☕</div>
+        <div class="footer anim-enter anim-delay-4" id="page-footer" data-i18n="footer">心存感激。谢谢你愿意为独立开发者的夜晚点亮一盏灯 ☕</div>
     </div>
 
     <script>
@@ -503,7 +550,7 @@
                 pageTitle: "Support Colorful Background ❤️",
                 title: "Keep the Colors Growing",
                 sub: "If it makes your browsing experience a little better, consider buying me a coffee.",
-                stats: ["⭐ 1,000+ users", "🪄 Independently Built", "🚀 Actively Maintained", "🎁 Always Free"],
+                stats: ["⭐ 1,000+ users", "🛠 Independently Built", "🚀 Actively Maintained", "🎁 Always Free"],
                 supportNote: "❤️ Thanks to every supporter - your encouragement and support keep Colorful Background moving forward with continuous updates.",
                 features: [
                     { icon: "✨", text: "Continuously delivering more stunning themes and motion experiences" },
@@ -523,7 +570,7 @@
                 pageTitle: "支持 Colorful Background ❤️",
                 title: "让色彩持续绽放",
                 sub: "如果它让你的浏览体验变得更舒适一点，欢迎请开发者喝杯咖啡。",
-                stats: ["⭐ 1,000+ 用户", "🪄 独立开发", "🚀 持续维护", "🎁 始终免费"],
+                stats: ["⭐ 1,000+ 用户", "🛠 独立开发", "🚀 持续维护", "🎁 始终免费"],
                 supportNote: "❤️ 感谢每一位支持者，你的鼓励与支持，都是 Colorful Background 持续更新的动力。",
                 features: [
                     { icon: "✨", text: "持续带来更惊艳的主题与动效体验" },
@@ -593,7 +640,7 @@
             document.getElementById("page-footer").innerText = data.footer;
 
             const statsEl = document.getElementById("stats");
-            statsEl.innerHTML = data.stats.map((s) => `<div>${s}</div>`).join("");
+            statsEl.innerHTML = data.stats.map((s, i) => `<div${i === 0 || i === 3 ? ' class="stat-highlight"' : ''}>${s}</div>`).join("");
             document.getElementById("support-note").innerText = data.supportNote;
 
             const featureListContainer = document.getElementById("feature-list");
