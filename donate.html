@@ -10,8 +10,8 @@
         :root {
             --bg-color: #f8fafc;
             --text-color: #0f172a;
-            --text-muted: #475569;
-            --text-light: #94a3b8;
+            --text-muted: #334155;
+            --text-light: #64748b;
             --card-bg: rgba(255, 255, 255, 0.85);
             --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 10px 30px -10px rgba(15, 23, 42, 0.06);
             --card-shadow-hover: 0 20px 40px -1px rgba(15, 23, 42, 0.12);
@@ -25,8 +25,8 @@
             :root {
                 --bg-color: #090d16;
                 --text-color: #f1f5f9;
-                --text-muted: #94a3b8;
-                --text-light: #64748b;
+                --text-muted: #cbd5e1;
+                --text-light: #94a3b8;
                 --card-bg: rgba(21, 28, 44, 0.7);
                 --border-color: rgba(34, 49, 77, 0.6);
                 --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 10px 30px -10px rgba(0, 0, 0, 0.4);
@@ -38,11 +38,13 @@
 
         body {
             margin: 0;
-            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', Roboto, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Segoe UI', Roboto, sans-serif;
             background: var(--bg-color);
             color: var(--text-color);
             transition: background 0.3s, color 0.3s;
-            -webkit-font-smoothing: antialiased;
+            -webkit-font-smoothing: subpixel-antialiased;
+            font-weight: 500;
+            line-height: 1.55;
         }
 
         .wrap {
@@ -162,6 +164,7 @@
             border: 1px solid var(--border-color);
             font-size: 13px;
             color: var(--text-muted);
+            font-weight: 600;
         }
 
         .hero h1 {
@@ -259,6 +262,20 @@
             font-size: 14px;
             line-height: 1.5;
             color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .support-note {
+            margin-top: 18px;
+            padding: 12px 14px;
+            border-radius: 14px;
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            font-size: 14px;
+            font-weight: 600;
+            line-height: 1.5;
+            text-align: center;
         }
 
         /* grid 布局优化 */
@@ -374,7 +391,7 @@
             margin-top: 20px;
             color: var(--text-light);
             font-size: 13px;
-            font-weight: 500;
+            font-weight: 600;
             line-height: 1.4;
         }
 
@@ -424,6 +441,7 @@
             text-align: center;
             color: var(--text-light);
             font-size: 13px;
+            font-weight: 500;
             border-top: 1px solid var(--border-color);
             padding-top: 30px;
             line-height: 1.5;
@@ -471,6 +489,7 @@
         <div class="story-container">
             <div class="stats" id="stats"></div>
             <div class="feature-list" id="feature-list"></div>
+            <div class="support-note" id="support-note"></div>
         </div>
 
         <div class="grid" id="grid"></div>
@@ -484,14 +503,15 @@
                 pageTitle: "Support Colorful Background ❤️",
                 title: "Keep the Colors Growing",
                 sub: "If it makes your browsing experience a little better, consider buying me a coffee.",
-                stats: ["⭐ 1,000+ users", "🛠 Independently Built", "🚀 Actively Maintained", "💰 Always Free"],
+                stats: ["⭐ 1,000+ users", "🪄 Independently Built", "🚀 Actively Maintained", "🎁 Always Free"],
+                supportNote: "❤️ Thanks to every supporter - your encouragement and support keep Colorful Background moving forward with continuous updates.",
                 features: [
-                    { icon: "🎨", text: "Crafting new elegant themes & seamless visual designs" },
-                    { icon: "🚀", text: "Delivering next-gen features & regular performance tuning" },
+                    { icon: "✨", text: "Continuously delivering more stunning themes and motion experiences" },
+                    { icon: "🚀", text: "Prioritizing new feature development and performance improvements" },
                     { icon: "🛠", text: "Resolving edge-case bugs & maintaining reliable updates" },
-                    { icon: "👁", text: "Researching deeper eye-comfort & dynamic dimming logic" }
+                    { icon: "🌈", text: "Making every browser launch feel more comfortable and healing" }
                 ],
-                footer: "Built with passion by an independent developer · Thank you for your support ❤️",
+                footer: "Built with passion by an independent developer · Thank you for your support ☂️",
                 wechatTitle: "WeChat Pay",
                 wechatTip: "Scan or Long-press via WeChat",
                 alipayTitle: "Alipay",
@@ -503,14 +523,15 @@
                 pageTitle: "支持 Colorful Background ❤️",
                 title: "让色彩持续绽放",
                 sub: "如果它让你的浏览体验变得更舒适一点，欢迎请开发者喝杯咖啡。",
-                stats: ["⭐ 1,000+ 用户", "🛠 独立开发", "🚀 持续维护", "💰 始终免费"],
+                stats: ["⭐ 1,000+ 用户", "🪄 独立开发", "🚀 持续维护", "🎁 始终免费"],
+                supportNote: "❤️ 感谢每一位支持者，你的鼓励与支持，都是 Colorful Background 持续更新的动力。",
                 features: [
-                    { icon: "🎨", text: "雕琢更优雅的专属主题与视觉动效" },
-                    { icon: "🚀", text: "探索下一代新功能与极致的性能调优" },
+                    { icon: "✨", text: "持续带来更惊艳的主题与动效体验" },
+                    { icon: "🚀", text: "优先投入新功能开发与性能提升" },
                     { icon: "🛠", text: "跨平台 Bug 追击与长期的稳定维护" },
-                    { icon: "👁", text: "持续深耕护眼技术与更细腻的色调算法" }
+                    { icon: "🌈", text: "让每一次打开浏览器，都更加舒适与治愈" }
                 ],
-                footer: "由独立开发者用热爱打造 · 感谢你的支持 ❤️",
+                footer: "由独立开发者用热爱打造 · 感谢你的支持 ☂️",
                 wechatTitle: "微信支付",
                 wechatTip: "微信扫码或长按识别",
                 alipayTitle: "支付宝",
@@ -573,6 +594,7 @@
 
             const statsEl = document.getElementById("stats");
             statsEl.innerHTML = data.stats.map((s) => `<div>${s}</div>`).join("");
+            document.getElementById("support-note").innerText = data.supportNote;
 
             const featureListContainer = document.getElementById("feature-list");
             featureListContainer.innerHTML = "";
