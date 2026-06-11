@@ -1,6 +1,5 @@
 <!doctype html>
 <html lang="zh">
-
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -19,6 +18,7 @@
             --btn-hover: #f1f5f9;
             --desc-bg: #ffffff;
             --primary-color: #4dadf7;
+            --media-shadow: 0 4px 12px rgba(0, 0, 0, 0.02), inset 0 0 0 1px rgba(0, 0, 0, 0.04);
         }
 
         @media (prefers-color-scheme: dark) {
@@ -50,11 +50,10 @@
         .wrap {
             max-width: 900px;
             margin: auto;
-            padding: 30px 24px 30px 24px;
+            padding: 30px 24px;
             box-sizing: border-box;
         }
 
-        /* 优化后的语言切换器：采用悬浮胶囊设计，不占用文档流空间 */
         .lang-toggle-container {
             position: fixed;
             top: 20px;
@@ -80,13 +79,9 @@
             font-weight: 600;
             font-size: 12px;
             transition: color 0.3s ease, background 0.35s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.35s ease, transform 0.2s ease;
-            position: relative;
-            z-index: 1;
         }
 
-        button.lang:hover {
-            color: var(--text-color);
-        }
+        button.lang:hover { color: var(--text-color); }
 
         button.lang.active {
             background: var(--text-color);
@@ -95,19 +90,8 @@
             transform: scale(1.02);
         }
 
-        button.lang:active {
-            transform: scale(0.96);
-        }
+        button.lang:active { transform: scale(0.96); }
 
-        /* 移动端视窗较小时，让悬浮按钮贴紧边缘或微调位置避免挡住主要内容 */
-        @media (max-width: 640px) {
-            .lang-toggle-container {
-                top: 12px;
-                right: 12px;
-            }
-        }
-
-        /* hero header */
         .hero {
             text-align: center;
             margin-bottom: 44px;
@@ -119,8 +103,7 @@
         }
 
         .brand-name {
-            margin-top: 10px;
-            margin-bottom: 12px;
+            margin: 10px 0 12px;
             font-size: 14px;
             font-weight: 800;
             letter-spacing: 0.08em;
@@ -139,22 +122,10 @@
             will-change: transform;
         }
 
-        .brand-name .brand-char:nth-child(3n + 1) {
-            color: #ff6b6b;
-        }
-
-        .brand-name .brand-char:nth-child(3n + 2) {
-            color: #4dadf7;
-        }
-
-        .brand-name .brand-char:nth-child(3n) {
-            color: #9c6bff;
-        }
-
-        .brand-name .brand-space {
-            width: 0.6em;
-            flex: 0 0 auto;
-        }
+        .brand-name .brand-char:nth-child(3n + 1) { color: #ff6b6b; }
+        .brand-name .brand-char:nth-child(3n + 2) { color: #4dadf7; }
+        .brand-name .brand-char:nth-child(3n) { color: #9c6bff; }
+        .brand-name .brand-space { width: 0.6em; flex: 0 0 auto; }
 
         .stats {
             display: flex;
@@ -184,7 +155,7 @@
         .hero h1 {
             font-size: 40px;
             font-weight: 800;
-            margin: 0 0 16px 0;
+            margin: 0 0 16px;
             letter-spacing: -0.5px;
             background: linear-gradient(135deg, #ff6b6b 10%, #4dadf7 50%, #cc5de8 90%);
             -webkit-background-clip: text;
@@ -194,45 +165,13 @@
             animation: shine 6s linear infinite;
         }
 
-        @keyframes shine {
-            to {
-                background-position: 200% center;
-            }
-        }
+        @keyframes shine { to { background-position: 200% center; } }
 
         @keyframes brand-letter-float {
-
-            0%,
-            100% {
-                transform: translateY(0);
-            }
-
-            50% {
-                transform: translateY(-3px);
-            }
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-3px); }
         }
 
-        @media (prefers-reduced-motion: reduce) {
-
-            .hero h1,
-            .brand-name .brand-char {
-                animation: none;
-            }
-
-            .anim-enter {
-                animation: none;
-                opacity: 1;
-            }
-
-            .card,
-            .feature-item,
-            button.lang,
-            .paypal-actions a {
-                transition: none;
-            }
-        }
-
-        /* 故事板结构优化 */
         .story-container {
             background: var(--desc-bg);
             border: 1px solid var(--border-color);
@@ -242,17 +181,10 @@
             margin-bottom: 40px;
         }
 
-        /* 列表组件自适应优化 */
         .feature-list {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 16px;
-        }
-
-        @media (max-width: 640px) {
-            .feature-list {
-                grid-template-columns: 1fr;
-            }
         }
 
         .feature-item {
@@ -272,10 +204,7 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
         }
 
-        .feature-icon {
-            font-size: 18px;
-            line-height: 1.4;
-        }
+        .feature-icon { font-size: 18px; line-height: 1.4; }
 
         .feature-text {
             font-size: 14px;
@@ -297,7 +226,6 @@
             text-align: center;
         }
 
-        /* grid 布局优化 */
         .grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -305,13 +233,6 @@
             margin-top: 20px;
         }
 
-        @media (max-width: 768px) {
-            .grid {
-                grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            }
-        }
-
-        /* 卡片细节打磨 */
         .card {
             background: var(--card-bg);
             border: 1px solid var(--border-color);
@@ -323,18 +244,11 @@
             -webkit-backdrop-filter: blur(8px);
             transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
             box-sizing: border-box;
-            position: relative;
-
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: space-between;
-            text-decoration: none;
             color: inherit;
-        }
-
-        a.card {
-            cursor: pointer;
         }
 
         .card:hover {
@@ -345,62 +259,52 @@
 
         .card h2 {
             font-size: 18px;
-            margin: 0 0 20px 0;
+            margin: 0 0 20px;
             font-weight: 600;
             display: flex;
             align-items: center;
             gap: 6px;
         }
 
-        /* 外链图标提示 */
         .card .link-icon {
             font-size: 14px;
             opacity: 0.5;
             transition: opacity 0.3s;
         }
 
-        .card:hover .link-icon {
-            opacity: 1;
-        }
+        .card:hover .link-icon { opacity: 1; }
 
-        /* 二维码交互暗示：微弱呼吸光晕 */
         @keyframes qr-breathe {
-            0%, 100% { box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02), inset 0 0 0 1px rgba(0, 0, 0, 0.04); }
+            0%, 100% { box-shadow: var(--media-shadow); }
             50% { box-shadow: 0 4px 18px rgba(77, 173, 247, 0.12), inset 0 0 0 1.5px rgba(77, 173, 247, 0.15); }
         }
 
-        .card:not(#card-paypal) .img-wrapper {
-            animation: qr-breathe 3.5s ease-in-out infinite;
+        .media-frame {
+            width: 100%;
+            max-width: 170px;
+            aspect-ratio: 1 / 1;
+            border-radius: 20px;
+            box-shadow: var(--media-shadow);
+            box-sizing: border-box;
         }
+
+        .card:not(#card-paypal) .img-wrapper { animation: qr-breathe 3.5s ease-in-out infinite; }
 
         .card:not(#card-paypal):hover .img-wrapper {
             animation: none;
             box-shadow: 0 4px 18px rgba(77, 173, 247, 0.18), inset 0 0 0 1.5px rgba(77, 173, 247, 0.2);
         }
 
-        /* 二维码容器等比缩放 */
         .img-wrapper {
-            width: 100%;
-            max-width: 170px;
-            aspect-ratio: 1 / 1;
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 20px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02), inset 0 0 0 1px rgba(0, 0, 0, 0.04);
-            box-sizing: border-box;
         }
 
         .paypal-body {
             display: flex;
             flex-direction: column;
             align-items: stretch;
-            width: 100%;
-            max-width: 170px;
-            aspect-ratio: 1 / 1;
-            border-radius: 20px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02), inset 0 0 0 1px rgba(0, 0, 0, 0.04);
-            box-sizing: border-box;
             overflow: hidden;
         }
 
@@ -436,9 +340,8 @@
 
         .paypal-actions {
             display: flex;
-            flex-direction: row;
-            flex-shrink: 0;
             gap: 6px;
+            flex-shrink: 0;
             padding: 8px 10px 10px;
         }
 
@@ -456,13 +359,8 @@
             cursor: pointer;
         }
 
-        .paypal-actions a:hover {
-            transform: translateY(-2px);
-        }
-
-        .paypal-actions a:active {
-            transform: scale(0.95);
-        }
+        .paypal-actions a:hover { transform: translateY(-2px); }
+        .paypal-actions a:active { transform: scale(0.95); }
 
         .paypal-actions a.featured {
             background: var(--primary-color);
@@ -472,15 +370,16 @@
             box-shadow: 0 2px 10px rgba(77, 173, 247, 0.4);
         }
 
-        .paypal-actions a.featured:hover {
-            filter: brightness(1.08);
-        }
+        .paypal-actions a.featured:hover { filter: brightness(1.08); }
 
-        /* 赞助者感谢区块 */
         .sponsors-section {
             margin-top: 40px;
             text-align: center;
+            overflow: visible;
         }
+
+        /* iOS Safari：父级 transform 动画会阻碍子元素高度重算 */
+        .sponsors-section.anim-enter { animation-name: fade-in; }
 
         .sponsors-title {
             font-size: 14px;
@@ -488,6 +387,8 @@
             color: var(--text-muted);
             letter-spacing: 0.04em;
             margin-bottom: 16px;
+            line-height: 1.55;
+            overflow: visible;
         }
 
         .sponsors-list {
@@ -558,16 +459,14 @@
             line-height: 1.5;
         }
 
-        /* #9 入场动画 */
         @keyframes fade-up {
-            from {
-                opacity: 0;
-                transform: translateY(24px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(24px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fade-in {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
         .anim-enter {
@@ -580,44 +479,43 @@
         .anim-delay-3 { animation-delay: 0.36s; }
         .anim-delay-4 { animation-delay: 0.48s; }
 
+        @media (max-width: 768px) {
+            .grid { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+        }
+
+        @media (max-width: 640px) {
+            .lang-toggle-container { top: 12px; right: 12px; }
+            .feature-list { grid-template-columns: 1fr; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .hero h1,
+            .brand-name .brand-char,
+            .card:not(#card-paypal) .img-wrapper { animation: none; }
+
+            .anim-enter { animation: none; opacity: 1; }
+
+            .card,
+            .feature-item,
+            button.lang,
+            .paypal-actions a { transition: none; }
+        }
     </style>
 </head>
 
 <body>
-    <!-- 修改后的悬浮切换栏 -->
     <div class="lang-toggle-container">
-        <button class="lang" id="btn-en" onclick="setLang('en')">EN</button>
-        <button class="lang" id="btn-zh" onclick="setLang('zh')">中文</button>
+        <button class="lang" id="btn-en" onclick="render('en')">EN</button>
+        <button class="lang" id="btn-zh" onclick="render('zh')">中文</button>
     </div>
 
     <div class="wrap">
         <div class="hero anim-enter anim-delay-1">
             <div class="hero-logo">
-                <img src="https://ext-colorful.github.io/umbrella.svg">
+                <img src="https://ext-colorful.github.io/umbrella.svg" alt="">
             </div>
-            <!-- 纯 CSS 逐字动画：手动拆分字母便于错峰延迟 -->
-            <div class="brand-name" aria-label="COLORFUL BACKGROUND">
-                <span class="brand-char" style="--i:0" aria-hidden="true">C</span>
-                <span class="brand-char" style="--i:1" aria-hidden="true">O</span>
-                <span class="brand-char" style="--i:2" aria-hidden="true">L</span>
-                <span class="brand-char" style="--i:3" aria-hidden="true">O</span>
-                <span class="brand-char" style="--i:4" aria-hidden="true">R</span>
-                <span class="brand-char" style="--i:5" aria-hidden="true">F</span>
-                <span class="brand-char" style="--i:6" aria-hidden="true">U</span>
-                <span class="brand-char" style="--i:7" aria-hidden="true">L</span>
-                <span class="brand-space" aria-hidden="true"></span>
-                <span class="brand-char" style="--i:8" aria-hidden="true">B</span>
-                <span class="brand-char" style="--i:9" aria-hidden="true">A</span>
-                <span class="brand-char" style="--i:10" aria-hidden="true">C</span>
-                <span class="brand-char" style="--i:11" aria-hidden="true">K</span>
-                <span class="brand-char" style="--i:12" aria-hidden="true">G</span>
-                <span class="brand-char" style="--i:13" aria-hidden="true">R</span>
-                <span class="brand-char" style="--i:14" aria-hidden="true">O</span>
-                <span class="brand-char" style="--i:15" aria-hidden="true">U</span>
-                <span class="brand-char" style="--i:16" aria-hidden="true">N</span>
-                <span class="brand-char" style="--i:17" aria-hidden="true">D</span>
-            </div>
-            <h1 id="page-main-title">让色彩持续绽放</h1>
+            <div class="brand-name" aria-label="COLORFUL BACKGROUND"></div>
+            <h1 id="page-main-title"></h1>
         </div>
 
         <div class="story-container anim-enter anim-delay-2">
@@ -628,13 +526,13 @@
 
         <div class="grid anim-enter anim-delay-3" id="grid"></div>
 
-        <div class="sponsors-section anim-enter anim-delay-4" id="sponsors-section">
+        <div class="sponsors-section anim-enter anim-delay-4">
             <div class="sponsors-title" id="sponsors-title"></div>
             <div class="sponsors-list" id="sponsors-list"></div>
             <div class="sponsors-cta" id="sponsors-cta"></div>
         </div>
 
-        <div class="footer anim-enter anim-delay-4" id="page-footer" data-i18n="footer">心存感激。谢谢你愿意为独立开发者的夜晚点亮一盏灯 ☕</div>
+        <div class="footer anim-enter anim-delay-4" id="page-footer"></div>
     </div>
 
     <script>
@@ -642,7 +540,6 @@
             en: {
                 pageTitle: "Support Colorful Background ❤️",
                 title: "Keep the Colors Growing",
-                sub: "If it makes your browsing experience a little better, consider buying me a coffee.",
                 stats: ["⭐ 1,000+ users", "🛠 Independently Built", "🚀 Actively Maintained", "🎁 Always Free"],
                 supportNote: "❤️ Thanks to every supporter - your encouragement and support keep Colorful Background moving forward with continuous updates.",
                 features: [
@@ -664,7 +561,6 @@
             zh: {
                 pageTitle: "支持 Colorful Background ❤️",
                 title: "让色彩持续绽放",
-                sub: "如果它让你的浏览体验变得更舒适一点，欢迎请开发者喝杯咖啡。",
                 stats: ["⭐ 1,000+ 用户", "🛠 独立开发", "🚀 持续维护", "🎁 始终免费"],
                 supportNote: "❤️ 感谢每一位支持者，你的鼓励与支持，都是 Colorful Background 持续更新的动力。",
                 features: [
@@ -685,30 +581,30 @@
             }
         };
 
-        // 赞助者名单：新增赞助只需在此追加一行
         const sponsors = [
             { name: "匿名小伙伴", amount: "¥5.20", color: "linear-gradient(135deg, #ff6b6b, #ee5a24)" }
         ];
 
         const paymentsConfig = [
-            { id: "wechat", titleKey: "wechatTitle", tipKey: "wechatTip", img: "https://ext-colorful.github.io/images/wechat_a2.png", isLink: false },
-            { id: "alipay", titleKey: "alipayTitle", tipKey: "alipayTip", img: "https://ext-colorful.github.io/images/alipay_a2.png", isLink: false },
-            { id: "paypal", titleKey: "paypalTitle", tipKey: "paypalTip", img: "https://ext-colorful.github.io/images/PayPal.svg", isLink: true, url: "https://paypal.me/yxuiang/5" }
+            { id: "wechat", titleKey: "wechatTitle", tipKey: "wechatTip", img: "https://ext-colorful.github.io/images/wechat_a2.png" },
+            { id: "alipay", titleKey: "alipayTitle", tipKey: "alipayTip", img: "https://ext-colorful.github.io/images/alipay_a2.png" },
+            { id: "paypal", titleKey: "paypalTitle", tipKey: "paypalTip", img: "https://ext-colorful.github.io/images/PayPal.svg", url: "https://paypal.me/yxuiang/5" }
         ];
 
+        function initBrandName() {
+            let i = 0;
+            document.querySelector(".brand-name").innerHTML = "COLORFUL BACKGROUND"
+                .split("")
+                .map(ch => ch === " "
+                    ? '<span class="brand-space" aria-hidden="true"></span>'
+                    : `<span class="brand-char" style="--i:${i++}" aria-hidden="true">${ch}</span>`)
+                .join("");
+        }
+
         function initDOM() {
-            const grid = document.getElementById("grid");
-            grid.innerHTML = "";
-
-            paymentsConfig.forEach(p => {
-                const card = document.createElement("div");
-                card.className = "card";
-                card.id = `card-${p.id}`;
-
-                if (p.isLink) {
-                    card.innerHTML = `
-            <h2 id="title-${p.id}"></h2>
-            <div class="paypal-body">
+            document.getElementById("grid").innerHTML = paymentsConfig.map(p => {
+                const body = p.url
+                    ? `<div class="paypal-body media-frame">
                 <a href="${p.url}" class="img-wrapper" target="_blank" rel="noopener noreferrer">
                     <img src="${p.img}" alt="${p.id}" loading="lazy" />
                 </a>
@@ -717,21 +613,16 @@
                     <a href="https://paypal.me/yxuiang/5" class="featured" target="_blank" rel="noopener noreferrer">$5</a>
                     <a href="https://paypal.me/yxuiang/10" target="_blank" rel="noopener noreferrer">$10</a>
                 </div>
-            </div>
-            <div class="tip" id="tip-${p.id}"></div>
-        `;
-                } else {
-                    card.innerHTML = `
-            <h2 id="title-${p.id}"></h2>
-            <div class="img-wrapper">
+            </div>`
+                    : `<div class="img-wrapper media-frame">
                 <img src="${p.img}" alt="${p.id}" loading="lazy" />
-            </div>
+            </div>`;
+                return `<div class="card" id="card-${p.id}">
+            <h2 id="title-${p.id}"></h2>
+            ${body}
             <div class="tip" id="tip-${p.id}"></div>
-        `;
-                }
-
-                grid.appendChild(card);
-            });
+        </div>`;
+            }).join("");
         }
 
         function render(lang) {
@@ -741,82 +632,48 @@
             document.getElementById("page-main-title").innerText = data.title;
             document.getElementById("page-footer").innerText = data.footer;
 
-            const statsEl = document.getElementById("stats");
-            statsEl.innerHTML = data.stats.map((s, i) => `<div${i === 0 || i === 3 ? ' class="stat-highlight"' : ''}>${s}</div>`).join("");
+            document.getElementById("stats").innerHTML = data.stats
+                .map((s, i) => `<div${i === 0 || i === 3 ? ' class="stat-highlight"' : ""}>${s}</div>`)
+                .join("");
+
             document.getElementById("support-note").innerText = data.supportNote;
 
-            const featureListContainer = document.getElementById("feature-list");
-            featureListContainer.innerHTML = "";
-            data.features.forEach(f => {
-                const item = document.createElement("div");
-                item.className = "feature-item";
-                item.innerHTML = `
-            <span class="feature-icon">${f.icon}</span>
-            <span class="feature-text">${f.text}</span>
-        `;
-                featureListContainer.appendChild(item);
-            });
+            document.getElementById("feature-list").innerHTML = data.features
+                .map(f => `<div class="feature-item"><span class="feature-icon">${f.icon}</span><span class="feature-text">${f.text}</span></div>`)
+                .join("");
 
             paymentsConfig.forEach(p => {
-                const titleEl = document.getElementById(`title-${p.id}`);
-                const tipEl = document.getElementById(`tip-${p.id}`);
-
-                if (titleEl && tipEl) {
-                    titleEl.innerHTML = `${data[p.titleKey]}${p.id === "paypal" ? '<span class="link-icon">↗</span>' : ''}`;
-                    tipEl.innerText = data[p.tipKey];
-                }
+                document.getElementById(`title-${p.id}`).innerHTML =
+                    `${data[p.titleKey]}${p.id === "paypal" ? '<span class="link-icon">↗</span>' : ""}`;
+                document.getElementById(`tip-${p.id}`).innerText = data[p.tipKey];
             });
 
-            // 渲染赞助者
             document.getElementById("sponsors-title").innerText = data.sponsorsTitle;
             document.getElementById("sponsors-cta").innerText = data.sponsorsCta;
-            const listEl = document.getElementById("sponsors-list");
-            listEl.innerHTML = "";
-            sponsors.forEach(s => {
-                const chip = document.createElement("div");
-                chip.className = "sponsor-chip";
-                const initial = s.name.charAt(0);
-                chip.innerHTML = `
-                    <span class="sponsor-avatar" style="background:${s.color}">${initial}</span>
-                    <span class="sponsor-name">${s.name}</span>
-                    <span class="sponsor-amount">${s.amount}</span>
-                `;
-                listEl.appendChild(chip);
-            });
+            document.getElementById("sponsors-list").innerHTML = sponsors
+                .map(s => `<div class="sponsor-chip">
+                <span class="sponsor-avatar" style="background:${s.color}">${s.name.charAt(0)}</span>
+                <span class="sponsor-name">${s.name}</span>
+                <span class="sponsor-amount">${s.amount}</span>
+            </div>`)
+                .join("");
 
-            document.querySelectorAll("button.lang").forEach(btn => btn.classList.remove("active"));
-            document.getElementById(`btn-${lang}`).classList.add("active");
-        }
-
-        function setLang(lang) {
-            render(lang);
-        }
-
-        /** 将扩展 locale（如 zh_CN、en_US）映射为页面语言 zh | en */
-        function toPageLang(locale) {
-            if (!locale || locale === "default") return null;
-            const base = locale.toLowerCase().replace(/_/g, "-").split("-")[0];
-            if (base === "zh") return "zh";
-            if (base === "en") return "en";
-            return null;
+            document.querySelectorAll("button.lang").forEach(btn => btn.classList.toggle("active", btn.id === `btn-${lang}`));
         }
 
         function getDefaultLang() {
-            const fromExtension = toPageLang(new URLSearchParams(location.search).get("lang"));
-            if (fromExtension) return fromExtension;
-
-            const locales = navigator.languages?.length
-                ? navigator.languages
-                : [navigator.language || navigator.userLanguage];
-            return locales.some((l) => l.toLowerCase().startsWith("zh")) ? "zh" : "en";
+            const param = new URLSearchParams(location.search).get("lang");
+            if (param && param !== "default") {
+                const base = param.toLowerCase().replace(/_/g, "-").split("-")[0];
+                if (base === "zh" || base === "en") return base;
+            }
+            const locales = navigator.languages?.length ? navigator.languages : [navigator.language];
+            return locales.some(l => l.toLowerCase().startsWith("zh")) ? "zh" : "en";
         }
 
-        // 执行初始化与首次渲染
+        initBrandName();
         initDOM();
-        const defaultLang = getDefaultLang();
-        render(defaultLang);
+        render(getDefaultLang());
     </script>
-
 </body>
-
 </html>
