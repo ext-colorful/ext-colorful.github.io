@@ -338,9 +338,9 @@
         }
 
         .card:hover {
-            transform: translateY(-6px);
+            transform: translateY(-3px);
             box-shadow: var(--card-shadow-hover);
-            border-color: var(--primary-color);
+            border-color: rgba(77, 173, 247, 0.35);
         }
 
         .card h2 {
@@ -361,6 +361,21 @@
 
         .card:hover .link-icon {
             opacity: 1;
+        }
+
+        /* 二维码交互暗示：微弱呼吸光晕 */
+        @keyframes qr-breathe {
+            0%, 100% { box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02), inset 0 0 0 1px rgba(0, 0, 0, 0.04); }
+            50% { box-shadow: 0 4px 18px rgba(77, 173, 247, 0.12), inset 0 0 0 1.5px rgba(77, 173, 247, 0.15); }
+        }
+
+        .card:not(#card-paypal) .img-wrapper {
+            animation: qr-breathe 3.5s ease-in-out infinite;
+        }
+
+        .card:not(#card-paypal):hover .img-wrapper {
+            animation: none;
+            box-shadow: 0 4px 18px rgba(77, 173, 247, 0.18), inset 0 0 0 1.5px rgba(77, 173, 247, 0.2);
         }
 
         /* 二维码容器等比缩放 */
