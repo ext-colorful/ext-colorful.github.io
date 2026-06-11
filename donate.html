@@ -476,6 +476,78 @@
             filter: brightness(1.08);
         }
 
+        /* 赞助者感谢区块 */
+        .sponsors-section {
+            margin-top: 40px;
+            text-align: center;
+        }
+
+        .sponsors-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-muted);
+            letter-spacing: 0.04em;
+            margin-bottom: 16px;
+        }
+
+        .sponsors-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .sponsor-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 7px 16px 7px 8px;
+            border-radius: 999px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .sponsor-chip:hover {
+            border-color: rgba(77, 173, 247, 0.3);
+            box-shadow: 0 4px 14px rgba(77, 173, 247, 0.08);
+        }
+
+        .sponsor-avatar {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+            color: #fff;
+            flex-shrink: 0;
+        }
+
+        .sponsor-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        .sponsor-amount {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-light);
+            margin-left: 2px;
+        }
+
+        .sponsors-cta {
+            margin-top: 14px;
+            font-size: 12px;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
         .footer {
             text-align: center;
             color: var(--text-light);
@@ -556,6 +628,12 @@
 
         <div class="grid anim-enter anim-delay-3" id="grid"></div>
 
+        <div class="sponsors-section anim-enter anim-delay-4" id="sponsors-section">
+            <div class="sponsors-title" id="sponsors-title"></div>
+            <div class="sponsors-list" id="sponsors-list"></div>
+            <div class="sponsors-cta" id="sponsors-cta"></div>
+        </div>
+
         <div class="footer anim-enter anim-delay-4" id="page-footer" data-i18n="footer">心存感激。谢谢你愿意为独立开发者的夜晚点亮一盏灯 ☕</div>
     </div>
 
@@ -579,7 +657,9 @@
                 alipayTitle: "Alipay",
                 alipayTip: "Scan or Long-press via Alipay",
                 paypalTitle: "PayPal",
-                paypalTip: "Click to donate via PayPal"
+                paypalTip: "Click to donate via PayPal",
+                sponsorsTitle: "THANKS TO OUR SUPPORTERS",
+                sponsorsCta: "Your name could be next — every bit of support matters ✨"
             },
             zh: {
                 pageTitle: "支持 Colorful Background ❤️",
@@ -599,9 +679,16 @@
                 alipayTitle: "支付宝",
                 alipayTip: "支付宝扫码或长按识别",
                 paypalTitle: "PayPal",
-                paypalTip: "点击跳转至 PayPal 页面"
+                paypalTip: "点击跳转至 PayPal 页面",
+                sponsorsTitle: "感谢以下支持者",
+                sponsorsCta: "你的名字也可以出现在这里 —— 每一份支持都被铭记 ✨"
             }
         };
+
+        // 赞助者名单：新增赞助只需在此追加一行
+        const sponsors = [
+            { name: "匿名小伙伴", amount: "¥5.20", color: "linear-gradient(135deg, #ff6b6b, #ee5a24)" }
+        ];
 
         const paymentsConfig = [
             { id: "wechat", titleKey: "wechatTitle", tipKey: "wechatTip", img: "https://ext-colorful.github.io/images/wechat_a2.png", isLink: false },
@@ -678,6 +765,23 @@
                     titleEl.innerHTML = `${data[p.titleKey]}${p.id === "paypal" ? '<span class="link-icon">↗</span>' : ''}`;
                     tipEl.innerText = data[p.tipKey];
                 }
+            });
+
+            // 渲染赞助者
+            document.getElementById("sponsors-title").innerText = data.sponsorsTitle;
+            document.getElementById("sponsors-cta").innerText = data.sponsorsCta;
+            const listEl = document.getElementById("sponsors-list");
+            listEl.innerHTML = "";
+            sponsors.forEach(s => {
+                const chip = document.createElement("div");
+                chip.className = "sponsor-chip";
+                const initial = s.name.charAt(0);
+                chip.innerHTML = `
+                    <span class="sponsor-avatar" style="background:${s.color}">${initial}</span>
+                    <span class="sponsor-name">${s.name}</span>
+                    <span class="sponsor-amount">${s.amount}</span>
+                `;
+                listEl.appendChild(chip);
             });
 
             document.querySelectorAll("button.lang").forEach(btn => btn.classList.remove("active"));
