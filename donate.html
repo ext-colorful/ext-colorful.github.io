@@ -23,7 +23,7 @@
             --line: rgba(25, 28, 34, 0.12);
             --card: #fffdf9;
             --shadow: 0 1px 2px rgba(25, 28, 34, 0.04), 0 22px 48px -20px rgba(25, 28, 34, 0.14);
-            --glow: rgba(63, 142, 247, 0.08);
+            --glow: rgba(63, 142, 247, 0.12);
             --dot: rgba(25, 28, 34, 0.07);
             --pp1: #003087;
             --pp2: #009cde;
@@ -35,6 +35,8 @@
             --c3: #9b6bf2;
             /* 小咖啡杯图标（Support 标题前），mask 套用 --light 颜色、随主题自适应 */
             --cup: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='%23000'%20stroke-width='2'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='M4%209h13v4a4%204%200%200%201-4%204H8a4%204%200%200%201-4-4V9z'/%3E%3Cpath%20d='M17%2010h2.5a2.5%202.5%200%200%201%200%205H17'/%3E%3Cpath%20d='M8%203c0%201-1%201.5-1%202.5M12%203c0%201-1%201.5-1%202.5'/%3E%3C/svg%3E");
+            /* 小星星图标（引导语前），mask 套用 --c1 品牌红、随强调色一致 */
+            --star: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='%23000'%3E%3Cpath%20d='M12%202l2.9%206.3%206.9.7-5.1%204.7%201.4%206.8L12%2017.8%205.9%2020.5l1.4-6.8L2.2%209l6.9-.7L12%202z'/%3E%3C/svg%3E");
         }
 
         @media (prefers-color-scheme: dark) {
@@ -46,7 +48,7 @@
                 --line: rgba(235, 233, 228, 0.12);
                 --card: #151821;
                 --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 22px 48px -20px rgba(0, 0, 0, 0.55);
-                --glow: rgba(155, 107, 242, 0.1);
+                --glow: rgba(155, 107, 242, 0.15);
                 --dot: rgba(235, 233, 228, 0.07);
                 --pp1: #79b0ff;
                 --pp2: #6ec1ff;
@@ -186,6 +188,17 @@
             letter-spacing: 0.01em;
             margin: 0;
             min-height: 1.2em;
+            color: var(--ink);
+        }
+        /* 主标题用品牌三色渐变文字，作为左侧视觉焦点（不支持时回退纯色） */
+        @supports ((-webkit-background-clip: text) or (background-clip: text)) {
+            h1 {
+                background: linear-gradient(105deg, var(--c1) 0%, var(--c3) 52%, var(--c2) 100%);
+                -webkit-background-clip: text;
+                background-clip: text;
+                color: transparent;
+                -webkit-text-fill-color: transparent;
+            }
         }
 
         .mark {
@@ -294,6 +307,30 @@
             transition: opacity 0.25s, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .store:hover .s-arrow { opacity: 1; transform: none; }
+
+        .store-hint {
+            margin: 16px 0 0;
+            padding: 11px 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            line-height: 1.5;
+            color: var(--ink);
+            background: linear-gradient(100deg, rgba(238,90,79,0.10), rgba(155,107,242,0.10) 55%, rgba(63,142,247,0.10));
+            border: 1px solid var(--line);
+            border-left: 3px solid var(--c1);
+            border-radius: 10px;
+        }
+        .store-hint::before {
+            content: "";
+            flex: none;
+            width: 16px; height: 16px;
+            background-color: var(--c1);
+            -webkit-mask: var(--star) center / contain no-repeat;
+            mask: var(--star) center / contain no-repeat;
+        }
 
         /* ---------- 右侧支持面板 ---------- */
         .panel {
@@ -577,6 +614,7 @@
                 <ul class="ticks" id="t-ticks"></ul>
 
                 <nav class="stores" id="stores" aria-label="links"></nav>
+                <p class="store-hint" id="t-storehint"></p>
             </section>
 
             <!-- 支持面板 -->
@@ -655,7 +693,8 @@
                 paypalTip: "Donate via PayPal",
                 sponsorsLabel: "SUPPORTERS",
                 sponsorsCta: "Your name could be next — every bit of support matters",
-                footer: "Built with passion by an independent developer · Thank you for your support"
+                footer: "Built with passion by an independent developer · Thank you for your support",
+                storeHint: "If it's useful, a quick review or kind word on the store goes a long way. Thank you!"
             },
             zh: {
                 pageTitle: "支持 Colorful Background · 让色彩持续绽放",
@@ -682,7 +721,8 @@
                 paypalTip: "点击跳转至 PayPal 页面",
                 sponsorsLabel: "支持者",
                 sponsorsCta: "你的名字也可以出现在这里——每一份支持都被铭记",
-                footer: "由独立开发者用热爱打造 · 感谢你的支持"
+                footer: "由独立开发者用热爱打造 · 感谢你的支持",
+                storeHint: "插件好用的话，别忘了来个好评或留言支持一下呀～"
             }
         };
 
@@ -695,7 +735,7 @@
 
         const STORES = [
             {
-                href: "https://chromewebstore.google.com/detail/colorful-background/kjdglnecpmkeokdeboehpaajdddhommg",
+                href: "https://chromewebstore.google.com/detail/kjdglnecpmkeokdeboehpaajdddhommg",
                 brand: "#4285f4",
                 icon: `<svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M12 12 L3.34 7 A10 10 0 0 1 20.66 7 Z" fill="#ea4335"/>
@@ -764,6 +804,7 @@
             document.getElementById("t-title").innerText = data.title;
             document.getElementById("t-lede").innerText = data.lede;
             document.getElementById("t-footer").innerText = data.footer;
+            document.getElementById("t-storehint").textContent = data.storeHint;
 
             // 统计行：彩点分隔
             document.getElementById("t-meta").innerHTML = data.stats
