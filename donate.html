@@ -3,594 +3,716 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Support Colorful Background ❤️</title>
+    <title>支持 Colorful Background</title>
     <link rel="icon" type="image/svg+xml" href="https://ext-colorful.github.io/umbrella.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Noto+Serif+SC:wght@600;700&display=swap" rel="stylesheet" />
     <style>
         :root {
-            --bg-color: #f8fafc;
-            --text-color: #0f172a;
-            --text-muted: #334155;
-            --text-light: #64748b;
-            --card-bg: rgba(255, 255, 255, 0.85);
-            --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 10px 30px -10px rgba(15, 23, 42, 0.06);
-            --card-shadow-hover: 0 20px 40px -1px rgba(15, 23, 42, 0.12);
-            --border-color: rgba(226, 232, 240, 0.8);
-            --btn-hover: #f1f5f9;
-            --desc-bg: #ffffff;
-            --primary-color: #4dadf7;
-            --media-shadow: 0 4px 12px rgba(0, 0, 0, 0.02), inset 0 0 0 1px rgba(0, 0, 0, 0.04);
+            --paper: #f7f4ee;
+            --ink: #191c22;
+            --muted: #4d5461;
+            --light: #8b8f99;
+            --line: rgba(25, 28, 34, 0.12);
+            --card: #fffdf9;
+            --shadow: 0 1px 2px rgba(25, 28, 34, 0.04), 0 22px 48px -20px rgba(25, 28, 34, 0.14);
+            --glow: rgba(63, 142, 247, 0.08);
+            --dot: rgba(25, 28, 34, 0.07);
+            --pp1: #003087;
+            --pp2: #009cde;
+            --ppb: #0070ba;
+            --brand: #3f8ef7;
+            /* 品牌三色：红 / 蓝 / 紫 */
+            --c1: #ee5a4f;
+            --c2: #3f8ef7;
+            --c3: #9b6bf2;
         }
 
         @media (prefers-color-scheme: dark) {
             :root {
-                --bg-color: #090d16;
-                --text-color: #f1f5f9;
-                --text-muted: #cbd5e1;
-                --text-light: #94a3b8;
-                --card-bg: rgba(21, 28, 44, 0.7);
-                --border-color: rgba(34, 49, 77, 0.6);
-                --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 10px 30px -10px rgba(0, 0, 0, 0.4);
-                --card-shadow-hover: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
-                --btn-hover: #1e293b;
-                --desc-bg: #111827;
+                --paper: #0d0f14;
+                --ink: #ebe9e4;
+                --muted: #b8bcc6;
+                --light: #787d89;
+                --line: rgba(235, 233, 228, 0.12);
+                --card: #151821;
+                --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 22px 48px -20px rgba(0, 0, 0, 0.55);
+                --glow: rgba(155, 107, 242, 0.1);
+                --dot: rgba(235, 233, 228, 0.07);
+                --pp1: #79b0ff;
+                --pp2: #6ec1ff;
+                --ppb: #4d9fe8;
             }
         }
 
+        * { box-sizing: border-box; }
+
         body {
             margin: 0;
-            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Segoe UI', Roboto, sans-serif;
-            background: var(--bg-color);
-            color: var(--text-color);
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Segoe UI', sans-serif;
+            background: var(--paper);
+            color: var(--ink);
             transition: background 0.3s, color 0.3s;
-            -webkit-font-smoothing: subpixel-antialiased;
-            font-weight: 500;
+            -webkit-font-smoothing: antialiased;
             line-height: 1.55;
         }
 
-        .wrap {
-            max-width: 900px;
-            margin: auto;
-            padding: 30px 24px;
-            box-sizing: border-box;
+        /* 极淡点阵，给纸面一点质感 */
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background-image: radial-gradient(var(--dot) 1px, transparent 1.3px);
+            background-size: 26px 26px;
+            pointer-events: none;
+            z-index: 0;
         }
 
-        .lang-toggle-container {
+        /* 跟随光标的柔和色晕 */
+        .glow {
             position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 100;
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            padding: 3px;
-            border-radius: 100px;
+            left: 0;
+            top: 0;
+            width: 640px;
+            height: 640px;
+            border-radius: 50%;
+            background: radial-gradient(closest-side, var(--glow), transparent 72%);
+            pointer-events: none;
+            z-index: 0;
+            will-change: transform;
+        }
+
+        @media (hover: none) { .glow { display: none; } }
+
+        ::selection { background: var(--brand); color: #fff; }
+
+        a:focus-visible, button:focus-visible, .pp-bar:focus-visible {
+            outline: 2px solid var(--brand);
+            outline-offset: 2px;
+            border-radius: 6px;
+        }
+        .pp-bar:focus-visible { outline-color: var(--ppb); }
+
+        .page {
+            position: relative;
+            z-index: 1;
+            max-width: 1140px;
+            margin: 0 auto;
+            padding: 22px 32px 26px;
+            min-height: 100dvh;
             display: flex;
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            flex-direction: column;
+        }
+
+        /* ---------- 顶栏 ---------- */
+        .top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+        }
+
+        .brand { display: flex; align-items: center; gap: 12px; }
+
+        .brand-name {
+            font-size: 10.5px;
+            font-weight: 800;
+            letter-spacing: 0.22em;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .brand-char {
+            display: inline-block;
+            animation: float 2.6s ease-in-out infinite;
+            animation-delay: calc(var(--i) * 90ms);
+        }
+        .brand-char:nth-child(3n + 1) { color: var(--c1); }
+        .brand-char:nth-child(3n + 2) { color: var(--c2); }
+        .brand-char:nth-child(3n)     { color: var(--c3); }
+        .brand-space { width: 0.55em; flex: 0 0 auto; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50%      { transform: translateY(-2px); }
+        }
+
+        .lang-toggle {
+            display: flex;
+            gap: 2px;
+            padding: 3px;
+            border: 1px solid var(--line);
+            border-radius: 999px;
+            background: var(--card);
         }
 
         button.lang {
             border: none;
             background: transparent;
-            color: var(--text-muted);
-            padding: 6px 14px;
-            border-radius: 100px;
+            color: var(--muted);
+            padding: 5px 13px;
+            border-radius: 999px;
             cursor: pointer;
+            font: 600 12px/1 inherit;
+            font-family: inherit;
+            transition: color 0.25s, background 0.3s;
+        }
+        button.lang:hover { color: var(--ink); }
+        button.lang.active { background: var(--ink); color: var(--paper); }
+
+        /* ---------- 主区 ---------- */
+        .main {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 1.05fr 0.95fr;
+            gap: 56px;
+            align-items: center;
+            padding: 26px 0;
+        }
+
+        h1 {
+            font-family: 'Fraunces', 'Noto Serif SC', 'Songti SC', serif;
             font-weight: 600;
-            font-size: 12px;
-            transition: color 0.3s ease, background 0.35s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.35s ease, transform 0.2s ease;
+            font-size: clamp(32px, 4.2vw, 54px);
+            line-height: 1.18;
+            letter-spacing: 0.01em;
+            margin: 0;
+            min-height: 1.2em;
         }
 
-        button.lang:hover { color: var(--text-color); }
+        .mark {
+            display: flex;
+            width: 64px;
+            height: 4px;
+            border-radius: 2px;
+            overflow: hidden;
+            margin: 16px 0 20px;
+        }
+        .mark i { flex: 1; }
 
-        button.lang.active {
-            background: var(--text-color);
-            color: var(--bg-color);
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.12);
-            transform: scale(1.02);
+        .lede {
+            margin: 0;
+            max-width: 34em;
+            font-size: 15px;
+            color: var(--muted);
         }
 
-        button.lang:active { transform: scale(0.96); }
-
-        .hero {
-            text-align: center;
-            margin-bottom: 44px;
+        .meta { margin-top: 14px; font-size: 13px; font-weight: 600; color: var(--muted); }
+        .meta i.mdot {
+            display: inline-block;
+            width: 5px; height: 5px;
+            border-radius: 50%;
+            background: var(--c);
+            margin: 0 11px;
+            vertical-align: 2px;
         }
 
-        .hero-logo img {
-            width: 78px;
-            height: 78px;
+        .ticks {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px 24px;
+            margin: 18px 0 4px;
+            padding: 0;
+            list-style: none;
+        }
+        .ticks li {
+            display: flex;
+            gap: 10px;
+            align-items: baseline;
+            font-size: 13.5px;
+            color: var(--muted);
+        }
+        .ticks li i {
+            flex: none;
+            width: 6px; height: 6px;
+            border-radius: 50%;
+            background: var(--c);
+            transform: translateY(-1px);
         }
 
-        .brand-name {
-            margin: 10px 0 12px;
-            font-size: 14px;
-            font-weight: 800;
-            letter-spacing: 0.08em;
+        /* 三个跳转入口 */
+        .stores { margin-top: 22px; }
+        .store {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 12px 2px;
+            border-top: 1px solid var(--line);
+            text-decoration: none;
+            color: inherit;
+            transition: padding-left 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .store:last-child { border-bottom: 1px solid var(--line); }
+        .store:hover { padding-left: 10px; }
+
+        .store .ic {
+            flex: none;
+            width: 36px; height: 36px;
+            border-radius: 11px;
+            border: 1px solid var(--line);
+            display: grid;
+            place-items: center;
+            color: var(--muted);
+            transition: color 0.25s, border-color 0.25s, background 0.25s;
+        }
+        .store:hover .ic {
+            color: var(--b);
+            border-color: var(--b);
+            background: color-mix(in srgb, var(--b) 8%, transparent);
+        }
+
+        .s-main { font-size: 14px; font-weight: 650; }
+        .s-sub  { margin-left: auto; font-size: 12px; color: var(--light); }
+        .s-arrow {
+            color: var(--b);
+            display: grid;
+            place-items: center;
+            opacity: 0;
+            transform: translateX(-6px);
+            transition: opacity 0.25s, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .store:hover .s-arrow { opacity: 1; transform: none; }
+
+        /* ---------- 右侧支持面板 ---------- */
+        .panel {
+            background: var(--card);
+            border: 1px solid var(--line);
+            border-radius: 24px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .panel-head {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+
+        .eyebrow {
+            font-size: 10.5px;
+            font-weight: 700;
+            letter-spacing: 0.2em;
             text-transform: uppercase;
-            color: var(--text-color);
-            text-shadow: 0 2px 10px rgba(77, 173, 247, 0.2);
+            color: var(--light);
             display: inline-flex;
             align-items: center;
-            gap: 0.04em;
+            gap: 8px;
         }
+        .eyebrow::before { content: ""; width: 14px; height: 1px; background: var(--light); }
 
-        .brand-name .brand-char {
-            display: inline-block;
-            animation: brand-letter-float 2s ease-in-out infinite;
-            animation-delay: calc(var(--i) * 90ms);
-            will-change: transform;
-        }
+        .panel-note { font-size: 12px; color: var(--light); }
 
-        .brand-name .brand-char:nth-child(3n + 1) { color: #ff6b6b; }
-        .brand-name .brand-char:nth-child(3n + 2) { color: #4dadf7; }
-        .brand-name .brand-char:nth-child(3n) { color: #9c6bff; }
-        .brand-name .brand-space { width: 0.6em; flex: 0 0 auto; }
-
-        .stats {
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-            justify-content: center;
-            margin-bottom: 24px;
-        }
-
-        .stats div {
-            padding: 8px 14px;
-            border-radius: 999px;
-            background: var(--bg-color);
-            border: 1px solid var(--border-color);
-            font-size: 13px;
-            color: var(--text-muted);
-            font-weight: 600;
-            transition: border-color 0.3s ease, color 0.3s ease;
-        }
-
-        .stats div.stat-highlight {
-            background: linear-gradient(160deg, rgba(77, 173, 247, 0.1) 0%, rgba(156, 107, 255, 0.08) 65%, rgba(255, 107, 107, 0.06) 100%);
-            border-color: rgba(77, 173, 247, 0.25);
-            color: var(--text-color);
-        }
-
-        .hero h1 {
-            font-size: 40px;
-            font-weight: 800;
-            margin: 0 0 16px;
-            letter-spacing: -0.5px;
-            background: linear-gradient(135deg, #ff6b6b 10%, #4dadf7 50%, #cc5de8 90%);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-size: 200% auto;
-            animation: shine 6s linear infinite;
-        }
-
-        @keyframes shine { to { background-position: 200% center; } }
-
-        @keyframes brand-letter-float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-3px); }
-        }
-
-        .story-container {
-            background: var(--desc-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 24px;
-            padding: 36px;
-            box-shadow: var(--card-shadow);
-            margin-bottom: 40px;
-        }
-
-        .feature-list {
+        .pay-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 16px;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
         }
 
-        .feature-item {
-            display: flex;
-            align-items: flex-start;
-            gap: 12px;
-            padding: 16px;
-            background: var(--bg-color);
+        .pay-card {
+            position: relative;
+            overflow: hidden;
+            background: var(--paper);
+            border: 1px solid var(--line);
             border-radius: 16px;
-            border: 1px solid transparent;
-            transition: all 0.3s ease;
+            padding: 14px 14px 12px;
+            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s;
         }
+        .pay-card:hover { transform: translateY(-3px); border-color: color-mix(in srgb, var(--b) 40%, transparent); }
 
-        .feature-item:hover {
-            border-color: rgba(77, 173, 247, 0.2);
-            background: var(--desc-bg);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
-        }
-
-        .feature-icon { font-size: 18px; line-height: 1.4; }
-
-        .feature-text {
-            font-size: 14px;
-            line-height: 1.5;
-            color: var(--text-muted);
-            font-weight: 500;
-        }
-
-        .support-note {
-            margin-top: 18px;
-            padding: 12px 14px;
-            border-radius: 14px;
-            background: var(--bg-color);
-            border: 1px solid var(--border-color);
-            color: var(--text-muted);
-            font-size: 14px;
-            font-weight: 600;
-            line-height: 1.5;
-            text-align: center;
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 24px;
-            margin-top: 20px;
-        }
-
-        .card {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 28px;
-            padding: 32px 24px;
-            text-align: center;
-            box-shadow: var(--card-shadow);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-            box-sizing: border-box;
+        .pay-card h3 {
+            margin: 0 0 10px;
+            font-size: 13.5px;
+            font-weight: 700;
             display: flex;
-            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 7px;
+        }
+        .pay-card h3 i {
+            width: 7px; height: 7px;
+            border-radius: 50%;
+            background: var(--b);
+        }
+
+        /* 二维码容器固定白底，保证暗色模式下也能扫 */
+        .qr {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: inset 0 0 0 1px rgba(15, 23, 42, 0.06);
+        }
+        .qr img {
+            display: block;
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            object-fit: contain;
+            border-radius: 6px;
+        }
+
+        .pay-card .tip {
+            margin: 9px 0 0;
+            text-align: center;
+            font-size: 11.5px;
+            font-weight: 600;
+            color: var(--light);
+        }
+
+        /* ---------- PayPal 横条：结构不变、保持一行，仅整条可点 ---------- */
+        .pp-bar {
+            margin-top: 12px;
+            display: flex;
             align-items: center;
             justify-content: space-between;
-            color: inherit;
+            gap: 12px;
+            flex-wrap: nowrap;              /* 始终一行 */
+            background: var(--paper);
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            padding: 10px 14px;
+            cursor: pointer;                /* 整条可点 */
+            transition: border-color 0.25s, box-shadow 0.3s;
+        }
+        .pp-bar:hover {
+            border-color: color-mix(in srgb, var(--ppb) 45%, transparent);
+            box-shadow: 0 10px 26px -14px color-mix(in srgb, var(--ppb) 45%, transparent);
         }
 
-        .card:hover {
-            transform: translateY(-3px);
-            box-shadow: var(--card-shadow-hover);
-            border-color: rgba(77, 173, 247, 0.35);
+        .pp-info { display: flex; align-items: center; gap: 12px; min-width: 0; }
+        .pp-word { font-size: 17px; font-weight: 800; font-style: italic; letter-spacing: -0.02em; white-space: nowrap; }
+        .pp-word b  { color: var(--pp1); font-weight: 800; }
+        .pp-word em { color: var(--pp2); font-style: italic; }
+        .pp-tip { font-size: 12px; color: var(--light); }
+
+        .pp-actions { display: flex; gap: 6px; flex-shrink: 0; }
+        .pp-actions a {
+            text-decoration: none;
+            padding: 7px 18px;
+            border-radius: 999px;
+            border: 1px solid var(--line);
+            background: var(--card);
+            color: var(--ink);
+            font-size: 13px;
+            font-weight: 700;
+            transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), filter 0.2s, border-color 0.2s;
         }
-
-        .card h2 {
-            font-size: 18px;
-            margin: 0 0 20px;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 6px;
+        .pp-actions a:hover { transform: translateY(-2px); border-color: var(--ppb); }
+        .pp-actions a:active { transform: scale(0.95); }
+        .pp-actions a.featured {
+            background: var(--ppb);
+            border-color: var(--ppb);
+            color: #fff;
+            box-shadow: 0 4px 14px -4px color-mix(in srgb, var(--ppb) 60%, transparent);
         }
+        .pp-actions a.featured:hover { filter: brightness(1.08); }
 
-        .card .link-icon {
-            font-size: 14px;
-            opacity: 0.5;
-            transition: opacity 0.3s;
-        }
-
-        .card:hover .link-icon { opacity: 1; }
-
-        @keyframes qr-breathe {
-            0%, 100% { box-shadow: var(--media-shadow); }
-            50% { box-shadow: 0 4px 18px rgba(77, 173, 247, 0.12), inset 0 0 0 1.5px rgba(77, 173, 247, 0.15); }
-        }
-
-        .media-frame {
-            width: 100%;
-            max-width: 170px;
-            aspect-ratio: 1 / 1;
-            border-radius: 20px;
-            box-shadow: var(--media-shadow);
-            box-sizing: border-box;
-        }
-
-        .card:not(#card-paypal) .img-wrapper { animation: qr-breathe 3.5s ease-in-out infinite; }
-
-        .card:not(#card-paypal):hover .img-wrapper {
-            animation: none;
-            box-shadow: 0 4px 18px rgba(77, 173, 247, 0.18), inset 0 0 0 1.5px rgba(77, 173, 247, 0.2);
-        }
-
-        .img-wrapper {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .paypal-body {
+        /* ---------- 底部 ---------- */
+        .bottom {
+            border-top: 1px solid var(--line);
+            padding-top: 16px;
             display: flex;
             flex-direction: column;
-            align-items: stretch;
-            overflow: hidden;
+            gap: 9px;
         }
 
-        #card-paypal .img-wrapper {
-            flex: 1 1 auto;
-            aspect-ratio: unset;
-            box-shadow: none;
-            border-radius: 0;
-            padding: 14px 14px 0;
-        }
-
-        .card img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-        }
-
-        .tip {
-            margin-top: 20px;
-            color: var(--text-light);
-            font-size: 13px;
-            font-weight: 600;
-            line-height: 1.4;
-        }
-
-        a.img-wrapper {
-            text-decoration: none;
-            color: inherit;
-        }
-
-        .paypal-actions {
+        .sponsors-row {
             display: flex;
-            gap: 6px;
-            flex-shrink: 0;
-            padding: 8px 10px 10px;
-        }
-
-        .paypal-actions a {
-            flex: 1;
-            text-decoration: none;
-            padding: 5px 0;
-            border-radius: 999px;
-            background: var(--btn-hover);
-            color: var(--text-color);
-            font-size: 12px;
-            font-weight: 600;
-            text-align: center;
-            transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), background 0.2s ease, filter 0.2s ease;
-            cursor: pointer;
-        }
-
-        .paypal-actions a:hover { transform: translateY(-2px); }
-        .paypal-actions a:active { transform: scale(0.95); }
-
-        .paypal-actions a.featured {
-            background: var(--primary-color);
-            color: #fff;
-            font-size: 13px;
-            padding: 6px 0;
-            box-shadow: 0 2px 10px rgba(77, 173, 247, 0.4);
-        }
-
-        .paypal-actions a.featured:hover { filter: brightness(1.08); }
-
-        .sponsors-section {
-            margin-top: 40px;
-            text-align: center;
-            overflow: visible;
-        }
-
-        /* iOS Safari：父级 transform 动画会阻碍子元素高度重算 */
-        .sponsors-section.anim-enter { animation-name: fade-in; }
-
-        .sponsors-title {
-            font-size: 14px;
-            font-weight: 700;
-            color: var(--text-muted);
-            letter-spacing: 0.04em;
-            margin-bottom: 16px;
-            line-height: 1.55;
-            overflow: visible;
-        }
-
-        .sponsors-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
+            align-items: center;
             justify-content: center;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+
+        .sponsors-label {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            color: var(--light);
         }
 
         .sponsor-chip {
             display: inline-flex;
             align-items: center;
-            gap: 8px;
-            padding: 7px 16px 7px 8px;
+            gap: 7px;
+            padding: 5px 12px 5px 6px;
             border-radius: 999px;
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            backdrop-filter: blur(6px);
-            -webkit-backdrop-filter: blur(6px);
-            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            background: var(--card);
+            border: 1px solid var(--line);
+            transition: border-color 0.25s;
         }
-
-        .sponsor-chip:hover {
-            border-color: rgba(77, 173, 247, 0.3);
-            box-shadow: 0 4px 14px rgba(77, 173, 247, 0.08);
-        }
+        .sponsor-chip:hover { border-color: color-mix(in srgb, var(--brand) 40%, transparent); }
 
         .sponsor-avatar {
-            width: 26px;
-            height: 26px;
+            width: 22px; height: 22px;
             border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 12px;
+            display: grid;
+            place-items: center;
+            font-size: 11px;
             font-weight: 700;
             color: #fff;
             flex-shrink: 0;
         }
 
-        .sponsor-name {
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--text-color);
+        .sponsor-name { font-size: 12.5px; font-weight: 650; }
+        .sponsor-amount { font-size: 11px; font-weight: 600; color: var(--light); }
+
+        .sponsors-cta { font-size: 12px; color: var(--light); }
+        .sponsors-cta i {
+            display: inline-block;
+            width: 5px; height: 5px;
+            border-radius: 50%;
+            background: var(--c3);
+            margin-left: 6px;
+            vertical-align: 1px;
         }
 
-        .sponsor-amount {
-            font-size: 11px;
-            font-weight: 600;
-            color: var(--text-light);
-            margin-left: 2px;
-        }
-
-        .sponsors-cta {
-            margin-top: 14px;
-            font-size: 12px;
-            color: var(--text-light);
-            font-weight: 500;
-        }
-
-        .footer {
+        .copyright {
+            margin: 0;
             text-align: center;
-            color: var(--text-light);
-            font-size: 13px;
-            font-weight: 500;
-            border-top: 1px solid var(--border-color);
-            padding-top: 30px;
-            line-height: 1.5;
+            font-size: 12px;
+            color: var(--light);
         }
 
-        @keyframes fade-up {
-            from { opacity: 0; transform: translateY(24px); }
-            to { opacity: 1; transform: translateY(0); }
+        /* ---------- 入场动效 ---------- */
+        @keyframes rise {
+            from { opacity: 0; transform: translateY(20px); }
+            to   { opacity: 1; transform: translateY(0); }
         }
 
-        @keyframes fade-in {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
+        .anim { opacity: 0; animation: rise 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        .d1 { animation-delay: 0.05s; }
+        .d2 { animation-delay: 0.18s; }
+        .d3 { animation-delay: 0.32s; }
 
-        .anim-enter {
-            opacity: 0;
-            animation: fade-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
+        .store { opacity: 0; animation: rise 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; animation-delay: calc(0.34s + var(--i) * 70ms); }
+        .pay-card { opacity: 0; animation: rise 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; animation-delay: calc(0.3s + var(--i) * 90ms); }
 
-        .anim-delay-1 { animation-delay: 0.08s; }
-        .anim-delay-2 { animation-delay: 0.2s; }
-        .anim-delay-3 { animation-delay: 0.36s; }
-        .anim-delay-4 { animation-delay: 0.48s; }
-
-        @media (max-width: 768px) {
-            .grid { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+        @media (max-width: 1023px) {
+            .main {
+                grid-template-columns: 1fr;
+                gap: 36px;
+                align-content: start;
+                padding: 34px 0;
+            }
+            .intro { max-width: 620px; }
+            .panel { max-width: 480px; }
         }
 
         @media (max-width: 640px) {
-            .lang-toggle-container { top: 12px; right: 12px; }
-            .feature-list { grid-template-columns: 1fr; }
+            .page { padding: 18px 20px 24px; }
+            .ticks { grid-template-columns: 1fr; }
+            .pp-tip { display: none; }          /* 窄屏隐藏提示文字，保证横条仍是一行 */
+            .pp-actions a { padding: 7px 13px; }
+            .s-sub { display: none; }
         }
 
         @media (prefers-reduced-motion: reduce) {
-            .hero h1,
-            .brand-name .brand-char,
-            .card:not(#card-paypal) .img-wrapper { animation: none; }
-
-            .anim-enter { animation: none; opacity: 1; }
-
-            .card,
-            .feature-item,
-            button.lang,
-            .paypal-actions a { transition: none; }
+            .brand-char, .anim, .store, .pay-card { animation: none; opacity: 1; }
+            .store, .pay-card, .pp-bar, .pp-actions a, button.lang { transition: none; }
+            .glow { display: none; }
         }
     </style>
 </head>
 
 <body>
-    <div class="lang-toggle-container">
-        <button class="lang" id="btn-en" onclick="render('en')">EN</button>
-        <button class="lang" id="btn-zh" onclick="render('zh')">中文</button>
-    </div>
+    <div class="glow" id="glow" aria-hidden="true"></div>
 
-    <div class="wrap">
-        <div class="hero anim-enter anim-delay-1">
-            <div class="hero-logo">
-                <img src="https://ext-colorful.github.io/umbrella.svg" alt="">
+    <div class="page">
+        <!-- 顶栏 -->
+        <header class="top anim d1">
+            <div class="brand">
+                <!-- 伞 Logo：三彩伞面 -->
+                <svg width="30" height="30" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+                    <path d="M6 25A18 18 0 0 1 15 9.41" stroke="#ee5a4f" stroke-width="3.4" stroke-linecap="round"/>
+                    <path d="M15 9.41A18 18 0 0 1 33 9.41" stroke="#3f8ef7" stroke-width="3.4" stroke-linecap="round"/>
+                    <path d="M33 9.41A18 18 0 0 1 42 25" stroke="#9b6bf2" stroke-width="3.4" stroke-linecap="round"/>
+                    <path d="M24 25v12a4.5 4.5 0 0 1-9 0" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+                    <path d="M24 7V4" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+                </svg>
+                <span class="brand-name" id="brand-name" aria-label="COLORFUL BACKGROUND"></span>
             </div>
-            <div class="brand-name" aria-label="COLORFUL BACKGROUND"></div>
-            <h1 id="page-main-title"></h1>
-        </div>
+            <div class="lang-toggle">
+                <button class="lang" id="btn-en" onclick="render('en')">EN</button>
+                <button class="lang" id="btn-zh" onclick="render('zh')">中文</button>
+            </div>
+        </header>
 
-        <div class="story-container anim-enter anim-delay-2">
-            <div class="stats" id="stats"></div>
-            <div class="feature-list" id="feature-list"></div>
-            <div class="support-note" id="support-note"></div>
-        </div>
+        <!-- 主区 -->
+        <main class="main">
+            <section class="intro anim d1">
+                <h1 id="t-title"></h1>
+                <span class="mark" aria-hidden="true">
+                    <i style="background:var(--c1)"></i><i style="background:var(--c2)"></i><i style="background:var(--c3)"></i>
+                </span>
+                <p class="lede" id="t-lede"></p>
+                <div class="meta" id="t-meta"></div>
+                <ul class="ticks" id="t-ticks"></ul>
 
-        <div class="grid anim-enter anim-delay-3" id="grid"></div>
+                <nav class="stores" aria-label="links">
+                    <a class="store" style="--b:#4285f4;--i:0" href="https://chromewebstore.google.com/detail/%E5%A4%9A%E5%BD%A9%E8%83%8C%E6%99%AF/kjdglnecpmkeokdeboehpaajdddhommg" target="_blank" rel="noopener noreferrer">
+                        <span class="ic">
+                            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/>
+                                <line x1="21.17" y1="8" x2="12" y2="8"/>
+                                <line x1="3.95" y1="6.06" x2="8.54" y2="14"/>
+                                <line x1="10.88" y1="21.94" x2="15.46" y2="14"/>
+                            </svg>
+                        </span>
+                        <span class="s-main"></span>
+                        <span class="s-sub"></span>
+                        <span class="s-arrow">
+                            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="M5 12h14"/><path d="M12 5l7 7-7 7"/>
+                            </svg>
+                        </span>
+                    </a>
+                    <a class="store" style="--b:#0b93d6;--i:1" href="https://microsoftedge.microsoft.com/addons/detail/pndeoniljijhiemfdogejkhmbggpognj" target="_blank" rel="noopener noreferrer">
+                        <span class="ic">
+                            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
+                                <circle cx="12" cy="12" r="10"/>
+                                <path d="M4.2 14.3C8.4 11.8 15.6 11.8 19.8 9.4"/>
+                            </svg>
+                        </span>
+                        <span class="s-main"></span>
+                        <span class="s-sub"></span>
+                        <span class="s-arrow">
+                            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="M5 12h14"/><path d="M12 5l7 7-7 7"/>
+                            </svg>
+                        </span>
+                    </a>
+                    <a class="store" style="--b:var(--ink);--i:2" href="https://github.com/ext-colorful/ext-colorful/issues/new/choose" target="_blank" rel="noopener noreferrer">
+                        <span class="ic">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+                            </svg>
+                        </span>
+                        <span class="s-main"></span>
+                        <span class="s-sub"></span>
+                        <span class="s-arrow">
+                            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="M5 12h14"/><path d="M12 5l7 7-7 7"/>
+                            </svg>
+                        </span>
+                    </a>
+                </nav>
+            </section>
 
-        <div class="sponsors-section anim-enter anim-delay-4">
-            <div class="sponsors-title" id="sponsors-title"></div>
-            <div class="sponsors-list" id="sponsors-list"></div>
-            <div class="sponsors-cta" id="sponsors-cta"></div>
-        </div>
+            <!-- 支持面板 -->
+            <section class="panel anim d2" aria-label="support">
+                <div class="panel-head">
+                    <span class="eyebrow" id="t-eyebrow"></span>
+                    <span class="panel-note" id="t-panelnote"></span>
+                </div>
 
-        <div class="footer anim-enter anim-delay-4" id="page-footer"></div>
+                <div class="pay-grid">
+                    <div class="pay-card" style="--b:#07c160;--i:0">
+                        <h3><i></i><span id="title-wechat"></span></h3>
+                        <div class="qr"><img src="https://ext-colorful.github.io/images/wechat_a2.png" alt="WeChat Pay QR" /></div>
+                        <p class="tip" id="tip-wechat"></p>
+                    </div>
+                    <div class="pay-card" style="--b:#1677ff;--i:1">
+                        <h3><i></i><span id="title-alipay"></span></h3>
+                        <div class="qr"><img src="https://ext-colorful.github.io/images/alipay_a2.png" alt="Alipay QR" /></div>
+                        <p class="tip" id="tip-alipay"></p>
+                    </div>
+                </div>
+
+                <!-- 结构与之前完全一致：一行横条 + 三个普通链接，仅多一个 JS 点击事件 -->
+                <div class="pp-bar" id="pp-bar" tabindex="0" role="button">
+                    <div class="pp-info">
+                        <span class="pp-word" aria-hidden="true"><b>Pay</b><em>Pal</em></span>
+                        <span class="pp-tip" id="tip-paypal"></span>
+                    </div>
+                    <div class="pp-actions">
+                        <a href="https://paypal.me/yxuiang/3" target="_blank" rel="noopener noreferrer">$3</a>
+                        <a href="https://paypal.me/yxuiang/5" class="featured" target="_blank" rel="noopener noreferrer">$5</a>
+                        <a href="https://paypal.me/yxuiang/10" target="_blank" rel="noopener noreferrer">$10</a>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- 底部 -->
+        <footer class="bottom anim d3">
+            <div class="sponsors-row">
+                <span class="sponsors-label" id="t-sponsorslabel"></span>
+                <span id="t-sponsors" style="display:inline-flex;gap:8px;flex-wrap:wrap;justify-content:center"></span>
+                <span class="sponsors-cta" id="t-cta"></span>
+            </div>
+            <p class="copyright" id="t-footer"></p>
+        </footer>
     </div>
 
     <script>
+        const dotColors = ["#ee5a4f", "#3f8ef7", "#9b6bf2", "#e8a33d"];
+        const tickColors = ["#ee5a4f", "#3f8ef7", "#9b6bf2", "#e8a33d"];
+
         const dict = {
             en: {
-                pageTitle: "Support Colorful Background ❤️",
+                pageTitle: "Support Colorful Background",
                 title: "Keep the Colors Growing",
-                stats: ["⭐ 1,000+ users", "🛠 Independently Built", "🚀 Actively Maintained", "🎁 Always Free"],
-                supportNote: "❤️ Thanks to every supporter - your encouragement and support keep Colorful Background moving forward with continuous updates.",
-                features: [
-                    { icon: "✨", text: "Continuously delivering more stunning themes and motion experiences" },
-                    { icon: "🚀", text: "Prioritizing new feature development and performance improvements" },
-                    { icon: "🛠", text: "Resolving edge-case bugs & maintaining reliable updates" },
-                    { icon: "🌈", text: "Making every browser launch feel more comfortable and healing" }
+                lede: "Thanks to every supporter — your encouragement is what keeps Colorful Background shipping, improving, and staying free.",
+                stats: ["1,000+ users", "Indie built", "Actively maintained", "Always free"],
+                ticks: [
+                    "Continuously delivering more stunning themes and motion experiences",
+                    "Prioritizing new features and performance improvements",
+                    "Hunting edge-case bugs with long-term reliable maintenance",
+                    "Making every browser launch feel more comfortable and healing"
                 ],
-                footer: "Built with passion by an independent developer · Thank you for your support ☂️",
+                stores: [
+                    { main: "Chrome Web Store", sub: "Add to Chrome" },
+                    { main: "Edge Add-ons", sub: "Add to Edge" },
+                    { main: "GitHub Issues", sub: "Share feedback" }
+                ],
+                eyebrow: "Support",
+                panelNote: "Buy the dev a coffee",
                 wechatTitle: "WeChat Pay",
-                wechatTip: "Scan or Long-press via WeChat",
+                wechatTip: "Scan via WeChat",
                 alipayTitle: "Alipay",
-                alipayTip: "Scan or Long-press via Alipay",
-                paypalTitle: "PayPal",
-                paypalTip: "Click to donate via PayPal",
-                sponsorsTitle: "THANKS TO OUR SUPPORTERS",
-                sponsorsCta: "Your name could be next — every bit of support matters ✨"
+                alipayTip: "Scan via Alipay",
+                paypalTip: "Donate via PayPal",
+                sponsorsLabel: "SUPPORTERS",
+                sponsorsCta: "Your name could be next — every bit of support matters",
+                footer: "Built with passion by an independent developer · Thank you for your support"
             },
             zh: {
-                pageTitle: "支持 Colorful Background ❤️",
+                pageTitle: "支持 Colorful Background · 让色彩持续绽放",
                 title: "让色彩持续绽放",
-                stats: ["⭐ 1,000+ 用户", "🛠 独立开发", "🚀 持续维护", "🎁 始终免费"],
-                supportNote: "❤️ 感谢每一位支持者，你的鼓励与支持，都是 Colorful Background 持续更新的动力。",
-                features: [
-                    { icon: "✨", text: "持续带来更惊艳的主题与动效体验" },
-                    { icon: "🚀", text: "优先投入新功能开发与性能提升" },
-                    { icon: "🛠", text: "跨平台 Bug 追击与长期的稳定维护" },
-                    { icon: "🌈", text: "让每一次打开浏览器，都更加舒适与治愈" }
+                lede: "感谢每一位支持者——你的鼓励与支持，都是 Colorful Background 持续更新、越做越好的动力。",
+                stats: ["1,000+ 用户", "独立开发", "持续维护", "始终免费"],
+                ticks: [
+                    "持续带来更惊艳的主题与动效体验",
+                    "优先投入新功能开发与性能提升",
+                    "跨平台 Bug 追击与长期的稳定维护",
+                    "让每一次打开浏览器，都更舒适治愈"
                 ],
-                footer: "由独立开发者用热爱打造 · 感谢你的支持 ☂️",
+                stores: [
+                    { main: "Chrome 应用商店", sub: "添加至 Chrome" },
+                    { main: "Microsoft Edge 加载项", sub: "添加至 Edge" },
+                    { main: "GitHub Issues", sub: "反馈问题" }
+                ],
+                eyebrow: "Support",
+                panelNote: "请作者喝一杯咖啡",
                 wechatTitle: "微信支付",
-                wechatTip: "微信扫码或长按识别",
+                wechatTip: "微信扫码",
                 alipayTitle: "支付宝",
-                alipayTip: "支付宝扫码或长按识别",
-                paypalTitle: "PayPal",
+                alipayTip: "支付宝扫码",
                 paypalTip: "点击跳转至 PayPal 页面",
-                sponsorsTitle: "感谢以下支持者",
-                sponsorsCta: "你的名字也可以出现在这里 —— 每一份支持都被铭记 ✨"
+                sponsorsLabel: "支持者",
+                sponsorsCta: "你的名字也可以出现在这里——每一份支持都被铭记",
+                footer: "由独立开发者用热爱打造 · 感谢你的支持"
             }
         };
 
         const sponsors = [
-            { name: "匿名小伙伴", amount: "¥5.20", color: "linear-gradient(135deg, #ff6b6b, #ee5a24)" }
-        ];
-
-        const paymentsConfig = [
-            { id: "wechat", titleKey: "wechatTitle", tipKey: "wechatTip", img: "https://ext-colorful.github.io/images/wechat_a2.png" },
-            { id: "alipay", titleKey: "alipayTitle", tipKey: "alipayTip", img: "https://ext-colorful.github.io/images/alipay_a2.png" },
-            { id: "paypal", titleKey: "paypalTitle", tipKey: "paypalTip", img: "https://ext-colorful.github.io/images/PayPal.svg", url: "https://paypal.me/yxuiang/5" }
+            { name: "匿名小伙伴", amount: "¥5.20", color: "linear-gradient(135deg, #ee5a4f, #f5a623)" }
         ];
 
         function initBrandName() {
             let i = 0;
-            document.querySelector(".brand-name").innerHTML = "COLORFUL BACKGROUND"
+            document.getElementById("brand-name").innerHTML = "COLORFUL BACKGROUND"
                 .split("")
                 .map(ch => ch === " "
                     ? '<span class="brand-space" aria-hidden="true"></span>'
@@ -598,64 +720,56 @@
                 .join("");
         }
 
-        function initDOM() {
-            document.getElementById("grid").innerHTML = paymentsConfig.map(p => {
-                const body = p.url
-                    ? `<div class="paypal-body media-frame">
-                <a href="${p.url}" class="img-wrapper" target="_blank" rel="noopener noreferrer">
-                    <img src="${p.img}" alt="${p.id}" loading="lazy" />
-                </a>
-                <div class="paypal-actions">
-                    <a href="https://paypal.me/yxuiang/3" target="_blank" rel="noopener noreferrer">$3</a>
-                    <a href="https://paypal.me/yxuiang/5" class="featured" target="_blank" rel="noopener noreferrer">$5</a>
-                    <a href="https://paypal.me/yxuiang/10" target="_blank" rel="noopener noreferrer">$10</a>
-                </div>
-            </div>`
-                    : `<div class="img-wrapper media-frame">
-                <img src="${p.img}" alt="${p.id}" loading="lazy" />
-            </div>`;
-                return `<div class="card" id="card-${p.id}">
-            <h2 id="title-${p.id}"></h2>
-            ${body}
-            <div class="tip" id="tip-${p.id}"></div>
-        </div>`;
-            }).join("");
-        }
-
         function render(lang) {
             const data = dict[lang];
 
             document.title = data.pageTitle;
-            document.getElementById("page-main-title").innerText = data.title;
-            document.getElementById("page-footer").innerText = data.footer;
+            document.getElementById("t-title").innerText = data.title;
+            document.getElementById("t-lede").innerText = data.lede;
+            document.getElementById("t-footer").innerText = data.footer;
 
-            document.getElementById("stats").innerHTML = data.stats
-                .map((s, i) => `<div${i === 0 || i === 3 ? ' class="stat-highlight"' : ""}>${s}</div>`)
+            // 统计行：彩点分隔
+            document.getElementById("t-meta").innerHTML = data.stats
+                .map((s, i) => `${i ? `<i class="mdot" style="--c:${dotColors[i % dotColors.length]}"></i>` : ""}<span>${s}</span>`)
                 .join("");
 
-            document.getElementById("support-note").innerText = data.supportNote;
-
-            document.getElementById("feature-list").innerHTML = data.features
-                .map(f => `<div class="feature-item"><span class="feature-icon">${f.icon}</span><span class="feature-text">${f.text}</span></div>`)
+            // 特性：四色圆点
+            document.getElementById("t-ticks").innerHTML = data.ticks
+                .map((t, i) => `<li style="--c:${tickColors[i % tickColors.length]}"><i></i><span>${t}</span></li>`)
                 .join("");
 
-            paymentsConfig.forEach(p => {
-                document.getElementById(`title-${p.id}`).innerHTML =
-                    `${data[p.titleKey]}${p.id === "paypal" ? '<span class="link-icon">↗</span>' : ""}`;
-                document.getElementById(`tip-${p.id}`).innerText = data[p.tipKey];
+            // 三个跳转入口
+            document.querySelectorAll(".store").forEach((a, i) => {
+                const d = data.stores[i];
+                a.querySelector(".s-main").textContent = d.main;
+                a.querySelector(".s-sub").textContent = d.sub;
             });
 
-            document.getElementById("sponsors-title").innerText = data.sponsorsTitle;
-            document.getElementById("sponsors-cta").innerText = data.sponsorsCta;
-            document.getElementById("sponsors-list").innerHTML = sponsors
-                .map(s => `<div class="sponsor-chip">
-                <span class="sponsor-avatar" style="background:${s.color}">${s.name.charAt(0)}</span>
-                <span class="sponsor-name">${s.name}</span>
-                <span class="sponsor-amount">${s.amount}</span>
-            </div>`)
+            // 支付面板
+            document.getElementById("t-eyebrow").textContent = data.eyebrow;
+            document.getElementById("t-panelnote").textContent = data.panelNote;
+            document.getElementById("title-wechat").textContent = data.wechatTitle;
+            document.getElementById("tip-wechat").textContent = data.wechatTip;
+            document.getElementById("title-alipay").textContent = data.alipayTitle;
+            document.getElementById("tip-alipay").textContent = data.alipayTip;
+            document.getElementById("tip-paypal").textContent = data.paypalTip;
+
+            // 支持者
+            document.getElementById("t-sponsorslabel").textContent = data.sponsorsLabel;
+            document.getElementById("t-cta").innerHTML = `${data.sponsorsCta}<i aria-hidden="true"></i>`;
+            document.getElementById("t-sponsors").innerHTML = sponsors
+                .map(s => `<span class="sponsor-chip">
+                    <span class="sponsor-avatar" style="background:${s.color}">${s.name.charAt(0)}</span>
+                    <span class="sponsor-name">${s.name}</span>
+                    <span class="sponsor-amount">${s.amount}</span>
+                </span>`)
                 .join("");
 
-            document.querySelectorAll("button.lang").forEach(btn => btn.classList.toggle("active", btn.id === `btn-${lang}`));
+            document.querySelectorAll("button.lang").forEach(btn => {
+                const on = btn.id === `btn-${lang}`;
+                btn.classList.toggle("active", on);
+                btn.setAttribute("aria-pressed", on);
+            });
         }
 
         function getDefaultLang() {
@@ -668,8 +782,40 @@
             return locales.some(l => l.toLowerCase().startsWith("zh")) ? "zh" : "en";
         }
 
+        // ★ PayPal 横条整体可点：点到空白处默认打开 $5；点到内部金额链接则走链接自身
+        (function initPaypalBar() {
+            const bar = document.getElementById("pp-bar");
+            const DEFAULT_URL = "https://paypal.me/yxuiang/5";
+            const open = () => window.open(DEFAULT_URL, "_blank", "noopener");
+
+            bar.addEventListener("click", e => {
+                if (e.target.closest("a")) return;  // $3/$5/$10 链接自己跳，不干预
+                open();
+            });
+            bar.addEventListener("keydown", e => {  // 键盘 Enter/空格 同样生效
+                if (e.key === "Enter" || e.key === " ") { e.preventDefault(); open(); }
+            });
+        })();
+
+        // 光标跟随的柔和色晕（尊重系统减弱动效设置）
+        (function initGlow() {
+            const glow = document.getElementById("glow");
+            const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+            if (!glow || reduce || !matchMedia("(hover: hover)").matches) {
+                if (glow) glow.style.display = "none";
+                return;
+            }
+            let tx = innerWidth * 0.62, ty = innerHeight * 0.42, x = tx, y = ty;
+            addEventListener("pointermove", e => { tx = e.clientX; ty = e.clientY; }, { passive: true });
+            (function loop() {
+                x += (tx - x) * 0.07;
+                y += (ty - y) * 0.07;
+                glow.style.transform = `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%)`;
+                requestAnimationFrame(loop);
+            })();
+        })();
+
         initBrandName();
-        initDOM();
         render(getDefaultLang());
     </script>
 </body>
