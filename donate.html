@@ -1,19 +1,30 @@
 <!doctype html>
-<html lang="zh">
+<html lang="en">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#f7f4ee" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0d0f14" media="(prefers-color-scheme: dark)" />
     <meta name="description" content="Support Colorful Background — a free, indie-built browser extension for stunning themes and motion. Donate via WeChat Pay, Alipay, or PayPal." />
     <meta property="og:type" content="website" />
     <meta property="og:title" content="Support Colorful Background" />
     <meta property="og:description" content="Keep the colors growing — support this free, indie-built browser extension. Donate via WeChat Pay, Alipay, or PayPal." />
     <meta property="og:image" content="https://ext-colorful.github.io/umbrella.png" />
+    <meta property="og:locale" content="en_US" />
     <meta name="twitter:card" content="summary" />
-    <title>支持 Colorful Background</title>
-    <link rel="icon" type="image/svg+xml" href="https://ext-colorful.github.io/umbrella.png" />
+    <meta name="twitter:title" content="Support Colorful Background" />
+    <meta name="twitter:description" content="Keep the colors growing — support this free, indie-built browser extension." />
+    <meta name="twitter:image" content="https://ext-colorful.github.io/umbrella.png" />
+    <title>Support Colorful Background</title>
+    <link rel="icon" type="image/png" href="https://ext-colorful.github.io/umbrella.png" />
+    <link rel="apple-touch-icon" href="https://ext-colorful.github.io/umbrella.png" />
+    <!-- 站点自有资源（Logo / 二维码 / og 图）与付费跳转域名，提前建连避免首屏等待 DNS -->
+    <link rel="preconnect" href="https://ext-colorful.github.io" crossorigin />
+    <link rel="dns-prefetch" href="https://ext-colorful.github.io" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Noto+Serif+SC:wght@600;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Noto+Serif+SC:wght@600&display=swap" rel="stylesheet" />
     <style>
         :root {
             --paper: #f7f4ee;
@@ -29,10 +40,14 @@
             --pp2: #009cde;
             --ppb: #0070ba;
             --brand: #3f8ef7;
-            /* 品牌三色：红 / 蓝 / 紫 */
+            /* 强调四色：标题/分隔点/特性点共用唯一色源，JS 侧以 var() 引用，不另建数组 */
             --c1: #ee5a4f;
             --c2: #3f8ef7;
             --c3: #9b6bf2;
+            --c4: #e8a33d;
+            /* 支付方式品牌色，取代 style 属性里的硬编码 */
+            --wechat: #07c160;
+            --alipay: #1677ff;
             /* 小咖啡杯图标（Support 标题前），mask 套用 --light 颜色、随主题自适应 */
             --cup: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='%23000'%20stroke-width='2'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='M4%209h13v4a4%204%200%200%201-4%204H8a4%204%200%200%201-4-4V9z'/%3E%3Cpath%20d='M17%2010h2.5a2.5%202.5%200%200%201%200%205H17'/%3E%3Cpath%20d='M8%203c0%201-1%201.5-1%202.5M12%203c0%201-1%201.5-1%202.5'/%3E%3C/svg%3E");
             /* 小星星图标（引导语前），mask 套用 --c1 品牌红、随强调色一致 */
@@ -193,7 +208,7 @@
         /* 主标题用品牌三色渐变文字，作为左侧视觉焦点（不支持时回退纯色） */
         @supports ((-webkit-background-clip: text) or (background-clip: text)) {
             h1 {
-                background: linear-gradient(105deg, var(--c1) 0%, var(--c3) 52%, var(--c2) 100%);
+                background-image: linear-gradient(105deg, var(--c1) 0%, var(--c3) 52%, var(--c2) 100%);
                 -webkit-background-clip: text;
                 background-clip: text;
                 color: transparent;
@@ -210,6 +225,9 @@
             margin: 16px 0 20px;
         }
         .mark i { flex: 1; }
+        .mark i:nth-child(1) { background: var(--c1); }
+        .mark i:nth-child(2) { background: var(--c2); }
+        .mark i:nth-child(3) { background: var(--c3); }
 
         .lede {
             margin: 0;
@@ -265,20 +283,35 @@
             background: var(--c);
         }
 
-        /* 三个跳转入口 */
-        .stores { margin-top: 22px; }
+        /* 商店与反馈入口 */
+        .stores {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 10px;
+            margin-top: 22px;
+        }
         .store {
             display: flex;
             align-items: center;
-            gap: 14px;
-            padding: 12px 2px;
-            border-top: 1px solid var(--line);
+            gap: 10px;
+            min-width: 0;
+            padding: 12px;
+            border: 1px solid var(--line);
+            border-radius: 14px;
+            background: var(--card);
             text-decoration: none;
             color: inherit;
-            transition: padding-left 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: border-color 0.25s, background 0.25s;
         }
-        .store:last-child { border-bottom: 1px solid var(--line); }
-        .store:hover { padding-left: 10px; }
+        .store:hover, .store:focus-visible {
+            border-color: var(--b);
+            background: color-mix(in srgb, var(--b) 6%, var(--card));
+        }
+        /* 入场动画序号由位置推导，与 .pay-card 一致，JS 侧不再传 --i */
+        .store:nth-child(1) { --i: 0; }
+        .store:nth-child(2) { --i: 1; }
+        .store:nth-child(3) { --i: 2; }
+        .store:nth-child(4) { --i: 3; }
 
         .store .ic {
             flex: none;
@@ -290,23 +323,32 @@
             color: var(--muted);
             transition: color 0.25s, border-color 0.25s, background 0.25s;
         }
+        .store .ic img {
+            width: 20px;
+            height: 20px;
+        }
+        @media (prefers-color-scheme: dark) {
+            .store .ic img[src$="/github.svg"] { filter: invert(1); }
+        }
         .store:hover .ic {
             color: var(--b);
             border-color: var(--b);
             background: color-mix(in srgb, var(--b) 8%, transparent);
         }
 
-        .s-main { font-size: 14px; font-weight: 650; }
-        .s-sub  { margin-left: auto; font-size: 12px; color: var(--light); }
+        .s-text { display: grid; gap: 3px; min-width: 0; }
+        .s-main { font-size: 13px; font-weight: 650; line-height: 1.3; }
+        .s-sub  { font-size: 12px; color: var(--light); line-height: 1.3; }
         .s-arrow {
             color: var(--b);
             display: grid;
             place-items: center;
-            opacity: 0;
-            transform: translateX(-6px);
+            margin-left: auto;
+            opacity: 0.55;
+            transform: translateX(-3px);
             transition: opacity 0.25s, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        .store:hover .s-arrow { opacity: 1; transform: none; }
+        .store:hover .s-arrow, .store:focus-visible .s-arrow { opacity: 1; transform: none; }
 
         .store-hint {
             margin: 16px 0 0;
@@ -318,7 +360,7 @@
             font-weight: 600;
             line-height: 1.5;
             color: var(--ink);
-            background: linear-gradient(100deg, rgba(238,90,79,0.10), rgba(155,107,242,0.10) 55%, rgba(63,142,247,0.10));
+            background-image: linear-gradient(100deg, rgba(238,90,79,0.10), rgba(155,107,242,0.10) 55%, rgba(63,142,247,0.10));
             border: 1px solid var(--line);
             border-left: 3px solid var(--c1);
             border-radius: 10px;
@@ -386,6 +428,9 @@
         }
         .pay-card:hover { transform: translateY(-3px); border-color: color-mix(in srgb, var(--b) 40%, transparent); }
 
+        .pay-wechat { --b: var(--wechat); --i: 0; }
+        .pay-alipay { --b: var(--alipay); --i: 1; }
+
         .pay-card h3 {
             margin: 0 0 10px;
             font-size: 13.5px;
@@ -410,6 +455,9 @@
         .qr img {
             display: block;
             width: 100%;
+            /* height: auto 必须显式写：HTML 的 height 属性会作为 presentational hint 压掉
+               aspect-ratio 推导出的高度，导致二维码被拉成长条 */
+            height: auto;
             aspect-ratio: 1 / 1;
             object-fit: contain;
             border-radius: 6px;
@@ -495,6 +543,13 @@
             color: var(--light);
         }
 
+        .sponsors-list {
+            display: inline-flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
         .sponsor-chip {
             display: inline-flex;
             align-items: center;
@@ -552,6 +607,11 @@
         .store { opacity: 0; animation: rise 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; animation-delay: calc(0.34s + var(--i) * 70ms); }
         .pay-card { opacity: 0; animation: rise 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; animation-delay: calc(0.3s + var(--i) * 90ms); }
 
+        /* 首屏之后（切换语言导致 DOM 重建）不再重播入场动画 */
+        .ready .anim,
+        .ready .store,
+        .ready .pay-card { animation: none; opacity: 1; }
+
         @media (max-width: 1023px) {
             .main {
                 grid-template-columns: 1fr;
@@ -568,7 +628,13 @@
             .ticks { grid-template-columns: 1fr; }
             .pp-tip { display: none; }          /* 窄屏隐藏提示文字，保证横条仍是一行 */
             .pp-actions a { padding: 7px 13px; }
-            .s-sub { display: none; }
+        }
+
+        /* 超窄屏：两个二维码并排会小到不好扫，改单列居中 */
+        @media (max-width: 420px) {
+            .stores { grid-template-columns: 1fr; }
+            .pay-grid { grid-template-columns: 1fr; }
+            .qr { max-width: 220px; margin-inline: auto; }
         }
 
         @media (prefers-reduced-motion: reduce) {
@@ -586,19 +652,19 @@
         <!-- 顶栏 -->
         <header class="top anim d1">
             <div class="brand">
-                <!-- 伞 Logo：三彩伞面 -->
+                <!-- 伞 Logo：三彩伞面，颜色统一取 :root 强调色 -->
                 <svg width="30" height="30" viewBox="0 0 48 48" fill="none" aria-hidden="true">
-                    <path d="M6 25A18 18 0 0 1 15 9.41" stroke="#ee5a4f" stroke-width="3.4" stroke-linecap="round"/>
-                    <path d="M15 9.41A18 18 0 0 1 33 9.41" stroke="#3f8ef7" stroke-width="3.4" stroke-linecap="round"/>
-                    <path d="M33 9.41A18 18 0 0 1 42 25" stroke="#9b6bf2" stroke-width="3.4" stroke-linecap="round"/>
+                    <path d="M6 25A18 18 0 0 1 15 9.41" stroke="var(--c1)" stroke-width="3.4" stroke-linecap="round"/>
+                    <path d="M15 9.41A18 18 0 0 1 33 9.41" stroke="var(--c2)" stroke-width="3.4" stroke-linecap="round"/>
+                    <path d="M33 9.41A18 18 0 0 1 42 25" stroke="var(--c3)" stroke-width="3.4" stroke-linecap="round"/>
                     <path d="M24 25v12a4.5 4.5 0 0 1-9 0" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
                     <path d="M24 7V4" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
                 </svg>
                 <span class="brand-name" id="brand-name" aria-label="COLORFUL BACKGROUND"></span>
             </div>
             <div class="lang-toggle">
-                <button class="lang" id="btn-en" onclick="render('en')">EN</button>
-                <button class="lang" id="btn-zh" onclick="render('zh')">中文</button>
+                <button class="lang" data-lang="en">EN</button>
+                <button class="lang" data-lang="zh">中文</button>
             </div>
         </header>
 
@@ -606,14 +672,12 @@
         <main class="main">
             <section class="intro anim d1">
                 <h1 id="t-title"></h1>
-                <span class="mark" aria-hidden="true">
-                    <i style="background:var(--c1)"></i><i style="background:var(--c2)"></i><i style="background:var(--c3)"></i>
-                </span>
+                <span class="mark" aria-hidden="true"><i></i><i></i><i></i></span>
                 <p class="lede" id="t-lede"></p>
                 <div class="meta" id="t-meta"></div>
                 <ul class="ticks" id="t-ticks"></ul>
 
-                <nav class="stores" id="stores" aria-label="links"></nav>
+                <nav class="stores" id="stores" aria-label="Links"></nav>
                 <p class="store-hint" id="t-storehint"></p>
             </section>
 
@@ -625,14 +689,14 @@
                 </div>
 
                 <div class="pay-grid">
-                    <div class="pay-card" style="--b:#07c160;--i:0">
+                    <div class="pay-card pay-wechat">
                         <h3><i></i><span id="title-wechat"></span></h3>
-                        <div class="qr"><img src="https://ext-colorful.github.io/images/wechat_a2.png" alt="WeChat Pay QR" decoding="async" /></div>
+                        <div class="qr"><img id="qr-wechat" src="https://ext-colorful.github.io/images/wechat_a2.png" alt="WeChat Pay QR" decoding="async" /></div>
                         <p class="tip" id="tip-wechat"></p>
                     </div>
-                    <div class="pay-card" style="--b:#1677ff;--i:1">
+                    <div class="pay-card pay-alipay">
                         <h3><i></i><span id="title-alipay"></span></h3>
-                        <div class="qr"><img src="https://ext-colorful.github.io/images/alipay_a2.png" alt="Alipay QR" decoding="async" /></div>
+                        <div class="qr"><img id="qr-alipay" src="https://ext-colorful.github.io/images/alipay_a2.png" alt="Alipay QR" decoding="async" /></div>
                         <p class="tip" id="tip-alipay"></p>
                     </div>
                 </div>
@@ -656,7 +720,7 @@
         <footer class="bottom anim d3">
             <div class="sponsors-row">
                 <span class="sponsors-label" id="t-sponsorslabel"></span>
-                <span id="t-sponsors" style="display:inline-flex;gap:8px;flex-wrap:wrap;justify-content:center"></span>
+                <span class="sponsors-list" id="t-sponsors"></span>
                 <span class="sponsors-cta" id="t-cta"></span>
             </div>
             <p class="copyright" id="t-footer"></p>
@@ -664,12 +728,17 @@
     </div>
 
     <script>
-        const accentColors = ["#ee5a4f", "#3f8ef7", "#9b6bf2", "#e8a33d"];
+        // 强调色直接引用 :root 的 CSS 变量，避免 JS 与 CSS 两套颜色源不同步
+        const accentColors = ["var(--c1)", "var(--c2)", "var(--c3)", "var(--c4)"];
         const PAYPAL_BASE = "https://paypal.me/yxuiang";
+        const LANG_KEY = "donate-lang";
 
         const dict = {
             en: {
                 pageTitle: "Support Colorful Background",
+                metaDescription: "Support Colorful Background — a free, indie-built browser extension for stunning themes and motion. Donate via WeChat Pay, Alipay, or PayPal.",
+                ogDescription: "Keep the colors growing — support this free, indie-built browser extension. Donate via WeChat Pay, Alipay, or PayPal.",
+                ogLocale: "en_US",
                 title: "Keep the Colors Growing",
                 lede: "Thanks to every supporter — your encouragement is what keeps Colorful Background shipping, improving, and staying free.",
                 stats: ["1,000+ users", "Indie built", "Actively maintained", "Always free"],
@@ -679,17 +748,21 @@
                     "Hunting edge-case bugs with long-term reliable maintenance",
                     "Making every browser launch feel more comfortable and healing"
                 ],
+                navLabel: "Links",
                 stores: [
                     { main: "Chrome Web Store", sub: "Add to Chrome" },
                     { main: "Edge Add-ons", sub: "Add to Edge" },
+                    { main: "Firefox Add-ons", sub: "Add to Firefox" },
                     { main: "GitHub Issues", sub: "Share feedback" }
                 ],
                 eyebrow: "Support",
                 panelNote: "Buy the dev a coffee",
                 wechatTitle: "WeChat Pay",
                 wechatTip: "Scan via WeChat",
+                wechatAlt: "WeChat Pay QR code",
                 alipayTitle: "Alipay",
                 alipayTip: "Scan via Alipay",
+                alipayAlt: "Alipay QR code",
                 paypalTip: "Donate via PayPal",
                 sponsorsLabel: "SUPPORTERS",
                 sponsorsCta: "Your name could be next — every bit of support matters",
@@ -698,6 +771,9 @@
             },
             zh: {
                 pageTitle: "支持 Colorful Background · 让色彩持续绽放",
+                metaDescription: "支持 Colorful Background —— 一款独立开发的免费浏览器扩展，带来惊艳的主题与动效。可通过微信支付、支付宝或 PayPal 支持作者。",
+                ogDescription: "让色彩持续绽放 —— 支持这款独立开发的免费浏览器扩展，可通过微信支付、支付宝或 PayPal 捐赠。",
+                ogLocale: "zh_CN",
                 title: "让色彩持续绽放",
                 lede: "感谢每一位支持者——你的鼓励与支持，都是 Colorful Background 持续更新、越做越好的动力。",
                 stats: ["1,000+ 用户", "独立开发", "持续维护", "始终免费"],
@@ -707,17 +783,21 @@
                     "跨平台 Bug 追击与长期的稳定维护",
                     "让每一次打开浏览器，都更舒适治愈"
                 ],
+                navLabel: "相关链接",
                 stores: [
-                    { main: "Chrome 应用商店", sub: "添加至 Chrome" },
-                    { main: "Microsoft Edge 加载项", sub: "添加至 Edge" },
+                    { main: "Chrome 扩展商店", sub: "添加至 Chrome" },
+                    { main: "Edge 扩展商店", sub: "添加至 Edge" },
+                    { main: "Firefox 附加组件", sub: "添加至 Firefox" },
                     { main: "GitHub Issues", sub: "反馈问题" }
                 ],
                 eyebrow: "Support",
                 panelNote: "请作者喝一杯咖啡",
                 wechatTitle: "微信支付",
                 wechatTip: "微信扫码",
+                wechatAlt: "微信支付收款二维码",
                 alipayTitle: "支付宝",
                 alipayTip: "支付宝扫码",
+                alipayAlt: "支付宝收款二维码",
                 paypalTip: "点击跳转至 PayPal 页面",
                 sponsorsLabel: "支持者",
                 sponsorsCta: "你的名字也可以出现在这里——每一份支持都被铭记",
@@ -737,52 +817,22 @@
             {
                 href: "https://chromewebstore.google.com/detail/kjdglnecpmkeokdeboehpaajdddhommg",
                 brand: "#4285f4",
-                icon: `<svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="M12 12 L3.34 7 A10 10 0 0 1 20.66 7 Z" fill="#ea4335"/>
-                    <path d="M12 12 L20.66 7 A10 10 0 0 1 12 22 Z" fill="#fbbc05"/>
-                    <path d="M12 12 L12 22 A10 10 0 0 1 3.34 7 Z" fill="#34a853"/>
-                    <circle cx="12" cy="12" r="4.2" fill="#4285f4"/>
-                    <circle cx="12" cy="12" r="2.3" fill="#fff"/>
-                </svg>`
+                icon: "https://ext-colorful.github.io/images/chrome.svg"
             },
             {
                 href: "https://microsoftedge.microsoft.com/addons/detail/pndeoniljijhiemfdogejkhmbggpognj",
                 brand: "#0078d4",
-                icon: `<svg width="20" height="20" viewBox="0 0 256 256" aria-hidden="true">
-                    <defs>
-                        <radialGradient id="edgeG1" cx="161.83" cy="788.401" r="95.38" gradientTransform="matrix(.9999 0 0 .9498 -4.622 -570.387)" gradientUnits="userSpaceOnUse">
-                            <stop offset=".72" stop-opacity="0"/><stop offset=".95" stop-opacity=".53"/><stop offset="1"/>
-                        </radialGradient>
-                        <radialGradient id="edgeG2" cx="-773.636" cy="746.715" r="143.24" gradientTransform="matrix(.15 -.9898 .8 .12 -410.718 -656.341)" gradientUnits="userSpaceOnUse">
-                            <stop offset=".76" stop-opacity="0"/><stop offset=".95" stop-opacity=".5"/><stop offset="1"/>
-                        </radialGradient>
-                        <radialGradient id="edgeG3" cx="230.593" cy="-106.038" r="202.43" gradientTransform="matrix(-.04 .9998 -2.1299 -.07998 -190.775 -191.635)" gradientUnits="userSpaceOnUse">
-                            <stop offset="0" stop-color="#35c1f1"/><stop offset=".11" stop-color="#34c1ed"/><stop offset=".23" stop-color="#2fc2df"/><stop offset=".31" stop-color="#2bc3d2"/><stop offset=".67" stop-color="#36c752"/>
-                        </radialGradient>
-                        <radialGradient id="edgeG4" cx="536.357" cy="-117.703" r="97.34" gradientTransform="matrix(.28 .9598 -.78 .23 -1.928 -410.318)" gradientUnits="userSpaceOnUse">
-                            <stop offset="0" stop-color="#66eb6e"/><stop offset="1" stop-color="#66eb6e" stop-opacity="0"/>
-                        </radialGradient>
-                        <linearGradient id="edgeG5" x1="63.334" x2="241.617" y1="757.83" y2="757.83" gradientTransform="translate(-4.63 -580.81)" gradientUnits="userSpaceOnUse">
-                            <stop offset="0" stop-color="#0c59a4"/><stop offset="1" stop-color="#114a8b"/>
-                        </linearGradient>
-                        <linearGradient id="edgeG6" x1="157.401" x2="46.028" y1="680.556" y2="801.868" gradientTransform="translate(-4.63 -580.81)" gradientUnits="userSpaceOnUse">
-                            <stop offset="0" stop-color="#1b9de2"/><stop offset=".16" stop-color="#1595df"/><stop offset=".67" stop-color="#0680d7"/><stop offset="1" stop-color="#0078d4"/>
-                        </linearGradient>
-                    </defs>
-                    <path fill="url(#edgeG5)" d="M231 190.5c-3.4 1.8-6.9 3.4-10.5 4.7c-11.5 4.3-23.6 6.5-35.9 6.5c-47.3 0-88.5-32.5-88.5-74.3c.1-11.4 6.4-21.9 16.4-27.3c-42.8 1.8-53.8 46.4-53.8 72.5c0 73.9 68.1 81.4 82.8 81.4c7.9 0 19.8-2.3 27-4.6l1.3-.4c27.6-9.5 51-28.1 66.6-52.8c1.2-1.9.6-4.3-1.2-5.5c-1.3-.8-2.9-.9-4.2-.2"/>
-                    <path fill="url(#edgeG1)" d="M231 190.5c-3.4 1.8-6.9 3.4-10.5 4.7c-11.5 4.3-23.6 6.5-35.9 6.5c-47.3 0-88.5-32.5-88.5-74.3c.1-11.4 6.4-21.9 16.4-27.3c-42.8 1.8-53.8 46.4-53.8 72.5c0 73.9 68.1 81.4 82.8 81.4c7.9 0 19.8-2.3 27-4.6l1.3-.4c27.6-9.5 51-28.1 66.6-52.8c1.2-1.9.6-4.3-1.2-5.5c-1.3-.8-2.9-.9-4.2-.2" opacity=".35"/>
-                    <path fill="url(#edgeG6)" d="M105.7 241.4c-8.9-5.5-16.6-12.8-22.7-21.3c-26.3-36-18.4-86.5 17.6-112.8c3.8-2.7 7.7-5.2 11.9-7.2c3.1-1.5 8.4-4.1 15.5-4c10.1.1 19.6 4.9 25.7 13c4 5.4 6.3 11.9 6.4 18.7c0-.2 24.5-79.6-80-79.6c-43.9 0-80 41.7-80 78.2c-.2 19.3 4 38.5 12.1 56c27.6 58.8 94.8 87.6 156.4 67.1c-21.1 6.6-44.1 3.7-62.9-8.1"/>
-                    <path fill="url(#edgeG2)" d="M105.7 241.4c-8.9-5.5-16.6-12.8-22.7-21.3c-26.3-36-18.4-86.5 17.6-112.8c3.8-2.7 7.7-5.2 11.9-7.2c3.1-1.5 8.4-4.1 15.5-4c10.1.1 19.6 4.9 25.7 13c4 5.4 6.3 11.9 6.4 18.7c0-.2 24.5-79.6-80-79.6c-43.9 0-80 41.7-80 78.2c-.2 19.3 4 38.5 12.1 56c27.6 58.8 94.8 87.6 156.4 67.1c-21.1 6.6-44.1 3.7-62.9-8.1" opacity=".41"/>
-                    <path fill="url(#edgeG3)" d="M152.3 148.9c-.8 1-3.3 2.5-3.3 5.7c0 2.6 1.7 5.1 4.7 7.2c14.4 10 41.5 8.7 41.6 8.7c10.7 0 21.1-2.9 30.3-8.3c18.8-11 30.4-31.1 30.4-52.9c.3-22.4-8-37.3-11.3-43.9C223.5 23.9 177.7 0 128 0C58 0 1 56.2 0 126.2c.5-36.5 36.8-66 80-66c3.5 0 23.5.3 42 10.1c16.3 8.6 24.9 18.9 30.8 29.2c6.2 10.7 7.3 24.1 7.3 29.5c0 5.3-2.7 13.3-7.8 19.9"/>
-                    <path fill="url(#edgeG4)" d="M152.3 148.9c-.8 1-3.3 2.5-3.3 5.7c0 2.6 1.7 5.1 4.7 7.2c14.4 10 41.5 8.7 41.6 8.7c10.7 0 21.1-2.9 30.3-8.3c18.8-11 30.4-31.1 30.4-52.9c.3-22.4-8-37.3-11.3-43.9C223.5 23.9 177.7 0 128 0C58 0 1 56.2 0 126.2c.5-36.5 36.8-66 80-66c3.5 0 23.5.3 42 10.1c16.3 8.6 24.9 18.9 30.8 29.2c6.2 10.7 7.3 24.1 7.3 29.5c0 5.3-2.7 13.3-7.8 19.9"/>
-                </svg>`
+                icon: "https://ext-colorful.github.io/images/edge.svg"
+            },
+            {
+                href: "https://addons.mozilla.org/zh-CN/firefox/addon/colorful-background",
+                brand: "#e85d04",
+                icon: "https://ext-colorful.github.io/images/firefox.svg"
             },
             {
                 href: "https://github.com/ext-colorful/ext-colorful/issues/new/choose",
                 brand: "var(--ink)",
-                icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="#6e5494" aria-hidden="true">
-                    <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222 0 1.606-.014 2.898-.014 3.293 0 .322.216.694.825.576C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
-                </svg>`
+                icon: "https://ext-colorful.github.io/images/github.svg"
             }
         ];
 
@@ -801,44 +851,64 @@
 
             document.documentElement.lang = lang;
             document.title = data.pageTitle;
-            document.getElementById("t-title").innerText = data.title;
-            document.getElementById("t-lede").innerText = data.lede;
-            document.getElementById("t-footer").innerText = data.footer;
-            document.getElementById("t-storehint").textContent = data.storeHint;
+
+            // SEO 元信息随语言一起更新，避免分享卡片与页面语言不一致
+            const setMeta = (selector, attr, value) => {
+                const el = document.querySelector(selector);
+                if (el) el.setAttribute(attr, value);
+            };
+            setMeta('meta[name="description"]', "content", data.metaDescription);
+            setMeta('meta[property="og:title"]', "content", data.pageTitle);
+            setMeta('meta[property="og:description"]', "content", data.ogDescription);
+            setMeta('meta[property="og:locale"]', "content", data.ogLocale);
+            setMeta('meta[name="twitter:title"]', "content", data.pageTitle);
+            setMeta('meta[name="twitter:description"]', "content", data.ogDescription);
+
+            const $ = id => document.getElementById(id);
+            $("t-title").textContent = data.title;
+            $("t-lede").textContent = data.lede;
+            $("t-footer").textContent = data.footer;
+            $("t-storehint").textContent = data.storeHint;
 
             // 统计行：彩点分隔
-            document.getElementById("t-meta").innerHTML = data.stats
+            $("t-meta").innerHTML = data.stats
                 .map((s, i) => `${i ? `<i class="mdot" style="--c:${accentColors[i % accentColors.length]}"></i>` : ""}<span>${s}</span>`)
                 .join("");
 
             // 特性：四色圆点
-            document.getElementById("t-ticks").innerHTML = data.ticks
+            $("t-ticks").innerHTML = data.ticks
                 .map((t, i) => `<li style="--c:${accentColors[i % accentColors.length]}"><i></i><span>${t}</span></li>`)
                 .join("");
 
-            // 三个跳转入口：由公共 STORES 配置遍历生成（图标/href/品牌色），文案取自 i18n
-            document.getElementById("stores").innerHTML = STORES.map((s, i) => `
-                <a class="store" style="--b:${s.brand};--i:${i}" href="${s.href}" target="_blank" rel="noopener noreferrer">
-                    <span class="ic">${s.icon}</span>
-                    <span class="s-main">${data.stores[i]?.main ?? ""}</span>
-                    <span class="s-sub">${data.stores[i]?.sub ?? ""}</span>
+            // 跳转入口由公共配置生成，文案取自 i18n
+            const stores = $("stores");
+            stores.setAttribute("aria-label", data.navLabel);
+            stores.innerHTML = STORES.map((s, i) => `
+                <a class="store" style="--b:${s.brand}" href="${s.href}" target="_blank" rel="noopener noreferrer">
+                    <span class="ic" aria-hidden="true"><img src="${s.icon}" alt="" width="20" height="20"></span>
+                    <span class="s-text">
+                        <span class="s-main">${data.stores[i]?.main ?? ""}</span>
+                        <span class="s-sub">${data.stores[i]?.sub ?? ""}</span>
+                    </span>
                     <span class="s-arrow">${ARROW}</span>
                 </a>
             `).join("");
 
             // 支付面板
-            document.getElementById("t-eyebrow").textContent = data.eyebrow;
-            document.getElementById("t-panelnote").textContent = data.panelNote;
-            document.getElementById("title-wechat").textContent = data.wechatTitle;
-            document.getElementById("tip-wechat").textContent = data.wechatTip;
-            document.getElementById("title-alipay").textContent = data.alipayTitle;
-            document.getElementById("tip-alipay").textContent = data.alipayTip;
-            document.getElementById("tip-paypal").textContent = data.paypalTip;
+            $("t-eyebrow").textContent = data.eyebrow;
+            $("t-panelnote").textContent = data.panelNote;
+            $("title-wechat").textContent = data.wechatTitle;
+            $("tip-wechat").textContent = data.wechatTip;
+            $("title-alipay").textContent = data.alipayTitle;
+            $("tip-alipay").textContent = data.alipayTip;
+            $("tip-paypal").textContent = data.paypalTip;
+            $("qr-wechat").alt = data.wechatAlt;
+            $("qr-alipay").alt = data.alipayAlt;
 
             // 支持者
-            document.getElementById("t-sponsorslabel").textContent = data.sponsorsLabel;
-            document.getElementById("t-cta").innerHTML = `${data.sponsorsCta}<i aria-hidden="true"></i>`;
-            document.getElementById("t-sponsors").innerHTML = sponsors
+            $("t-sponsorslabel").textContent = data.sponsorsLabel;
+            $("t-cta").innerHTML = `${data.sponsorsCta}<i aria-hidden="true"></i>`;
+            $("t-sponsors").innerHTML = sponsors
                 .map(s => `<span class="sponsor-chip">
                     <span class="sponsor-avatar" style="background:${s.color}">${s.name.charAt(0)}</span>
                     <span class="sponsor-name">${s.name}</span>
@@ -846,11 +916,27 @@
                 </span>`)
                 .join("");
 
-            document.querySelectorAll("button.lang").forEach(btn => {
-                const on = btn.id === `btn-${lang}`;
+            document.querySelectorAll("button.lang[data-lang]").forEach(btn => {
+                const on = btn.dataset.lang === lang;
                 btn.classList.toggle("active", on);
                 btn.setAttribute("aria-pressed", on);
             });
+        }
+
+        // 语言选择落盘 + 同步到地址栏，刷新/分享链接都能保持上次选择（file:// 下写不了地址栏，静默跳过）
+        function setLang(lang) {
+            render(lang);
+            document.documentElement.classList.add("ready");   // 之后的重渲染不再重播入场动画
+            try { localStorage.setItem(LANG_KEY, lang); } catch { /* 隐私模式忽略 */ }
+            try {
+                const url = new URL(location.href);
+                url.searchParams.set("lang", lang);
+                history.replaceState(null, "", url);
+            } catch { /* file:// 不支持 replaceState */ }
+        }
+
+        function readStoredLang() {
+            try { return localStorage.getItem(LANG_KEY); } catch { return null; }
         }
 
         function getDefaultLang() {
@@ -859,6 +945,8 @@
                 const base = param.toLowerCase().replace(/_/g, "-").split("-")[0];
                 if (base === "zh" || base === "en") return base;
             }
+            const stored = readStoredLang();
+            if (stored === "zh" || stored === "en") return stored;
             const locales = navigator.languages?.length ? navigator.languages : [navigator.language];
             return locales.some(l => l.toLowerCase().startsWith("zh")) ? "zh" : "en";
         }
@@ -866,6 +954,7 @@
         // ★ PayPal 横条整体可点：点到空白处默认打开 $5；点到内部金额链接则走链接自身
         (function initPaypalBar() {
             const bar = document.getElementById("pp-bar");
+            if (!bar) return;
             const open = url => window.open(url, "_blank", "noopener");
 
             // 金额链接的 href 由常量统一生成，改账号只需改 PAYPAL_BASE 一处
@@ -876,6 +965,13 @@
             bar.addEventListener("click", e => {
                 if (e.target.closest("a")) return;  // $3/$5/$10 链接自己跳，不干预
                 open(PAYPAL_BASE + "/5");           // 点空白处默认 $5
+            });
+        })();
+
+        // 语言切换改为事件绑定（无内联 onclick，兼容 CSP）
+        (function initLangToggle() {
+            document.querySelectorAll("button.lang[data-lang]").forEach(btn => {
+                btn.addEventListener("click", () => setLang(btn.dataset.lang));
             });
         })();
 
